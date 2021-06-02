@@ -13,8 +13,3 @@ export type AdapterRequest = {
   headers?: AdapterRequestHeaders
   params?: AdapterRequestParams
 }
-
-export type AdapterResponse = {
-  status: number
-  body?: any
-}

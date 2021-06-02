@@ -7,9 +7,9 @@ import {
   AdapterRequest,
   AdapterRequestBody,
   AdapterRequestHeaders,
-  AdapterRequestParams,
-  AdapterResponse
+  AdapterRequestParams
 } from "./controller-adapter.types"
+import { ControllerResponse } from "../types/controller.types"
 
 export default class FastifyControllerAdapter {
   private readonly request: FastifyRequest
@@ -93,7 +93,7 @@ export default class FastifyControllerAdapter {
       return
     }
     try {
-      const controllerResponse: AdapterResponse = await controller.execute(adaptedRequest)
+      const controllerResponse: ControllerResponse = await controller.execute(adaptedRequest)
       this.response.status(controllerResponse.status)
       this.response.send(controllerResponse.body)
     } catch (err) {

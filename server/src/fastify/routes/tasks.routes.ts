@@ -1,8 +1,12 @@
 import { FastifyPluginCallback } from "fastify"
 
-import FastifyControllerAdapter from "../../domain/adapters/fastify-controller.adapter"
+import callAdapterWith from "./functions/call-adapter-with.function"
 
 import CreateTaskController from "../../domain/controllers/tasks/create-task.controller"
+import DeleteTaskController from "../../domain/controllers/tasks/delete-task.controller"
+import FindTaskByIdController from "../../domain/controllers/tasks/find-task-by-id.controller"
+import FindTasksByUserIdController from "../../domain/controllers/tasks/find-tasks-by-user-id.controller"
+import UpdateTaskController from "../../domain/controllers/tasks/update-task.controller"
 
 /**
  * TASKS
@@ -10,29 +14,27 @@ import CreateTaskController from "../../domain/controllers/tasks/create-task.con
 const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _options) => {
   // CreateTask
   fastify.post("/api/tasks/user/:userId", async (request, response) => {
-    const controller = CreateTaskController.getInstance()
-    const controllerAdapter = new FastifyControllerAdapter(request, response)
-    controllerAdapter.executeController(controller)
+    callAdapterWith(CreateTaskController, request, response)
   })
 
   // DeleteTask
-  fastify.delete("/api/tasks/:taskId", async (_request, _response) => {
-    return "Delete Task"
+  fastify.delete("/api/tasks/:taskId", async (request, response) => {
+    callAdapterWith(DeleteTaskController, request, response)
   })
 
   // FindTaskById
-  fastify.get("/api/tasks/:taskId", async (_request, _response) => {
-    return "Find Task By Id"
+  fastify.get("/api/tasks/:taskId", async (request, response) => {
+    callAdapterWith(FindTaskByIdController, request, response)
   })
 
   // FindTasksByUserId
-  fastify.get("/api/tasks/user/:userId", async (_request, _response) => {
-    return "Find Tasks By User Id"
+  fastify.get("/api/tasks/user/:userId", async (request, response) => {
+    callAdapterWith(FindTasksByUserIdController, request, response)
   })
 
   // UpdateTask
-  fastify.put("/api/tasks/:taskId", async (_request, _response) => {
-    return "Update Task"
+  fastify.put("/api/tasks/:taskId", async (request, response) => {
+    callAdapterWith(UpdateTaskController, request, response)
   })
 }
 

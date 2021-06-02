@@ -1,47 +1,58 @@
 import { FastifyPluginCallback } from "fastify"
 
+import callAdapterWith from "./functions/call-adapter-with.function"
+
+import ClearCompleteTodosByTaskIdController from "../../domain/controllers/todos/clear-complete-todos-by-task-id.controller"
+import CreateTodoController from "../../domain/controllers/todos/create-todo.controller"
+import DeleteTodoController from "../../domain/controllers/todos/delete-todo.controller"
+import FindTodoByIdController from "../../domain/controllers/todos/find-todo-by-id.controller"
+import FindTodosByTaskIdController from "../../domain/controllers/todos/find-todos-by-task-id.controller"
+import SetTodoAsDoneController from "../../domain/controllers/todos/set-todo-as-done.controller"
+import SetTodoAsNotDoneController from "../../domain/controllers/todos/set-todo-as-not-done.controller"
+import UpdateTodoController from "../../domain/controllers/todos/update-todo.controller"
+
 /**
  * TODOS
  */
 const todosRoutesPluginCallback: FastifyPluginCallback = async (fastify, _options) => {
   // ClearCompleteTodosByTaskId
-  fastify.delete("/api/todos/task/:taskId", async (_request, _response) => {
-    return "Clear Complete Todos By Task Id"
+  fastify.delete("/api/todos/task/:taskId", async (request, response) => {
+    callAdapterWith(ClearCompleteTodosByTaskIdController, request, response)
   })
 
   // CreateTodo
-  fastify.post("/api/todos", async (_request, _response) => {
-    return "Create Todo"
+  fastify.post("/api/todos", async (request, response) => {
+    callAdapterWith(CreateTodoController, request, response)
   })
 
   // DeleteTodo
-  fastify.delete("/api/todos/:todoId", async (_request, _response) => {
-    return "Delete Todo"
+  fastify.delete("/api/todos/:todoId", async (request, response) => {
+    callAdapterWith(DeleteTodoController, request, response)
   })
 
   // FindTodoById
-  fastify.get("/api/todos/:todoId", async (_request, _response) => {
-    return "Delete Todo"
+  fastify.get("/api/todos/:todoId", async (request, response) => {
+    callAdapterWith(FindTodoByIdController, request, response)
   })
 
   // FindTodosByTaskId
-  fastify.get("/api/todos/task/:taskId", async (_request, _response) => {
-    return "Find Todos By Task Id"
+  fastify.get("/api/todos/task/:taskId", async (request, response) => {
+    callAdapterWith(FindTodosByTaskIdController, request, response)
   })
 
   // SetTodosAsDone
-  fastify.patch("/api/todos/setdone/:todoId", async (_request, _response) => {
-    return "Set Todo As Done"
+  fastify.patch("/api/todos/setdone/:todoId", async (request, response) => {
+    callAdapterWith(SetTodoAsDoneController, request, response)
   })
 
   // SetTodoAsNotDone
-  fastify.patch("/api/todos/setnotdone/:todoId", async (_request, _response) => {
-    return "Set Todo As Not Done"
+  fastify.patch("/api/todos/setnotdone/:todoId", async (request, response) => {
+    callAdapterWith(SetTodoAsNotDoneController, request, response)
   })
 
   // UpdateTodo
-  fastify.put("/api/todos/:todoId", async (_request, _response) => {
-    return "Update Todo"
+  fastify.put("/api/todos/:todoId", async (request, response) => {
+    callAdapterWith(UpdateTodoController, request, response)
   })
 }
 
