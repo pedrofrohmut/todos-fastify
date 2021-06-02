@@ -1,0 +1,15 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+
+# production
+/build
+
+# VIM
+*.swp
+*.swo
+
+# Yarn
+yarn.lock

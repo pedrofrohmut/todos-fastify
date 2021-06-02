@@ -1,0 +1,14 @@
+[DONE] 1. Scaffolding the project: yarn create next-app site
+
+[DONE] 2. Prepare the config files for the app to run
+  a - TypeScritp  support
+  b - eslint
+  c - editorconfig / prettier / prettierignore
+  d - gitignore
+  e - next.config.js
+
+[DONE] 3. Clean sheet of paper: clean up next scaffolded files and structure to begin as
+hello world project with typescript
+
+4. Styles: make the general pourpose styles of app global.css, classes.css and
+colors.css
