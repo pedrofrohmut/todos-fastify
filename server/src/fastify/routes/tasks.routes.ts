@@ -1,12 +1,18 @@
 import { FastifyPluginCallback } from "fastify"
 
+import FastifyControllerAdapter from "../../domain/adapters/fastify-controller.adapter"
+
+import CreateTaskController from "../../domain/controllers/tasks/create-task.controller"
+
 /**
  * TASKS
  */
 const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _options) => {
   // CreateTask
-  fastify.post("/api/tasks/user/:userId", async (_request, _response) => {
-    return "Create Task"
+  fastify.post("/api/tasks/user/:userId", async (request, response) => {
+    const controller = CreateTaskController.getInstance()
+    const controllerAdapter = new FastifyControllerAdapter(request, response)
+    controllerAdapter.executeController(controller)
   })
 
   // DeleteTask
