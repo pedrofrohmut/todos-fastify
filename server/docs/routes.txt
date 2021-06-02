@@ -1,0 +1,21 @@
+TASKS
+  Create: POST api/tasks/user/[userId]
+  Delete: DELETE api/tasks/[taskId]
+  FindById: GET api/tasks/[taskId]
+  FindByUserId: GET api/tasks/user/[userId]
+  UpdateTask: PUT api/tasks/[taskId]
+
+TODOS
+  ClearCompleteByTaskId: DELETE api/todos/task/[taskId]
+  Create: POST api/todos
+  Delete: DELETE api/todos/[todoId]
+  FindById: GET api/todos/[todoId]
+  FindByTaskId: GEt api/todos/task/[taskId]
+  SetDone: PATCH api/todos/setdone/[todosId]
+  SetNotDone: PATCH api/todos/setnotdone/[todoId]
+  Update: PUT api/todos/[todosId]
+
+USERS
+  Create: POST api/users
+  GetSignedUser: GET api/users/signed
+  SignIn: POST api/users/signin
