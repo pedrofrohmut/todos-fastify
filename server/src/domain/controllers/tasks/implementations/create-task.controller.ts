@@ -2,10 +2,12 @@ import DatabaseConnection from "../../../database/database-connection.interface"
 import CreateTaskUseCase from "../../../usecases/tasks/create-task-usecase.interface"
 import CreateTaskController from "../create-task-controller.interface"
 
-import { CreateTaskBody, CreateTaskRequest, CreateTaskResponse } from "../../../types/controller.types"
+import {
+  CreateTaskBody,
+  CreateTaskRequest,
+  CreateTaskResponse
+} from "../../../types/controller.types"
 
-import ConnectionFactory from "../../../database/connection.factory"
-import CreateTaskUseCaseImplementation from "../../../usecases/tasks/implementations/create-task.usecase"
 import MissingRequestBodyError from "../../../errors/request/missing-request-body.error"
 
 export default class CreateTaskControllerImplementation implements CreateTaskController {
@@ -15,12 +17,6 @@ export default class CreateTaskControllerImplementation implements CreateTaskCon
   constructor(connection: DatabaseConnection, createTaskUseCase: CreateTaskUseCase) {
     this.connection = connection
     this.createTaskUseCase = createTaskUseCase
-  }
-
-  public static getInstance() {
-    const connection = ConnectionFactory.getConnection()
-    const createTaskUseCase = new CreateTaskUseCaseImplementation()
-    return new CreateTaskControllerImplementation(connection, createTaskUseCase)
   }
 
   public async execute(request: CreateTaskRequest): Promise<CreateTaskResponse> {

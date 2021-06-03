@@ -2,9 +2,9 @@ import { FastifyPluginCallback } from "fastify"
 
 import callAdapterWith from "./functions/call-adapter-with.function"
 
-import CreateUserController from "../../domain/controllers/users/implementations/create-user.controller"
-import GetSignedUserController from "../../domain/controllers/users/implementations/get-signed-user.controller"
-import SignInUserController from "../../domain/controllers/users/implementations/sign-in-user.controller"
+import CreateUserControllerImplementation from "../../domain/controllers/users/implementations/create-user.controller"
+import GetSignedUserControllerImplementation from "../../domain/controllers/users/implementations/get-signed-user.controller"
+import SignInUserControllerImplementation from "../../domain/controllers/users/implementations/sign-in-user.controller"
 
 /**
  * USERS
@@ -12,17 +12,17 @@ import SignInUserController from "../../domain/controllers/users/implementations
 const usersRoutesPluginCallback: FastifyPluginCallback = async (fastify, _options) => {
   // CreateUser
   fastify.post("/api/users", async (request, response) => {
-    callAdapterWith(CreateUserController, request, response)
+    callAdapterWith(CreateUserControllerImplementation, request, response)
   })
 
   // GetSignedUser
   fastify.get("/api/users/signed", async (request, response) => {
-    callAdapterWith(GetSignedUserController, request, response)
+    callAdapterWith(GetSignedUserControllerImplementation, request, response)
   })
 
   // SignInUser
   fastify.post("/api/users/signin", async (request, response) => {
-    callAdapterWith(SignInUserController, request, response)
+    callAdapterWith(SignInUserControllerImplementation, request, response)
   })
 }
 

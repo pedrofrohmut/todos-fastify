@@ -62,8 +62,8 @@ export default class FastifyControllerAdapter {
     return params
   }
 
-  private createAdaptedRequest(request: FastifyRequest): AdapterRequest {
-    const { body, headers, params } = request
+  private createAdaptedRequest(): AdapterRequest {
+    const { body, headers, params } = this.request
     const adaptedBody: AdapterRequestBody = this.createAdaptedBody(body)
     const adaptedHeaders: AdapterRequestHeaders = this.createAdaptedHeaders(headers)
     const adaptedParams: AdapterRequestParams = this.createAdaptedParams(params)
@@ -75,10 +75,9 @@ export default class FastifyControllerAdapter {
     return adaptedRequest
   }
 
-  private sendAdapterErrorRespons(response: FastifyReply, message: string, error?: Error): void {
-    const errorMessage = error !== undefined && error.message || ""
-    response.status(500)
-    response.send(`[ControllerAdapter] ${message}. ${errorMessage}`)
+  private sendAdapterErrorResponse(message: string, error: Error): void {
+    this.response.status(500)
+    this.response.send(`[ControllerAdapter] ${message}. ${error.message}`)
   }
 
   private sendControllerResponse(controllerResponse: AdapterResponse): void {
@@ -89,22 +88,22 @@ export default class FastifyControllerAdapter {
   public async executeController(controller: AdapterController): Promise<void> {
     let adaptedRequest
     try {
-      adaptedRequest = this.createAdaptedRequest(this.request)
+      adaptedRequest = this.createAdaptedRequest()
     } catch (err) {
-      this.sendAdapterErrorRespons(this.response, "Error adapt the request", err)
+      this.sendAdapterErrorResponse("Error adapt the request", err)
       return
     }
     let controllerResponse
     try {
       controllerResponse = await controller.execute(adaptedRequest)
     } catch (err) {
-      this.sendAdapterErrorRespons(this.response, "Error to execute controller", err)
+      this.sendAdapterErrorResponse("Error to execute controller", err)
       return
     }
     try {
       this.sendControllerResponse(controllerResponse)
     } catch (err) {
-      this.sendAdapterErrorRespons(this.response, "Error to send adapter response", err)
+      this.sendAdapterErrorResponse("Error to send adapter response", err)
       return
     }
   }
