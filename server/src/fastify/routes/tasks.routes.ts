@@ -1,6 +1,6 @@
 import { FastifyPluginCallback } from "fastify"
 
-import callAdapterWith from "./functions/call-adapter-with.function"
+import callAdapterWith from "../../domain/adapters/controller/call-adapter-with.function"
 
 import CreateTaskControllerImplementation from "../../domain/controllers/tasks/implementations/create-task.controller"
 import DeleteTaskControllerImplementation from "../../domain/controllers/tasks/implementations/delete-task.controller"

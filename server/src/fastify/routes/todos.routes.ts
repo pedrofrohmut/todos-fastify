@@ -1,6 +1,6 @@
 import { FastifyPluginCallback } from "fastify"
 
-import callAdapterWith from "./functions/call-adapter-with.function"
+import callAdapterWith from "../../domain/adapters/controller/call-adapter-with.function"
 
 import ClearCompleteTodosByTaskIdControllerImplementation from "../../domain/controllers/todos/implementations/clear-complete-todos-by-task-id.controller"
 import CreateTodoControllerImplementation from "../../domain/controllers/todos/implementations/create-todo.controller"

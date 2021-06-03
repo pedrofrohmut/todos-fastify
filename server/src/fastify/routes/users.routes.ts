@@ -1,6 +1,6 @@
 import { FastifyPluginCallback } from "fastify"
 
-import callAdapterWith from "./functions/call-adapter-with.function"
+import callAdapterWith from "../../domain/adapters/controller/call-adapter-with.function"
 
 import CreateUserControllerImplementation from "../../domain/controllers/users/implementations/create-user.controller"
 import GetSignedUserControllerImplementation from "../../domain/controllers/users/implementations/get-signed-user.controller"

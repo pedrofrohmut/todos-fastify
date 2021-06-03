@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 
-import FastifyControllerAdapter from "../../../domain/adapters/fastify-controller.adapter"
+import FastifyControllerAdapter from "./fastify-controller.adapter"
 import ControllerFactory from "../../../domain/controllers/controller.factory"
 
 const callAdapterWith = (controller: any, request: FastifyRequest, response: FastifyReply) => {
