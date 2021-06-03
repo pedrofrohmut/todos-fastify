@@ -13,7 +13,7 @@ import UpdateTaskControllerImplementation from "../../domain/controllers/tasks/i
  */
 const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _options) => {
   // CreateTask
-  fastify.post("/api/tasks/user/:userId", async (request, response) => {
+  fastify.post("/api/tasks", async (request, response) => {
     callAdapterWith(CreateTaskControllerImplementation, request, response)
   })
 
