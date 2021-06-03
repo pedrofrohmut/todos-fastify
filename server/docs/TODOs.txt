@@ -12,7 +12,8 @@
 2. Create Controller Interface/Implementation for Each Route and
 Controller.Types
 
-3. Controller has static method getInstance but public constructor to be tested
+3. ControllerFactory to generate controllers with dependencies injected and
+ready-to-use
 
 4. Create ConnectionFactory, DatabaseConnection.Interface and
 PostgresDataBaseConnection
