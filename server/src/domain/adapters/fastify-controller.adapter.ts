@@ -75,30 +75,37 @@ export default class FastifyControllerAdapter {
     return adaptedRequest
   }
 
+  private sendAdapterErrorRespons(response: FastifyReply, message: string, error?: Error): void {
+    const errorMessage = error !== undefined && error.message || ""
+    response.status(500)
+    response.send(`[ControllerAdapter] ${message}. ${errorMessage}`)
+  }
+
+  private sendControllerResponse(controllerResponse: AdapterResponse): void {
+    this.response.status(controllerResponse.status)
+    this.response.send(controllerResponse.body)
+  }
+
   public async executeController(controller: AdapterController): Promise<void> {
-    let adaptedRequest = undefined
-    let adaptRequestErr = undefined
+    let adaptedRequest
     try {
       adaptedRequest = this.createAdaptedRequest(this.request)
     } catch (err) {
-      adaptRequestErr = err
+      this.sendAdapterErrorRespons(this.response, "Error adapt the request", err)
+      return
     }
-    if (adaptedRequest === undefined || adaptRequestErr !== undefined) {
-      this.response.status(500)
-      this.response.send(
-        "[ControllerAdapter] Error to adapt the request " +
-          (adaptRequestErr ? adaptRequestErr.message : "")
-      )
+    let controllerResponse
+    try {
+      controllerResponse = await controller.execute(adaptedRequest)
+    } catch (err) {
+      this.sendAdapterErrorRespons(this.response, "Error to execute controller", err)
       return
     }
     try {
-      const controllerResponse: AdapterResponse = await controller.execute(adaptedRequest)
-      this.response.status(controllerResponse.status)
-      this.response.send(controllerResponse.body)
+      this.sendControllerResponse(controllerResponse)
     } catch (err) {
-      this.response
-        .status(500)
-        .send("[ControllerAdapter] Error to execute controller " + err.message)
+      this.sendAdapterErrorRespons(this.response, "Error to send adapter response", err)
+      return
     }
   }
 }
