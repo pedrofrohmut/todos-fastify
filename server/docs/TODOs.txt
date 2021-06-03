@@ -1,0 +1,40 @@
+#### FASTIFY #################################################################
+
+1. Create Routes for Task, Todos and Users
+
+2. ControllerAdapter callControllers at routes with helper function
+"callWithAdapter"
+
+#### DOMAIN ###################################################################
+
+1. Create ControllerAdapterTypes and FastifyControllerAdapter
+
+2. Create Controller Interface/Implementation for Each Route and
+Controller.Types
+
+3. Controller has static method getInstance but public constructor to be tested
+
+4. Create ConnectionFactory, DatabaseConnection.Interface and
+PostgresDataBaseConnection
+
+5. Create UseCases.Interface and UserCases.Implementations
+
+6. Create Services.Interfaces and Services.Implementations
+
+#### TESTS ###################################################################
+
+1. Config Jest with typescript / jest.config / babel.config
+
+2. Add to Jest global-setup and global-teardown for start/cleanUp off tests
+
+3. Test-env for test env variables
+
+4. Fakes to make Tasks, Todos, Users and JWTs
+
+5. ApiCallers with AxiosAdapter
+
+6. Test Fastify.Routes
+
+7. Test Fastify.Routes.Functions
+
+8. Test Domain.Controllers with mocks

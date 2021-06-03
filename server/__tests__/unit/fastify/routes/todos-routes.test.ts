@@ -5,7 +5,7 @@ describe("[ROUTES] Todos", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.delete(SERVER_URL + "/api/todos/task/1")
+      response = await axios.delete(process.env.SERVER_URL + "/api/todos/task/1")
     } catch (err) {
       requestErr = err
     }
@@ -17,7 +17,7 @@ describe("[ROUTES] Todos", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.post(SERVER_URL + "/api/todos", {})
+      response = await axios.post(process.env.SERVER_URL + "/api/todos", {})
     } catch (err) {
       requestErr = err
     }
@@ -29,7 +29,7 @@ describe("[ROUTES] Todos", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.delete(SERVER_URL + "/api/todos/1")
+      response = await axios.delete(process.env.SERVER_URL + "/api/todos/1")
     } catch (err) {
       requestErr = err
     }
@@ -41,7 +41,7 @@ describe("[ROUTES] Todos", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.get(SERVER_URL + "/api/todos/1")
+      response = await axios.get(process.env.SERVER_URL + "/api/todos/1")
     } catch (err) {
       requestErr = err
     }
@@ -53,7 +53,7 @@ describe("[ROUTES] Todos", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.get(SERVER_URL + "/api/todos/task/1")
+      response = await axios.get(process.env.SERVER_URL + "/api/todos/task/1")
     } catch (err) {
       requestErr = err
     }
@@ -65,7 +65,7 @@ describe("[ROUTES] Todos", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.patch(SERVER_URL + "/api/todos/setdone/1")
+      response = await axios.patch(process.env.SERVER_URL + "/api/todos/setdone/1")
     } catch (err) {
       requestErr = err
     }
@@ -77,7 +77,7 @@ describe("[ROUTES] Todos", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.patch(SERVER_URL + "/api/todos/setnotdone/1")
+      response = await axios.patch(process.env.SERVER_URL + "/api/todos/setnotdone/1")
     } catch (err) {
       requestErr = err
     }
@@ -89,7 +89,7 @@ describe("[ROUTES] Todos", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.put(SERVER_URL + "/api/todos/1", {})
+      response = await axios.put(process.env.SERVER_URL + "/api/todos/1", {})
     } catch (err) {
       requestErr = err
     }

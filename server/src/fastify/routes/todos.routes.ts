@@ -2,14 +2,14 @@ import { FastifyPluginCallback } from "fastify"
 
 import callAdapterWith from "./functions/call-adapter-with.function"
 
-import ClearCompleteTodosByTaskIdController from "../../domain/controllers/todos/clear-complete-todos-by-task-id.controller"
-import CreateTodoController from "../../domain/controllers/todos/create-todo.controller"
-import DeleteTodoController from "../../domain/controllers/todos/delete-todo.controller"
-import FindTodoByIdController from "../../domain/controllers/todos/find-todo-by-id.controller"
-import FindTodosByTaskIdController from "../../domain/controllers/todos/find-todos-by-task-id.controller"
-import SetTodoAsDoneController from "../../domain/controllers/todos/set-todo-as-done.controller"
-import SetTodoAsNotDoneController from "../../domain/controllers/todos/set-todo-as-not-done.controller"
-import UpdateTodoController from "../../domain/controllers/todos/update-todo.controller"
+import ClearCompleteTodosByTaskIdController from "../../domain/controllers/todos/implementations/clear-complete-todos-by-task-id.controller"
+import CreateTodoController from "../../domain/controllers/todos/implementations/create-todo.controller"
+import DeleteTodoController from "../../domain/controllers/todos/implementations/delete-todo.controller"
+import FindTodoByIdController from "../../domain/controllers/todos/implementations/find-todo-by-id.controller"
+import FindTodosByTaskIdController from "../../domain/controllers/todos/implementations/find-todos-by-task-id.controller"
+import SetTodoAsDoneController from "../../domain/controllers/todos/implementations/set-todo-as-done.controller"
+import SetTodoAsNotDoneController from "../../domain/controllers/todos/implementations/set-todo-as-not-done.controller"
+import UpdateTodoController from "../../domain/controllers/todos/implementations/update-todo.controller"
 
 /**
  * TODOS

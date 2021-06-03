@@ -2,11 +2,11 @@ import { FastifyPluginCallback } from "fastify"
 
 import callAdapterWith from "./functions/call-adapter-with.function"
 
-import CreateTaskController from "../../domain/controllers/tasks/create-task.controller"
-import DeleteTaskController from "../../domain/controllers/tasks/delete-task.controller"
-import FindTaskByIdController from "../../domain/controllers/tasks/find-task-by-id.controller"
-import FindTasksByUserIdController from "../../domain/controllers/tasks/find-tasks-by-user-id.controller"
-import UpdateTaskController from "../../domain/controllers/tasks/update-task.controller"
+import CreateTaskController from "../../domain/controllers/tasks/implementations/create-task.controller"
+import DeleteTaskController from "../../domain/controllers/tasks/implementations/delete-task.controller"
+import FindTaskByIdController from "../../domain/controllers/tasks/implementations/find-task-by-id.controller"
+import FindTasksByUserIdController from "../../domain/controllers/tasks/implementations/find-tasks-by-user-id.controller"
+import UpdateTaskController from "../../domain/controllers/tasks/implementations/update-task.controller"
 
 /**
  * TASKS

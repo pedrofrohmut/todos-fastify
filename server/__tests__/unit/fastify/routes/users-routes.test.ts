@@ -5,7 +5,7 @@ describe("[ROUTES] Users", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.post(SERVER_URL + "/api/users", {})
+      response = await axios.post(process.env.SERVER_URL + "/api/users", {})
     } catch (err) {
       requestErr = err
     }
@@ -17,7 +17,7 @@ describe("[ROUTES] Users", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.get(SERVER_URL + "/api/users/signed")
+      response = await axios.get(process.env.SERVER_URL + "/api/users/signed")
     } catch (err) {
       requestErr = err
     }
@@ -29,7 +29,7 @@ describe("[ROUTES] Users", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.post(SERVER_URL + "/api/users/signin", {})
+      response = await axios.post(process.env.SERVER_URL + "/api/users/signin", {})
     } catch (err) {
       requestErr = err
     }

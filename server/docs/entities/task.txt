@@ -1,0 +1,4 @@
+id: uuid
+name: text
+description: text
+userId: text

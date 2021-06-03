@@ -5,3 +5,7 @@
 *.swo
 
 yarn.lock
+
+# ENV
+/__tests__/test-env.js
+.env

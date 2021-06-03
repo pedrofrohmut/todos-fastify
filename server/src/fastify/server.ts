@@ -1,4 +1,5 @@
 import Fastify, { FastifyInstance } from "fastify"
+import fastifyEnv from "fastify-env"
 import formbody from "fastify-formbody"
 
 import tasksRoutes from "./routes/tasks.routes"
@@ -15,6 +16,31 @@ const server: FastifyInstance = Fastify({
  */
 // Body Parser
 server.register(formbody)
+
+/**
+ * ENV Setup/validation
+ */
+const envSchema = {
+  type: "object",
+  required: ["PORT", "JWT_SECRET", "PGUSER", "PGHOST", "PGPASSWORD", "PGDATABASE", "PGPORT"],
+  properties: {
+    PORT: { type: "string", default: 5000 }
+  }
+}
+server
+  .register(fastifyEnv, {
+    confKey: "config",
+    dotenv: true,
+    schema: envSchema,
+    data: process.env
+  })
+  .ready(err => {
+    if (err) {
+      console.error(err)
+    }
+    // @ts-ignore
+    console.log(server.config)
+  })
 
 /**
  * ROUTES

@@ -2,9 +2,9 @@ import { FastifyPluginCallback } from "fastify"
 
 import callAdapterWith from "./functions/call-adapter-with.function"
 
-import CreateUserController from "../../domain/controllers/users/create-user.controller"
-import GetSignedUserController from "../../domain/controllers/users/get-signed-user.controller"
-import SignInUserController from "../../domain/controllers/users/sign-in-user.controller"
+import CreateUserController from "../../domain/controllers/users/implementations/create-user.controller"
+import GetSignedUserController from "../../domain/controllers/users/implementations/get-signed-user.controller"
+import SignInUserController from "../../domain/controllers/users/implementations/sign-in-user.controller"
 
 /**
  * USERS

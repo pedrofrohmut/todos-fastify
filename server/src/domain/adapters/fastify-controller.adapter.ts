@@ -1,15 +1,14 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { IncomingHttpHeaders } from "http"
 
-import Controller from "../controllers/controller.interface"
-
 import {
+  AdapterController,
   AdapterRequest,
   AdapterRequestBody,
   AdapterRequestHeaders,
-  AdapterRequestParams
+  AdapterRequestParams,
+  AdapterResponse
 } from "./controller-adapter.types"
-import { ControllerResponse } from "../types/controller.types"
 
 export default class FastifyControllerAdapter {
   private readonly request: FastifyRequest
@@ -76,7 +75,7 @@ export default class FastifyControllerAdapter {
     return adaptedRequest
   }
 
-  public async executeController(controller: Controller): Promise<void> {
+  public async executeController(controller: AdapterController): Promise<void> {
     let adaptedRequest = undefined
     let adaptRequestErr = undefined
     try {
@@ -93,7 +92,7 @@ export default class FastifyControllerAdapter {
       return
     }
     try {
-      const controllerResponse: ControllerResponse = await controller.execute(adaptedRequest)
+      const controllerResponse: AdapterResponse = await controller.execute(adaptedRequest)
       this.response.status(controllerResponse.status)
       this.response.send(controllerResponse.body)
     } catch (err) {

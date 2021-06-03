@@ -2,22 +2,23 @@ import axios from "axios"
 
 describe("[ROUTES] Tasks", () => {
   test("[Route] Create Task", async () => {
-    let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.post(SERVER_URL + "/api/tasks/user/1", {})
+      response = await axios.post(process.env.SERVER_URL + "/api/tasks/user/1", {})
+      expect(response).toBeDefined()
     } catch (err) {
-      requestErr = err
+      expect(err).toBeDefined()
+      expect(err.response).toBeDefined()
+      expect(err.response.status).toBeDefined()
+      expect(err.response.status).not.toBe(404)
     }
-    expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
   })
 
   test("[Route] Delete Task", async () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.delete(SERVER_URL + "/api/tasks/1")
+      response = await axios.delete(process.env.SERVER_URL + "/api/tasks/1")
     } catch (err) {
       requestErr = err
     }
@@ -29,7 +30,7 @@ describe("[ROUTES] Tasks", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.get(SERVER_URL + "/api/tasks/1")
+      response = await axios.get(process.env.SERVER_URL + "/api/tasks/1")
     } catch (err) {
       requestErr = err
     }
@@ -41,7 +42,7 @@ describe("[ROUTES] Tasks", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.get(SERVER_URL + "/api/tasks/user/1")
+      response = await axios.get(process.env.SERVER_URL + "/api/tasks/user/1")
     } catch (err) {
       requestErr = err
     }
@@ -53,7 +54,7 @@ describe("[ROUTES] Tasks", () => {
     let requestErr = undefined
     let response = undefined
     try {
-      response = await axios.put(SERVER_URL + "/api/tasks/1", {})
+      response = await axios.put(process.env.SERVER_URL + "/api/tasks/1", {})
     } catch (err) {
       requestErr = err
     }
