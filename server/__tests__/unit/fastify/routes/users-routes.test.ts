@@ -1,39 +1,24 @@
-import axios from "axios"
+import UsersApiCaller from "../../../utils/api/users-api-caller.util"
 
 describe("[ROUTES] Users", () => {
   test("[Route] Create User", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.post(process.env.SERVER_URL + "/api/users", {})
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await UsersApiCaller.createUser(undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
-  test("[Route] Clear Complete Todos By Task Id", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.get(process.env.SERVER_URL + "/api/users/signed")
-    } catch (err) {
-      requestErr = err
-    }
+  test("[Route] Get Signed User", async () => {
+    const response = await UsersApiCaller.getSignedUser(undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
-  test("[Route] Clear Complete Todos By Task Id", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.post(process.env.SERVER_URL + "/api/users/signin", {})
-    } catch (err) {
-      requestErr = err
-    }
+  test("[Route] Sign In User", async () => {
+    const response = await UsersApiCaller.signInUser(undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 })

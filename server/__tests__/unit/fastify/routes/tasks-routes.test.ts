@@ -1,64 +1,38 @@
-import axios from "axios"
+import TasksApiCaller from "../../../utils/api/tasks-api-caller.util"
 
 describe("[ROUTES] Tasks", () => {
   test("[Route] Create Task", async () => {
-    let response = undefined
-    try {
-      response = await axios.post(process.env.SERVER_URL + "/api/tasks/user/1", {})
-      expect(response).toBeDefined()
-    } catch (err) {
-      expect(err).toBeDefined()
-      expect(err.response).toBeDefined()
-      expect(err.response.status).toBeDefined()
-      expect(err.response.status).not.toBe(404)
-    }
+    const response = await TasksApiCaller.createTask(undefined, undefined)
+    expect(response).toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
   test("[Route] Delete Task", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.delete(process.env.SERVER_URL + "/api/tasks/1")
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await TasksApiCaller.deleteTask(undefined, undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
   test("[Route] Find Task By Id", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.get(process.env.SERVER_URL + "/api/tasks/1")
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await TasksApiCaller.findTaskById(undefined, undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
   test("[Route] Find Tasks By User Id", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.get(process.env.SERVER_URL + "/api/tasks/user/1")
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await TasksApiCaller.findTasksByUserId(undefined, undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
   test("[Route] Update Task", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.put(process.env.SERVER_URL + "/api/tasks/1", {})
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await TasksApiCaller.updateTask(undefined, undefined, undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 })

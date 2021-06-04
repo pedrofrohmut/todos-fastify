@@ -1,99 +1,59 @@
-import axios from "axios"
+import TodosApiCaller from "../../../utils/api/todos-api-caller.util"
 
 describe("[ROUTES] Todos", () => {
   test("[Route] Clear Complete Todos By Task Id", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.delete(process.env.SERVER_URL + "/api/todos/task/1")
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await TodosApiCaller.clearCompleteTodosByTaskId(undefined, undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
   test("[Route] Create Todo", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.post(process.env.SERVER_URL + "/api/todos", {})
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await TodosApiCaller.createTodo(undefined, undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
   test("[Route] Delete Todo", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.delete(process.env.SERVER_URL + "/api/todos/1")
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await TodosApiCaller.deleteTodo(undefined, undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
   test("[Route] Find Todo By Id", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.get(process.env.SERVER_URL + "/api/todos/1")
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await TodosApiCaller.findTodoById(undefined, undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
   test("[Route] Find Todos By Task Id", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.get(process.env.SERVER_URL + "/api/todos/task/1")
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await TodosApiCaller.findTodosByTaskId(undefined, undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
   test("[Route] Set Todo As Done", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.patch(process.env.SERVER_URL + "/api/todos/setdone/1")
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await TodosApiCaller.setTodoAsDone(undefined, undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
   test("[Route] Set Todo As Not Done", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.patch(process.env.SERVER_URL + "/api/todos/setnotdone/1")
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await TodosApiCaller.setTodoAsNotDone(undefined, undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 
   test("[Route] Update Todo", async () => {
-    let requestErr = undefined
-    let response = undefined
-    try {
-      response = await axios.put(process.env.SERVER_URL + "/api/todos/1", {})
-    } catch (err) {
-      requestErr = err
-    }
+    const response = await TodosApiCaller.updateTodo(undefined, undefined, undefined)
     expect(response).toBeDefined()
-    expect(requestErr).not.toBeDefined()
+    expect(response.status).toBeDefined()
+    expect(response.status).not.toBe(404)
   })
 })
