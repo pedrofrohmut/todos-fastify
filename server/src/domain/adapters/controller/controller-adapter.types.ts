@@ -1,24 +1,26 @@
-export type AdapterRequestBody = object | null
+export type AdaptedRequestBody = object | null
 
-export type AdapterController = {
-  execute(request: AdapterRequest): Promise<AdapterResponse>
+export type AdaptedRequest = {
+  body?: AdaptedRequestBody
+  headers?: AdaptedRequestHeaders
+  params?: AdaptedRequestParams
 }
 
-export type AdapterRequestHeaders = { authenticationToken: string } | null
+export type AdaptedRequestHeaders =
+  | { authenticationToken: string }
+  | null
 
-export type AdapterRequestParams =
+export type AdaptedRequestParams =
   | { userId: string }
   | { taskId: string }
   | { todoId: string }
   | null
 
-export type AdapterRequest = {
-  body?: AdapterRequestBody
-  headers?: AdapterRequestHeaders
-  params?: AdapterRequestParams
+export type Controller = {
+  execute(request: AdaptedRequest): Promise<ControllerResponse>
 }
 
-export type AdapterResponse = {
+export type ControllerResponse = {
   status: number
   body?: any
 }
