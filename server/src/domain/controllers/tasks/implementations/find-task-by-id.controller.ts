@@ -1,18 +1,12 @@
-import Controller from "../controller.interface"
+import { FindTaskByIdRequest } from "../../../types/controller/request.types"
+import { FindTaskByIdResponse } from "../../../types/controller/response.types"
 
-import { AdapterRequest } from "../../adapters/controller-adapter.types"
-import { ControllerResponse } from "../../types/controller.types"
+import FindTaskByIdController from "../find-task-by-id-controller.interface"
 
-export default class FindTaskByIdController implements Controller {
-  private constructor() {}
+export default class FindTaskByIdControllerImplementation implements FindTaskByIdController {
+  public constructor() {}
 
-  public static getInstance() {
-    return new FindTaskByIdController()
-  }
-
-  public async execute(request: AdapterRequest): Promise<ControllerResponse> {
-    return {
-      status: 200
-    }
+  public async execute(_request: FindTaskByIdRequest): Promise<FindTaskByIdResponse> {
+    throw new Error("Method not implemented.")
   }
 }

@@ -1,18 +1,14 @@
-import Controller from "../controller.interface"
+import { SetTodoAsNotDoneRequest } from "../../../types/controller/request.types"
+import { SetTodoAsNotDoneResponse } from "../../../types/controller/response.types"
 
-import { AdapterRequest } from "../../adapters/controller-adapter.types"
-import { ControllerResponse } from "../../types/controller.types"
+import SetTodoAsNotDoneController from "../set-todo-as-not-done-controller.interface"
 
-export default class SetTodoAsNotDoneController implements Controller {
-  private constructor() {}
+export default class SetTodoAsNotDoneControllerImplementation
+  implements SetTodoAsNotDoneController
+{
+  public constructor() {}
 
-  public static getInstance() {
-    return new SetTodoAsNotDoneController()
-  }
-
-  public async execute(request: AdapterRequest): Promise<ControllerResponse> {
-    return {
-      status: 204
-    }
+  public async execute(_request: SetTodoAsNotDoneRequest): Promise<SetTodoAsNotDoneResponse> {
+    throw new Error("Method not implemented.")
   }
 }

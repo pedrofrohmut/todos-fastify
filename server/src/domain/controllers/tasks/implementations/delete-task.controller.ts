@@ -1,18 +1,12 @@
-import Controller from "../controller.interface"
+import { DeleteTaskRequest } from "../../../types/controller/request.types"
+import { DeleteTaskResponse } from "../../../types/controller/response.types"
 
-import { AdapterRequest } from "../../adapters/controller-adapter.types"
-import { ControllerResponse } from "../../types/controller.types"
+import DeleteTaskController from "../delete-task-controller.interface"
 
-export default class DeleteTaskController implements Controller {
-  private constructor() {}
+export default class DeleteTaskControllerImplementation implements DeleteTaskController {
+  public constructor() {}
 
-  public static getInstance() {
-    return new DeleteTaskController()
-  }
-
-  public async execute(request: AdapterRequest): Promise<ControllerResponse> {
-    return {
-      status: 204
-    }
+  public async execute(_request: DeleteTaskRequest): Promise<DeleteTaskResponse> {
+    throw new Error("Method not implemented.")
   }
 }

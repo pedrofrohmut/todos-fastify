@@ -1,18 +1,14 @@
-import Controller from "../controller.interface"
+import { FindTasksByUserIdRequest } from "../../../types/controller/request.types"
+import { FindTasksByUserIdResponse } from "../../../types/controller/response.types"
 
-import { AdapterRequest } from "../../adapters/controller-adapter.types"
-import { ControllerResponse } from "../../types/controller.types"
+import FindTasksByUserIdController from "../find-task-by-user-id-controller.interface"
 
-export default class FindTasksByUserIdController implements Controller {
-  private constructor() {}
+export default class FindTasksByUserIdControllerImplementation
+  implements FindTasksByUserIdController
+{
+  public constructor() {}
 
-  public static getInstance() {
-    return new FindTasksByUserIdController()
-  }
-
-  public async execute(request: AdapterRequest): Promise<ControllerResponse> {
-    return {
-      status: 200
-    }
+  public async execute(_request: FindTasksByUserIdRequest): Promise<FindTasksByUserIdResponse> {
+    throw new Error("Method not implemented.")
   }
 }

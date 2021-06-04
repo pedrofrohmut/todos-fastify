@@ -1,18 +1,12 @@
-import Controller from "../controller.interface"
+import { UpdateTaskRequest } from "../../../types/controller/request.types"
+import { UpdateTaskResponse } from "../../../types/controller/response.types"
 
-import { AdapterRequest } from "../../adapters/controller-adapter.types"
-import { ControllerResponse } from "../../types/controller.types"
+import UpdateTaskController from "../update-task-controller.interface"
 
-export default class UpdateTaskController implements Controller {
-  private constructor() {}
+export default class UpdateTaskControllerImplementation implements UpdateTaskController {
+  public constructor() {}
 
-  public static getInstance() {
-    return new UpdateTaskController()
-  }
-
-  public async execute(request: AdapterRequest): Promise<ControllerResponse> {
-    return {
-      status: 204
-    }
+  public async execute(_request: UpdateTaskRequest): Promise<UpdateTaskResponse> {
+    throw new Error("Method not implemented.")
   }
 }

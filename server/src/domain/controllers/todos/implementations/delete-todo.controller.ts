@@ -1,18 +1,12 @@
-import Controller from "../controller.interface"
+import { DeleteTodoRequest } from "../../../types/controller/request.types"
+import { DeleteTodoResponse } from "../../../types/controller/response.types"
 
-import { AdapterRequest } from "../../adapters/controller-adapter.types"
-import { ControllerResponse } from "../../types/controller.types"
+import DeleteTodoController from "../delete-todo-controller.interface"
 
-export default class DeleteTodoController implements Controller {
-  private constructor() {}
+export default class DeleteTodoControllerImplementation implements DeleteTodoController {
+  public constructor() {}
 
-  public static getInstance() {
-    return new DeleteTodoController()
-  }
-
-  public async execute(request: AdapterRequest): Promise<ControllerResponse> {
-    return {
-      status: 204
-    }
+  public async execute(_request: DeleteTodoRequest): Promise<DeleteTodoResponse> {
+    throw new Error("Method not implemented.")
   }
 }

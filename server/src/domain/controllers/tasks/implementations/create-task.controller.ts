@@ -1,39 +1,12 @@
-import DatabaseConnection from "../../../database/database-connection.interface"
-import CreateTaskUseCase from "../../../usecases/tasks/create-task-usecase.interface"
+import { CreateTaskRequest } from "../../../types/controller/request.types"
+import { CreateTaskResponse } from "../../../types/controller/response.types"
+
 import CreateTaskController from "../create-task-controller.interface"
 
-import {
-  CreateTaskBody,
-  CreateTaskRequest,
-  CreateTaskResponse
-} from "../../../types/controller.types"
-
-import MissingRequestBodyError from "../../../errors/request/missing-request-body.error"
-
 export default class CreateTaskControllerImplementation implements CreateTaskController {
-  private readonly connection: DatabaseConnection
-  private readonly createTaskUseCase: CreateTaskUseCase
+  public constructor() {}
 
-  constructor(connection: DatabaseConnection, createTaskUseCase: CreateTaskUseCase) {
-    this.connection = connection
-    this.createTaskUseCase = createTaskUseCase
-  }
-
-  public async execute(request: CreateTaskRequest): Promise<CreateTaskResponse> {
-    if (request.body === null) {
-      return { status: 400, body: MissingRequestBodyError.message }
-    }
-    const { name, description } = request.body
-    const { userId } = request.params
-    const newTask: CreateTaskBody = { name, description }
-    try {
-      await this.connection.open()
-      await this.createTaskUseCase.execute(newTask, userId)
-      return { status: 201 }
-    } catch (err) {
-      return { status: 500, body: "[Controller] Error to create a task. " + err.message }
-    } finally {
-      await this.connection.close()
-    }
+  public async execute(_request: CreateTaskRequest): Promise<CreateTaskResponse> {
+    throw new Error("Method not implemented.")
   }
 }

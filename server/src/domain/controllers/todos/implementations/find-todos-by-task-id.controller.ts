@@ -1,18 +1,14 @@
-import Controller from "../controller.interface"
+import { FindTodosByTaskIdRequest } from "../../../types/controller/request.types"
+import { FindTodosByTaskIdResponse } from "../../../types/controller/response.types"
 
-import { AdapterRequest } from "../../adapters/controller-adapter.types"
-import { ControllerResponse } from "../../types/controller.types"
+import FindTodosByTaskIdController from "../find-todos-by-task-id-controller.interface"
 
-export default class FindTodosByTaskIdController implements Controller {
-  private constructor() {}
+export default class FindTodosByTaskIdControllerImplementation
+  implements FindTodosByTaskIdController
+{
+  public constructor() {}
 
-  public static getInstance() {
-    return new FindTodosByTaskIdController()
-  }
-
-  public async execute(request: AdapterRequest): Promise<ControllerResponse> {
-    return {
-      status: 204
-    }
+  public async execute(_request: FindTodosByTaskIdRequest): Promise<FindTodosByTaskIdResponse> {
+    throw new Error("Method not implemented.")
   }
 }

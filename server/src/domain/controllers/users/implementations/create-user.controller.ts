@@ -1,18 +1,12 @@
-import Controller from "../controller.interface"
+import { CreateUserRequest } from "../../../types/controller/request.types"
+import { CreateUserResponse } from "../../../types/controller/response.types"
 
-import { AdapterRequest } from "../../adapters/controller-adapter.types"
-import { ControllerResponse } from "../../types/controller.types"
+import CreateUserController from "../create-user-controller.interface"
 
-export default class CreateUserController implements Controller {
-  private constructor() {}
+export default class CreateUserControllerImplementation implements CreateUserController {
+  public constructor() {}
 
-  public static getInstance() {
-    return new CreateUserController()
-  }
-
-  public async execute(request: AdapterRequest): Promise<ControllerResponse> {
-    return {
-      status: 204
-    }
+  public async execute(_request: CreateUserRequest): Promise<CreateUserResponse> {
+    throw new Error("Method not implemented.")
   }
 }

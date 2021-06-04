@@ -1,18 +1,16 @@
-import Controller from "../controller.interface"
+import { ClearCompleteTodosByTaskIdRequest } from "../../../types/controller/request.types"
+import { ClearCompleteTodosByTaskIdResponse } from "../../../types/controller/response.types"
 
-import { AdapterRequest } from "../../adapters/controller-adapter.types"
-import { ControllerResponse } from "../../types/controller.types"
+import ClearCompleteTodosByTaskIdController from "../clear-complete-todos-by-task-id-controller.interface"
 
-export default class ClearCompleteTodosByTaskIdController implements Controller {
-  private constructor() {}
+export default class ClearCompleteTodoByTaskIdControllerImplementation
+  implements ClearCompleteTodosByTaskIdController
+{
+  public constructor() {}
 
-  public static getInstance() {
-    return new ClearCompleteTodosByTaskIdController()
-  }
-
-  public async execute(request: AdapterRequest): Promise<ControllerResponse> {
-    return {
-      status: 204
-    }
+  public async execute(
+    _request: ClearCompleteTodosByTaskIdRequest
+  ): Promise<ClearCompleteTodosByTaskIdResponse> {
+    throw new Error("Method not implemented.")
   }
 }

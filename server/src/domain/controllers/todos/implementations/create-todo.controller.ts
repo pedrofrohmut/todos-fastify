@@ -1,18 +1,12 @@
-import Controller from "../controller.interface"
+import { CreateTodoRequest } from "../../../types/controller/request.types"
+import { CreateTodoResponse } from "../../../types/controller/response.types"
 
-import { AdapterRequest } from "../../adapters/controller-adapter.types"
-import { ControllerResponse } from "../../types/controller.types"
+import CreateTodoController from "../create-todo-controller.interface"
 
-export default class CreateTodoController implements Controller {
-  private constructor() {}
+export default class CreateTodoControllerImplementation implements CreateTodoController {
+  public constructor() {}
 
-  public static getInstance() {
-    return new CreateTodoController()
-  }
-
-  public async execute(request: AdapterRequest): Promise<ControllerResponse> {
-    return {
-      status: 204
-    }
+  public async execute(_request: CreateTodoRequest): Promise<CreateTodoResponse> {
+    throw new Error("Method not implemented.")
   }
 }

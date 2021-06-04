@@ -1,18 +1,12 @@
-import Controller from "../controller.interface"
+import { GetSignedUserRequest } from "../../../types/controller/request.types"
+import { GetSignedUserResponse } from "../../../types/controller/response.types"
 
-import { AdapterRequest } from "../../adapters/controller-adapter.types"
-import { ControllerResponse } from "../../types/controller.types"
+import GetSignedUserController from "../get-signed-user-controller.interface"
 
-export default class GetSignedUserController implements Controller {
-  private constructor() {}
+export default class GetSignedUserControllerImplementation implements GetSignedUserController {
+  public constructor() {}
 
-  public static getInstance() {
-    return new GetSignedUserController()
-  }
-
-  public async execute(request: AdapterRequest): Promise<ControllerResponse> {
-    return {
-      status: 204
-    }
+  public async execute(_request: GetSignedUserRequest): Promise<GetSignedUserResponse> {
+    throw new Error("Method not implemented.")
   }
 }
