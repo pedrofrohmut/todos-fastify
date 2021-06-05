@@ -1,24 +1,24 @@
-import UsersApiCaller from "../../../utils/api/users-api-caller.util"
+import {buildTestServerWithAllRoutes} from "../../../utils/server/fastify-test.server"
 
 describe("[ROUTES] Users", () => {
+  const server = buildTestServerWithAllRoutes()
+
+  afterAll(() => {
+    server.close()
+  })
+
   test("[Route] Create User", async () => {
-    const response = await UsersApiCaller.createUser(undefined)
-    expect(response).toBeDefined()
-    expect(response.status).toBeDefined()
-    expect(response.status).not.toBe(404)
+    const response = await server.inject({ method: "POST", url: "/api/users" })
+    expect(response.statusCode).not.toBe(404)
   })
 
   test("[Route] Get Signed User", async () => {
-    const response = await UsersApiCaller.getSignedUser(undefined)
-    expect(response).toBeDefined()
-    expect(response.status).toBeDefined()
-    expect(response.status).not.toBe(404)
+    const response = await server.inject({ method: "GET", url: "/api/users/signed" })
+    expect(response.statusCode).not.toBe(404)
   })
 
   test("[Route] Sign In User", async () => {
-    const response = await UsersApiCaller.signInUser(undefined)
-    expect(response).toBeDefined()
-    expect(response.status).toBeDefined()
-    expect(response.status).not.toBe(404)
+    const response = await server.inject({ method: "POST", url: "/api/users/signin" })
+    expect(response.statusCode).not.toBe(404)
   })
 })
