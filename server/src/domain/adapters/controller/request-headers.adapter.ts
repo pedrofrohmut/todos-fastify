@@ -2,20 +2,24 @@ import { IncomingHttpHeaders } from "http"
 import { AdaptedRequestHeaders } from "./controller-adapter.types"
 
 export default class RequestHeadersAdapter {
-  public static execute(headers: IncomingHttpHeaders): AdaptedRequestHeaders {
+  public static execute(
+    headers: IncomingHttpHeaders | { authentication_token: string }
+  ): AdaptedRequestHeaders {
     if (
       headers === undefined ||
-      headers === null ||
-      (headers.authentication_token === undefined && headers.authorization === undefined)
+      headers == null ||
+      headers.authentication_token === undefined ||
+      headers.authentication_token === null
     ) {
       return null
     }
-    const token = headers.authentication_token || headers.authorization
-    if (typeof token !== "string") {
-      return null
+    if (typeof headers.authentication_token !== "string") {
+      throw new Error(
+        "[RequestHeadersAdapter] The header authentication_token is not a valid string"
+      )
     }
     return {
-      authenticationToken: token
+      authenticationToken: headers.authentication_token
     }
   }
 }

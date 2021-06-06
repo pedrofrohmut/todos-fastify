@@ -6,9 +6,7 @@ export type AdaptedRequest = {
   params?: AdaptedRequestParams
 }
 
-export type AdaptedRequestHeaders =
-  | { authenticationToken: string }
-  | null
+export type AdaptedRequestHeaders = { authenticationToken: string } | null
 
 export type AdaptedRequestParams =
   | { userId: string }

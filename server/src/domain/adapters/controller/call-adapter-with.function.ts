@@ -10,7 +10,7 @@ const callAdapterWith = (controller: any, request: FastifyRequest, response: Fas
     return
   }
   const controllerAdapter = new FastifyControllerAdapter(request, response)
-  controllerAdapter.execute(controllerInstance)
+  controllerAdapter.executeController(controllerInstance)
 }
 
 export default callAdapterWith

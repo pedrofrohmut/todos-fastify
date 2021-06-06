@@ -6,9 +6,7 @@ export default class RequestParamsAdapter {
       params === undefined ||
       params === null ||
       typeof params !== "object" ||
-      Object.keys(params).length === 0 ||
-      (params.taskId === undefined && params.todoId === undefined && params.userId === undefined) ||
-      Object.keys(params).length > 1
+      Object.keys(params).length === 0
     ) {
       return null
     }

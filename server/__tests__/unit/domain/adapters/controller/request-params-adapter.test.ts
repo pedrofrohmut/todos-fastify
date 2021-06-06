@@ -17,17 +17,6 @@ describe("RequestParamsAdapter", () => {
     expect(RequestParamsAdapter.execute({})).toBeNull()
   })
 
-  test("params object without taskId or todoId or userId or ... => null", () => {
-    expect(RequestParamsAdapter.execute({ foo: "bar" })).toBeNull()
-  })
-
-  test("params object with more than one value => null", () => {
-    expect(RequestParamsAdapter.execute({ taskId: "TASK_ID", userId: "USER_ID" })).toBeNull()
-    expect(
-      RequestParamsAdapter.execute({ taskId: "TASK_ID", todoId: "TODO_ID", userId: "USER_ID" })
-    ).toBeNull()
-  })
-
   test("params with only one valid key => { key: value }", () => {
     expect(RequestParamsAdapter.execute({ taskId: "TASK_ID" })).toEqual({ taskId: "TASK_ID" })
     expect(RequestParamsAdapter.execute({ todoId: "TODO_IS" })).toEqual({ todoId: "TODO_IS" })

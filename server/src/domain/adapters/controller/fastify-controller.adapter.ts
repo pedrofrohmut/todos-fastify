@@ -1,14 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { IncomingHttpHeaders } from "http"
 
-import {
-  AdaptedRequest,
-  AdaptedRequestBody,
-  AdaptedRequestHeaders,
-  AdaptedRequestParams,
-  Controller,
-  ControllerResponse
-} from "./controller-adapter.types"
+import { AdaptedRequest, Controller, ControllerResponse } from "./controller-adapter.types"
+import RequestBodyAdapter from "./request-body.adapter"
+import RequestHeadersAdapter from "./request-headers.adapter"
+import RequestParamsAdapter from "./request-params.adapter"
 
 export default class FastifyControllerAdapter {
   private readonly request: FastifyRequest
@@ -19,93 +14,44 @@ export default class FastifyControllerAdapter {
     this.response = response
   }
 
-  private createAdaptedBody(body?: any): AdaptedRequestBody {
-    if (
-      body === undefined ||
-      body === null ||
-      (typeof body === "object" && Object.keys(body).length === 0)
-    ) {
-      return null
-    }
-    return body
-  }
-
-  private extractToken(authenticationHeader: string): string {
-    const splitedHeaders = authenticationHeader.split(" ")
-    const token = splitedHeaders[1]
-    return token
-  }
-
-  private createAdaptedHeaders(headers?: IncomingHttpHeaders): AdaptedRequestHeaders {
-    if (headers === null || headers === undefined) {
-      return null
-    }
-    const authenticationToken = headers.authorization
-      ? this.extractToken(headers.authorization)
-      : headers.authentication_token
-      ? headers.authentication_token
-      : null
-    if (authenticationToken === null) {
-      return null
-    }
+  private getAdaptedRequest(request: FastifyRequest): AdaptedRequest {
     return {
-      authenticationToken: authenticationToken as string
+      body: RequestBodyAdapter.execute(request.body),
+      headers: RequestHeadersAdapter.execute(request.headers),
+      params: RequestParamsAdapter.execute(request.params)
     }
   }
 
-  private createAdaptedParams(params?: any): AdaptedRequestParams {
-    if (params === null || params === undefined) {
-      return null
+  private validateControllerResponse(controllerResponse: ControllerResponse): void {
+    if (controllerResponse === undefined) {
+      throw new Error("Controller did not return a response")
     }
-    if (params.userId === undefined && params.taskId === undefined && params.todoId === undefined) {
-      return null
+    const { status, body } = controllerResponse
+    if (status === undefined) {
+      throw new Error("Invalid controller response. It has no status")
     }
-    if (params.userId === "" || params.taskId === "" || params.todoId === "") {
-      return null
+    if (status !== 201 && status !== 204 && body === undefined) {
+      throw new Error("Controller is missing the response body")
     }
-    return params
   }
 
-  private createAdaptedRequest(request: FastifyRequest): AdaptedRequest {
+  public async executeController(controller: Controller): Promise<void> {
+    if (controller === undefined || controller === null) {
+      throw new Error(
+        "[FastifyControllerAdapter] Controller is either null or not defined. Adapter cannot proceed."
+      )
+    }
+    let controllerResponse: ControllerResponse
+    const adaptedRequest = this.getAdaptedRequest(this.request)
     try {
-      const { body, headers, params } = request
-      const adaptedBody = this.createAdaptedBody(body)
-      const adaptedHeaders = this.createAdaptedHeaders(headers)
-      const adaptedParams = this.createAdaptedParams(params)
-      return {
-        body: adaptedBody,
-        headers: adaptedHeaders,
-        params: adaptedParams
-      }
+      controllerResponse = await controller.execute(adaptedRequest)
     } catch (err) {
-      throw new Error("[ControllerAdapter] Error adapt the request. " + err.message)
+      this.response
+        .status(500)
+        .send("[ControllerAdapter] Error to execute the controller. " + err.message)
+      return
     }
-  }
-
-  private async executeController(
-    controller: Controller,
-    adaptedRequest: AdaptedRequest
-  ): Promise<ControllerResponse> {
-    try {
-      const controllerResponse = await controller.execute(adaptedRequest)
-      return controllerResponse
-    } catch (err) {
-      throw new Error("[ControllerAdapter] Error to execute controller. " + err.message)
-    }
-  }
-
-  private sendFastifyResponse(status: number, body: any): void {
-    this.response.status(status)
-    this.response.send(body)
-  }
-
-  public async execute(controller: Controller): Promise<void> {
-    try {
-      const adaptedRequest = this.createAdaptedRequest(this.request)
-      const { status, body } = await this.executeController(controller, adaptedRequest)
-      this.sendFastifyResponse(status, body)
-    } catch (err) {
-      this.sendFastifyResponse(500, err.message)
-    }
+    this.validateControllerResponse(controllerResponse)
+    this.response.status(controllerResponse.status).send(controllerResponse.body)
   }
 }

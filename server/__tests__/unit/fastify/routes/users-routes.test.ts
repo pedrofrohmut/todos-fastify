@@ -1,4 +1,4 @@
-import {buildTestServerWithAllRoutes} from "../../../utils/server/fastify-test.server"
+import { buildTestServerWithAllRoutes } from "../../../utils/server/fastify-test.server"
 
 describe("[ROUTES] Users", () => {
   const server = buildTestServerWithAllRoutes()

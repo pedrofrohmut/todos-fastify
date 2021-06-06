@@ -15,21 +15,17 @@ describe("RequestHeadersAdapter", () => {
 
   test("headers with Auth and noToken => null", () => {
     expect(RequestHeadersAdapter.execute({ authentication_token: null })).toBeNull()
-    expect(RequestHeadersAdapter.execute({ authorization: null })).toBeNull()
   })
 
-  test("Token not typeof string => null", () => {
-    // @ts-ignore
-    expect(RequestHeadersAdapter.execute({ authentication_token: 123 })).toBeNull()
-    // @ts-ignore
-    expect(RequestHeadersAdapter.execute({ authorization: 123 })).toBeNull()
+  test("Token not typeof string ", () => {
+    expect(() => {
+      // @ts-ignore
+      RequestHeadersAdapter.execute({ authentication_token: 123 })
+    }).toThrowError()
   })
 
   test("Headers with a string token => { authenticationToken: '...' }", () => {
     expect(RequestHeadersAdapter.execute({ authentication_token: "hello" })).toEqual({
-      authenticationToken: "hello"
-    })
-    expect(RequestHeadersAdapter.execute({ authorization: "hello" })).toEqual({
       authenticationToken: "hello"
     })
   })

@@ -4,6 +4,8 @@
 *.swp
 *.swo
 
+# Yarn
+yarn-error.log
 yarn.lock
 
 # ENV
