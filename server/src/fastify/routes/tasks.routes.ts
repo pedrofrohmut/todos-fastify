@@ -1,4 +1,5 @@
 import { FastifyPluginCallback } from "fastify"
+import { TaskBody } from "../../domain/types/controller/body.types"
 
 import { checkBodyExists } from "./utils/body.util"
 import { checkHeadersForAuthentication } from "./utils/headers.util"
@@ -29,7 +30,13 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot find task by id"
     checkParamsForTaskId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    response.status(200).send()
+    const responseBody: TaskBody = {
+      id: "id",
+      name: "task_name",
+      description: "task_description",
+      userId: "userId"
+    }
+    response.status(200).send(responseBody)
   })
 
   // FindTasksByUserIdRoute
@@ -37,13 +44,34 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot find tasks by user id"
     checkParamsForUserId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    response.status(200).send()
+    const responseBody: TaskBody[] = [
+      {
+        id: "id",
+        name: "task_name",
+        description: "task_description",
+        userId: "userId"
+      },
+      {
+        id: "id",
+        name: "task_name",
+        description: "task_description",
+        userId: "userId"
+      },
+      {
+        id: "id",
+        name: "task_name",
+        description: "task_description",
+        userId: "userId"
+      }
+    ]
+    response.status(200).send(responseBody)
   })
 
   // UpdateTaskRoute
   fastify.put("/api/tasks/:taskId", async (request, response) => {
     const message = "Cannot update task"
     checkParamsForTaskId(request, response, message)
+    checkBodyExists(request, response, message)
     checkHeadersForAuthentication(request, response, message)
     response.status(204).send()
   })
