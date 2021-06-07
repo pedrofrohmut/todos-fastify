@@ -1,8 +1,9 @@
 import { FastifyPluginCallback } from "fastify"
 import { TodoBody } from "../../domain/types/controller/body.types"
-import { checkBodyExists } from "./utils/body.util"
-import { checkHeadersForAuthentication } from "./utils/headers.util"
-import { checkParamsForTaskId, checkParamsForTodoId } from "./utils/params.util"
+
+import { checkBodyExists } from "../../domain/utils/routes/body.util"
+import { checkHeadersForAuthentication } from "../../domain/utils/routes/headers.util"
+import { checkParamsForTaskId, checkParamsForTodoId } from "../../domain/utils/routes/params.util"
 
 /**
  * TODOS
