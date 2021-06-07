@@ -65,6 +65,6 @@ export default class ControllerFactory {
     if (controller.toString() === SignInUserControllerImplementation.toString()) {
       return new SignInUserControllerImplementation()
     }
-    return null
+    throw new Error("[ControllerFactory] Cannot get a controller instance. Controller not listed.")
   }
 }

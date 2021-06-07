@@ -1,10 +1,10 @@
-import { AdaptedRequest } from "../../../src/domain/adapters/controller/controller-adapter.types"
+import { AdaptedRequest } from "../../../src/domain/controllers/controller-executor.types"
 
 export class MockControllerStatusPayload {
   private readonly status: number
   private readonly body: object | string
 
-  constructor(status: number, body: object | string) {
+  constructor(status: number, body?: object | string) {
     this.status = status
     this.body = body
   }
@@ -18,7 +18,7 @@ export class MockControllerStatusPayload {
 }
 
 export class MockControllerRequestAsPayload {
-  private readonly status: number
+  private readonly status: number = 200
 
   constructor(status: number) {
     this.status = status
@@ -29,5 +29,17 @@ export class MockControllerRequestAsPayload {
       status: this.status,
       body: request
     }
+  }
+}
+
+export class MockControllerArgsAsResponse {
+  private readonly args: any
+
+  constructor(args: any) {
+    this.args = args
+  }
+
+  public async execute(_request: AdaptedRequest) {
+    return this.args
   }
 }

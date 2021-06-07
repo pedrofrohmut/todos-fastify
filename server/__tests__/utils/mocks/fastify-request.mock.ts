@@ -4,14 +4,14 @@ import { Socket } from "net"
 
 export default class MockRequest implements FastifyRequest {
   id: any
-  params: unknown = null
+  params: unknown
   raw: IncomingMessage
   query: unknown
   log: FastifyLoggerInstance
-  body: unknown = null
+  body: unknown
   validationError?: Error & { validation: any; validationContext: string }
   req: IncomingMessage
-  headers: IncomingHttpHeaders = null
+  headers: IncomingHttpHeaders = {}
   ip: string
   ips?: string[]
   hostname: string
