@@ -1,7 +1,10 @@
 import { FastifyPluginCallback } from "fastify"
 
-import { SignedUserBody } from "../../domain/types/controller/body.types"
+import CreateUserControllerImplementation from "../../domain/controllers/users/implementations/create-user.controller"
+import GetSignedUserControllerImplementation from "../../domain/controllers/users/implementations/get-signed-user.controller"
+import SignInUserControllerImplementation from "../../domain/controllers/users/implementations/sign-in-user.controller"
 
+import ControllerUtilImplementation from "../../domain/controllers/controller.util"
 import { checkBodyExists } from "../../domain/utils/routes/body.util"
 import { checkHeadersForAuthentication } from "../../domain/utils/routes/headers.util"
 
@@ -13,33 +16,21 @@ const usersRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
   fastify.post("/api/users", async (request, response) => {
     const message = "Cannot create user"
     checkBodyExists(request, response, message)
-    response.status(201).send()
+    ControllerUtilImplementation.callControllerUtilsWith(request, response, CreateUserControllerImplementation)
   })
 
   // GetSignedUser
   fastify.get("/api/users/signed", async (request, response) => {
     const message = "Cannot get signed user"
     checkHeadersForAuthentication(request, response, message)
-    const responseBody: SignedUserBody = {
-      id: "UserId",
-      name: "UserName",
-      email: "user@email.com",
-      token: "TOKEN"
-    }
-    response.status(200).send(responseBody)
+    ControllerUtilImplementation.callControllerUtilsWith(request, response, GetSignedUserControllerImplementation)
   })
 
   // SignInUser
   fastify.post("/api/users/signin", async (request, response) => {
     const message = "Cannot sign in user"
     checkBodyExists(request, response, message)
-    const responseBody: SignedUserBody = {
-      id: "UserId",
-      name: "UserName",
-      email: "user@email.com",
-      token: "TOKEN"
-    }
-    response.status(200).send(responseBody)
+    ControllerUtilImplementation.callControllerUtilsWith(request, response, SignInUserControllerImplementation)
   })
 }
 

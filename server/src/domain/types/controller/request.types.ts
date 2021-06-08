@@ -1,4 +1,11 @@
-import { CreateTaskBody, CreateTodoBody, CreateUserBody, SignInUserBody } from "./body.types"
+import {
+  CreateTaskBody,
+  CreateTodoBody,
+  CreateUserBody,
+  SignInUserBody,
+  UpdateTaskBody,
+  UpdateTodoBody
+} from "./body.types"
 import { AuthenticationHeaders } from "./header.types"
 import { TaskIdParam, TodoIdParam, UserIdParam } from "./param.types"
 
@@ -70,13 +77,13 @@ export type SignInUserRequest = {
 }
 
 export type UpdateTaskRequest = {
-  body: CreateTaskBody
+  body: UpdateTaskBody
   header: AuthenticationHeaders
   params: TaskIdParam
 }
 
 export type UpdateTodoRequest = {
-  body: CreateTodoBody
+  body: UpdateTodoBody
   headers: AuthenticationHeaders
   params: TodoIdParam
 }

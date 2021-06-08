@@ -1,11 +1,14 @@
 export type CreateTaskBody = {
   name: string
   description?: string
+  userId: string
 }
 
 export type CreateTodoBody = {
   name: string
   description?: string
+  taskId: string
+  userId: string
 }
 
 export type CreateUserBody = {
@@ -39,4 +42,15 @@ export type TodoBody = {
   description?: string
   taskId: string
   userId: string
+}
+
+export type UpdateTaskBody = {
+  name: string
+  description?: string
+}
+
+export type UpdateTodoBody = {
+  name: string
+  description?: string
+  isDone: boolean
 }

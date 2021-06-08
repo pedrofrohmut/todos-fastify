@@ -1,4 +1,4 @@
-import { FastifyRequest } from "fastify"
+import { FastifyReply, FastifyRequest } from "fastify"
 import { IncomingHttpHeaders } from "http"
 
 import ControllerUtil from "./controller-util.interface"
@@ -111,5 +111,15 @@ export default class ControllerUtilImplementation implements ControllerUtil {
     } catch (err) {
       return { status: 500, body: err.message }
     }
+  }
+
+  public static async callControllerUtilsWith(
+    request: FastifyRequest,
+    response: FastifyReply,
+    controller: Function | Controller
+  ): Promise<void> {
+    const controllerUtil = new ControllerUtilImplementation(request)
+    const { status, body } = await controllerUtil.workOn(controller)
+    response.status(status).send(body)
   }
 }
