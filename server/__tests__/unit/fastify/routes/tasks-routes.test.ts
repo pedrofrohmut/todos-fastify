@@ -3,9 +3,13 @@ import "jest-extended"
 
 import { buildTestServerWithTasksRoutes } from "../../../utils/server/fastify-test.server"
 
-import { CreateTaskBody } from "../../../../src/domain/types/controller/body.types"
+import { CreateTaskBody, UpdateTaskBody } from "../../../../src/domain/types/controller/body.types"
 
 const headers = { authentication_token: "TOKEN" }
+const POST = "POST"
+const GET = "GET"
+const PUT = "PUT"
+const DELETE = "DELETE"
 
 let server: FastifyInstance
 
@@ -18,34 +22,59 @@ afterAll(() => {
 })
 
 describe("CreateTaskRoute", () => {
+  const url = "/api/tasks"
+  const method = POST
+  const body: CreateTaskBody = {
+    name: "TaskName",
+    description: "TaskDescription",
+    userId: "userId"
+  }
+
   test("Return is not a 404", async () => {
-    const response = await server.inject({ method: "POST", url: "/api/tasks" })
+    // Given
+    expect(url).toBe("/api/tasks")
+    expect(method).toBe(POST)
+    // When
+    const response = await server.inject({ method, url })
+    // Then
     expect(response.statusCode).not.toBe(404)
   })
 
   test("Without body to return 400 and message", async () => {
-    const response = await server.inject({ method: "POST", url: "/api/tasks", headers })
+    // Given
+    expect(url).toBe("/api/tasks")
+    expect(method).toBe(POST)
+    expect(headers).toEqual({ authentication_token: "TOKEN" })
+    // When
+    const response = await server.inject({ method, url, headers })
+    // Then
     expect(response.statusCode).toBe(400)
     expect(response.payload).toBeTruthy()
     expect(typeof response.payload === "string").toBeTrue()
   })
 
   test("Without authentication headers to return 401", async () => {
-    const body: CreateTaskBody = { name: "TaskName", description: "TaskDescription" }
-    const response = await server.inject({ method: "POST", url: "/api/tasks", payload: body })
+    // Given
+    expect(url).toBe("/api/tasks")
+    expect(method).toBe(POST)
+    expect(body).toEqual({ name: "TaskName", description: "TaskDescription", userId: "userId" })
+    // When
+    const response = await server.inject({ method, url, payload: body })
+    // Then
     expect(response.statusCode).toBe(401)
     expect(response.payload).toBeTruthy()
     expect(typeof response.payload === "string").toBeTrue()
   })
 
   test("With body and authentication headers return 201 or 500", async () => {
-    const body: CreateTaskBody = { name: "TaskName", description: "TaskDescription" }
-    const response = await server.inject({
-      method: "POST",
-      url: "/api/tasks",
-      payload: body,
-      headers
-    })
+    // Given
+    expect(url).toBe("/api/tasks")
+    expect(method).toBe(POST)
+    expect(body).toEqual({ name: "TaskName", description: "TaskDescription", userId: "userId" })
+    expect(headers).toEqual({ authentication_token: "TOKEN" })
+    // When
+    const response = await server.inject({ method, url, payload: body, headers })
+    // Then
     expect(response.statusCode).toBeOneOf([201, 500])
     if (response.statusCode === 201) {
       expect(response.payload).toBeFalsy()
@@ -58,31 +87,53 @@ describe("CreateTaskRoute", () => {
 })
 
 describe("DeleteTaskRoute", () => {
+  const url = "/api/tasks/1"
+  const method = DELETE
+
   test("Return is not a 404", async () => {
-    const response = await server.inject({ method: "DELETE", url: "/api/tasks/1" })
+    // Given
+    expect(url).toBe("/api/tasks/1")
+    expect(method).toBe(DELETE)
+    // When
+    const response = await server.inject({ method, url })
+    // Then
     expect(response.statusCode).not.toBe(404)
   })
 
   test("Withoud taskId as param returns 400 and message", async () => {
-    const response = await server.inject({ method: "DELETE", url: "/api/tasks/", headers })
+    const url = "/api/tasks/"
+    // Given
+    expect(url).toBe("/api/tasks/")
+    expect(method).toBe(DELETE)
+    expect(headers).toEqual({ authentication_token: "TOKEN" })
+    // When
+    const response = await server.inject({ method, url, headers })
+    // Then
     expect(response.statusCode).toBe(400)
     expect(response.payload).toBeTruthy()
     expect(typeof response.payload === "string").toBeTrue()
   })
 
   test("Without authentication headers to return 401 and message", async () => {
-    const response = await server.inject({ method: "DELETE", url: "/api/tasks/1" })
+    // Given
+    expect(url).toBe("/api/tasks/1")
+    expect(method).toBe(DELETE)
+    // When
+    const response = await server.inject({ method, url })
+    // Then
     expect(response.statusCode).toBe(401)
     expect(response.payload).toBeTruthy()
     expect(typeof response.payload === "string").toBeTrue()
   })
 
   test("With taskId and authentication headers return 204 or 500", async () => {
-    const response = await server.inject({
-      method: "DELETE",
-      url: "/api/tasks/1",
-      headers
-    })
+    // Given
+    expect(url).toBe("/api/tasks/1")
+    expect(method).toBe(DELETE)
+    expect(headers).toEqual({ authentication_token: "TOKEN" })
+    // When
+    const response = await server.inject({ method, url, headers })
+    // Then
     expect(response.statusCode).toBeOneOf([204, 500])
     if (response.statusCode === 204) {
       expect(response.payload).toBeFalsy()
@@ -95,31 +146,53 @@ describe("DeleteTaskRoute", () => {
 })
 
 describe("FindTaskByIdRoute", () => {
+  const url = "/api/tasks/1"
+  const method = GET
+
   test("Return is not a 404", async () => {
-    const response = await server.inject({ method: "GET", url: "/api/tasks/1" })
+    // Given
+    expect(url).toBe("/api/tasks/1")
+    expect(method).toBe(GET)
+    // When
+    const response = await server.inject({ method, url })
+    // Then
     expect(response.statusCode).not.toBe(404)
   })
 
   test("Withoud taskId as param returns 400 and message", async () => {
-    const response = await server.inject({ method: "GET", url: "/api/tasks/", headers })
+    const url = "/api/tasks/"
+    // Given
+    expect(url).toBe("/api/tasks/")
+    expect(method).toBe(GET)
+    expect(headers).toEqual({ authentication_token: "TOKEN" })
+    // When
+    const response = await server.inject({ method, url, headers })
+    // Then
     expect(response.statusCode).toBe(400)
     expect(response.payload).toBeTruthy()
     expect(typeof response.payload === "string").toBeTrue()
   })
 
   test("Without authentication headers to return 401 and message", async () => {
-    const response = await server.inject({ method: "GET", url: "/api/tasks/1" })
+    // Given
+    expect(url).toBe("/api/tasks/1")
+    expect(method).toBe(GET)
+    // When
+    const response = await server.inject({ method, url })
+    // Then
     expect(response.statusCode).toBe(401)
     expect(response.payload).toBeTruthy()
     expect(typeof response.payload === "string").toBeTrue()
   })
 
   test("With taskId and authentication headers return 200 or 500", async () => {
-    const response = await server.inject({
-      method: "GET",
-      url: "/api/tasks/1",
-      headers
-    })
+    // Given
+    expect(url).toBe("/api/tasks/1")
+    expect(method).toBe(GET)
+    expect(headers).toEqual({ authentication_token: "TOKEN" })
+    // When
+    const response = await server.inject({ method, url, headers })
+    // Then
     expect(response.statusCode).toBeOneOf([200, 500])
     expect(response.payload).toBeTruthy()
     if (response.statusCode === 200) {
@@ -132,31 +205,53 @@ describe("FindTaskByIdRoute", () => {
 })
 
 describe("FindTasksByUserIdRoute", () => {
+  const url = "/api/tasks/user/1"
+  const method = GET
+
   test("Return is not a 404", async () => {
-    const response = await server.inject({ method: "GET", url: "/api/tasks/user/1" })
+    // Given
+    expect(url).toBe("/api/tasks/user/1")
+    expect(method).toBe(GET)
+    // When
+    const response = await server.inject({ method, url })
+    // Then
     expect(response.statusCode).not.toBe(404)
   })
 
   test("Withoud userId as param returns 400 and message", async () => {
-    const response = await server.inject({ method: "GET", url: "/api/tasks/user/", headers })
+    const url = "/api/tasks/user/"
+    // Given
+    expect(url).toBe("/api/tasks/user/")
+    expect(method).toBe(GET)
+    expect(headers).toEqual({ authentication_token: "TOKEN" })
+    // When
+    const response = await server.inject({ method, url, headers })
+    // Then
     expect(response.statusCode).toBe(400)
     expect(response.payload).toBeTruthy()
     expect(typeof response.payload === "string").toBeTrue()
   })
 
   test("Without authentication headers to return 401 and message", async () => {
-    const response = await server.inject({ method: "GET", url: "/api/tasks/user/1" })
+    // Given
+    expect(url).toBe("/api/tasks/user/1")
+    expect(method).toBe(GET)
+    // When
+    const response = await server.inject({ method, url })
+    // Then
     expect(response.statusCode).toBe(401)
     expect(response.payload).toBeTruthy()
     expect(typeof response.payload === "string").toBeTrue()
   })
 
   test("With userId and authentication headers return 200 or 500", async () => {
-    const response = await server.inject({
-      method: "GET",
-      url: "/api/tasks/user/1",
-      headers
-    })
+    // Given
+    expect(url).toBe("/api/tasks/user/1")
+    expect(method).toBe(GET)
+    expect(headers).toEqual({ authentication_token: "TOKEN" })
+    // When
+    const response = await server.inject({ method, url, headers })
+    // Then
     expect(response.statusCode).toBeOneOf([200, 500])
     expect(response.payload).toBeTruthy()
     if (response.statusCode === 200) {
@@ -169,47 +264,70 @@ describe("FindTasksByUserIdRoute", () => {
 })
 
 describe("UpdateTaskRoute", () => {
+  const url = "/api/tasks/1"
+  const method = PUT
+  const body: UpdateTaskBody = { name: "TaskName", description: "TaskDescription" }
+
   test("Return in not a 404", async () => {
-    const response = await server.inject({ method: "PUT", url: "/api/tasks/1" })
+    // Given
+    expect(url).toBe("/api/tasks/1")
+    expect(method).toBe(PUT)
+    // When
+    const response = await server.inject({ method, url })
+    // Then
     expect(response.statusCode).not.toBe(404)
   })
 
   test("Withoud taskId as param returns 400 and message", async () => {
-    const body: CreateTaskBody = { name: "TaskName", description: "TaskDescription" }
-    const response = await server.inject({
-      method: "PUT",
-      url: "/api/tasks/",
-      payload: body,
-      headers
-    })
+    const url = "/api/tasks/"
+    // Given
+    expect(url).toBe("/api/tasks/")
+    expect(method).toBe(PUT)
+    expect(body).toEqual({ name: "TaskName", description: "TaskDescription" })
+    expect(headers).toEqual({ authentication_token: "TOKEN" })
+    // When
+    const response = await server.inject({ method, url, payload: body, headers })
+    // Then
     expect(response.statusCode).toBe(400)
     expect(response.payload).toBeTruthy()
     expect(typeof response.payload === "string").toBeTrue()
   })
 
   test("Without body to return 400 and message", async () => {
-    const response = await server.inject({ method: "PUT", url: "/api/tasks/1", headers })
+    // Given
+    expect(url).toBe("/api/tasks/1")
+    expect(method).toBe(PUT)
+    expect(headers).toEqual({ authentication_token: "TOKEN" })
+    // When
+    const response = await server.inject({ method, url, headers })
+    // Then
     expect(response.statusCode).toBe(400)
     expect(response.payload).toBeTruthy()
     expect(typeof response.payload === "string").toBeTrue()
   })
 
   test("Without authentication headers to return 401 and message", async () => {
-    const body: CreateTaskBody = { name: "TaskName", description: "TaskDescription" }
-    const response = await server.inject({ method: "PUT", url: "/api/tasks/1", payload: body })
+    // Given
+    expect(url).toBe("/api/tasks/1")
+    expect(method).toBe(PUT)
+    expect(body).toEqual({ name: "TaskName", description: "TaskDescription" })
+    // When
+    const response = await server.inject({ method, url, payload: body })
+    // Then
     expect(response.statusCode).toBe(401)
     expect(response.payload).toBeTruthy()
     expect(typeof response.payload === "string").toBeTrue()
   })
 
   test("With taskId and authentication headers return 204 or 500", async () => {
-    const body: CreateTaskBody = { name: "TaskName", description: "TaskDescription" }
-    const response = await server.inject({
-      method: "PUT",
-      url: "/api/tasks/1",
-      payload: body,
-      headers
-    })
+    // Given
+    expect(url).toBe("/api/tasks/1")
+    expect(method).toBe(PUT)
+    expect(body).toEqual({ name: "TaskName", description: "TaskDescription" })
+    expect(headers).toEqual({ authentication_token: "TOKEN" })
+    // When
+    const response = await server.inject({ method, url, payload: body, headers })
+    // Then
     expect(response.statusCode).toBeOneOf([204, 500])
     if (response.statusCode === 204) {
       expect(response.payload).toBeFalsy()
