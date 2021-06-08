@@ -2,9 +2,9 @@ import { AdaptedRequest } from "../../../src/domain/controllers/controller-execu
 
 export class MockControllerStatusPayload {
   private readonly status: number
-  private readonly body: object | string
+  private readonly body: any
 
-  constructor(status: number, body?: object | string) {
+  constructor(status: number, body?: any) {
     this.status = status
     this.body = body
   }

@@ -3,7 +3,7 @@ import "jest-extended"
 
 import { buildTestServerWithTasksRoutes } from "../../../utils/server/fastify-test.server"
 
-import { CreateTaskBody, TaskBody } from "../../../../src/domain/types/controller/body.types"
+import { CreateTaskBody } from "../../../../src/domain/types/controller/body.types"
 
 const headers = { authentication_token: "TOKEN" }
 

@@ -1,4 +1,6 @@
 import { FastifyPluginCallback } from "fastify"
+import ControllerUtilImplementation from "../../domain/controllers/controller.util"
+import CreateTaskControllerImplementation from "../../domain/controllers/tasks/implementations/create-task.controller"
 import { TaskBody } from "../../domain/types/controller/body.types"
 
 import { checkBodyExists } from "../../domain/utils/routes/body.util"
@@ -14,7 +16,10 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot find tasks by user id"
     checkBodyExists(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    response.status(201).send()
+    // response.status(201).send()
+    const controllerExecutor = new ControllerUtilImplementation(request)
+    const { status, body } = await controllerExecutor.workOn(CreateTaskControllerImplementation)
+    response.status(status).send(body)
   })
 
   // DeleteTaskRoute

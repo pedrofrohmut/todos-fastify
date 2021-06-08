@@ -1,7 +1,7 @@
 import { FastifyRequest } from "fastify"
 import { IncomingHttpHeaders } from "http"
 
-import ControllerExecutor from "./controller-executor.interface"
+import ControllerUtil from "./controller-util.interface"
 import {
   AdaptedRequest,
   AdaptedRequestBody,
@@ -9,10 +9,10 @@ import {
   AdaptedRequestParams,
   Controller,
   ControllerResponse
-} from "./controller-executor.types"
+} from "../types/controller/util.types"
 import ControllerFactory from "./controller.factory"
 
-export default class ControllerExecutorImplementation implements ControllerExecutor {
+export default class ControllerUtilImplementation implements ControllerUtil {
   private readonly request: FastifyRequest
 
   constructor(request: FastifyRequest) {
@@ -66,6 +66,19 @@ export default class ControllerExecutorImplementation implements ControllerExecu
     }
   }
 
+  private getControllerInstance(controller: Function | Controller) {
+    let controllerInstance: Function | Controller
+    if (typeof controller === "function") {
+      controllerInstance = ControllerFactory.getController(controller)
+    } else {
+      controllerInstance = controller
+    }
+    if (!controllerInstance) {
+      throw new Error("Cannot execute without a controller instance")
+    }
+    return controllerInstance
+  }
+
   private validateControllerResponse(controllerResponse: ControllerResponse): void {
     if (!controllerResponse) {
       throw new Error("[ControllerExecutor] The controller did not return a response")
@@ -83,19 +96,20 @@ export default class ControllerExecutorImplementation implements ControllerExecu
     }
   }
 
-  public async execute(controller: Function | Controller): Promise<ControllerResponse> {
-    let controllerInstance: Function | Controller
-    if (typeof controller === "function") {
-      controllerInstance = ControllerFactory.getController(controller)
-    } else {
-      controllerInstance = controller
+  public async workOn(controller: Function | Controller): Promise<ControllerResponse> {
+    let adaptedRequest: AdaptedRequest
+    try {
+      adaptedRequest = this.adaptRequest(this.request)
+    } catch (err) {
+      return { status: 400, body: err.message }
     }
-    if (!controllerInstance) {
-      throw new Error("Cannot execute without a controller instance")
+    try {
+      const controllerInstance = this.getControllerInstance(controller)
+      const controllerResponse = await controllerInstance.execute(adaptedRequest)
+      this.validateControllerResponse(controllerResponse)
+      return controllerResponse
+    } catch (err) {
+      return { status: 500, body: err.message }
     }
-    const adaptedRequest = this.adaptRequest(this.request)
-    const controllerResponse = await controllerInstance.execute(adaptedRequest)
-    this.validateControllerResponse(controllerResponse)
-    return controllerResponse
   }
 }
