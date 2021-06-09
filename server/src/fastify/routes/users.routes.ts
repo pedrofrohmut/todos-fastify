@@ -4,9 +4,9 @@ import CreateUserControllerImplementation from "../../domain/controllers/users/i
 import GetSignedUserControllerImplementation from "../../domain/controllers/users/implementations/get-signed-user.controller"
 import SignInUserControllerImplementation from "../../domain/controllers/users/implementations/sign-in-user.controller"
 
-import ControllerUtilImplementation from "../../domain/controllers/controller.util"
-import { checkBodyExists } from "../../domain/utils/routes/body.util"
-import { checkHeadersForAuthentication } from "../../domain/utils/routes/headers.util"
+import ControllerUtil from "../../utils/controllers/controller.util"
+import { checkBodyExists } from "../../utils/routes/body.util"
+import { checkHeadersForAuthentication } from "../../utils/routes/headers.util"
 
 /**
  * USERS
@@ -16,21 +16,24 @@ const usersRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
   fastify.post("/api/users", async (request, response) => {
     const message = "Cannot create user"
     checkBodyExists(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(request, response, CreateUserControllerImplementation)
+    // ControllerUtilImplementation.callControllerUtilsWith(request, response, CreateUserControllerImplementation)
+    new ControllerUtil(request, response).workOn(CreateUserControllerImplementation)
   })
 
   // GetSignedUser
   fastify.get("/api/users/signed", async (request, response) => {
     const message = "Cannot get signed user"
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(request, response, GetSignedUserControllerImplementation)
+    // ControllerUtilImplementation.callControllerUtilsWith(request, response, GetSignedUserControllerImplementation)
+    new ControllerUtil(request, response).workOn(GetSignedUserControllerImplementation)
   })
 
   // SignInUser
   fastify.post("/api/users/signin", async (request, response) => {
     const message = "Cannot sign in user"
     checkBodyExists(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(request, response, SignInUserControllerImplementation)
+    // ControllerUtilImplementation.callControllerUtilsWith(request, response, SignInUserControllerImplementation)
+    new ControllerUtil(request, response).workOn(SignInUserControllerImplementation)
   })
 }
 

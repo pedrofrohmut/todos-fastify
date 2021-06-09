@@ -6,10 +6,10 @@ import FindTaskByIdControllerImplementation from "../../domain/controllers/tasks
 import FindTasksByUserIdControllerImplementation from "../../domain/controllers/tasks/implementations/find-tasks-by-user-id.controller"
 import UpdateTaskControllerImplementation from "../../domain/controllers/tasks/implementations/update-task.controller"
 
-import ControllerUtilImplementation from "../../domain/controllers/controller.util"
-import { checkBodyExists } from "../../domain/utils/routes/body.util"
-import { checkHeadersForAuthentication } from "../../domain/utils/routes/headers.util"
-import { checkParamsForTaskId, checkParamsForUserId } from "../../domain/utils/routes/params.util"
+import ControllerUtil from "../../utils/controllers/controller.util"
+import { checkBodyExists } from "../../utils/routes/body.util"
+import { checkHeadersForAuthentication } from "../../utils/routes/headers.util"
+import { checkParamsForTaskId, checkParamsForUserId } from "../../utils/routes/params.util"
 
 /**
  * TASKS
@@ -20,11 +20,8 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot create task"
     checkBodyExists(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(
-      request,
-      response,
-      CreateTaskControllerImplementation
-    )
+    // ControllerUtilImplementation.callControllerUtilsWith( request, response, CreateTaskControllerImplementation)
+    new ControllerUtil(request, response).workOn(CreateTaskControllerImplementation)
   })
 
   // DeleteTaskRoute
@@ -32,11 +29,8 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot delete task"
     checkParamsForTaskId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(
-      request,
-      response,
-      DeleteTaskControllerImplementation
-    )
+    // ControllerUtilImplementation.callControllerUtilsWith( request, response, DeleteTaskControllerImplementation)
+    new ControllerUtil(request, response).workOn(DeleteTaskControllerImplementation)
   })
 
   // FindTaskByIdRoute
@@ -44,11 +38,8 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot find task by id"
     checkParamsForTaskId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(
-      request,
-      response,
-      FindTaskByIdControllerImplementation
-    )
+    // ControllerUtilImplementation.callControllerUtilsWith( request, response, FindTaskByIdControllerImplementation)
+    new ControllerUtil(request, response).workOn(FindTaskByIdControllerImplementation)
   })
 
   // FindTasksByUserIdRoute
@@ -56,11 +47,8 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot find tasks by user id"
     checkParamsForUserId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(
-      request,
-      response,
-      FindTasksByUserIdControllerImplementation
-    )
+    // ControllerUtilImplementation.callControllerUtilsWith( request, response, FindTasksByUserIdControllerImplementation)
+    new ControllerUtil(request, response).workOn(FindTasksByUserIdControllerImplementation)
   })
 
   // UpdateTaskRoute
@@ -69,11 +57,8 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     checkParamsForTaskId(request, response, message)
     checkBodyExists(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(
-      request,
-      response,
-      UpdateTaskControllerImplementation
-    )
+    // ControllerUtilImplementation.callControllerUtilsWith( request, response, UpdateTaskControllerImplementation)
+    new ControllerUtil(request, response).workOn(UpdateTaskControllerImplementation)
   })
 }
 

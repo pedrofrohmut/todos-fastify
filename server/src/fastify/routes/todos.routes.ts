@@ -9,10 +9,10 @@ import SetTodoAsDoneControllerImplementation from "../../domain/controllers/todo
 import SetTodoAsNotDoneControllerImplementation from "../../domain/controllers/todos/implementations/set-todo-as-not-done.controller"
 import UpdateTodoControllerImplementation from "../../domain/controllers/todos/implementations/update-todo.controller"
 
-import ControllerUtilImplementation from "../../domain/controllers/controller.util"
-import { checkBodyExists } from "../../domain/utils/routes/body.util"
-import { checkHeadersForAuthentication } from "../../domain/utils/routes/headers.util"
-import { checkParamsForTaskId, checkParamsForTodoId } from "../../domain/utils/routes/params.util"
+import ControllerUtil from "../../utils/controllers/controller.util"
+import { checkBodyExists } from "../../utils/routes/body.util"
+import { checkHeadersForAuthentication } from "../../utils/routes/headers.util"
+import { checkParamsForTaskId, checkParamsForTodoId } from "../../utils/routes/params.util"
 
 /**
  * TODOS
@@ -23,7 +23,8 @@ const todosRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot clear complete todos by task id"
     checkParamsForTaskId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(request, response, ClearCompleteTodoByTaskIdControllerImplementation)
+    // ControllerUtilImplementation.callControllerUtilsWith(request, response, ClearCompleteTodoByTaskIdControllerImplementation)
+    new ControllerUtil(request, response).workOn(ClearCompleteTodoByTaskIdControllerImplementation)
   })
 
   // CreateTodoRoute
@@ -31,7 +32,8 @@ const todosRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot create todo"
     checkBodyExists(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(request, response, CreateTodoControllerImplementation)
+    // ControllerUtilImplementation.callControllerUtilsWith(request, response, CreateTodoControllerImplementation)
+    new ControllerUtil(request, response).workOn(CreateTodoControllerImplementation)
   })
 
   // // DeleteTodoRoute
@@ -39,7 +41,8 @@ const todosRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot delete todo"
     checkParamsForTodoId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(request, response, DeleteTodoControllerImplementation)
+    // ControllerUtilImplementation.callControllerUtilsWith(request, response, DeleteTodoControllerImplementation)
+    new ControllerUtil(request, response).workOn(DeleteTodoControllerImplementation)
   })
 
   // FindTodoById
@@ -47,7 +50,8 @@ const todosRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot find todo by id"
     checkParamsForTodoId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(request, response, FindTodoByIdControllerImplementation)
+    // ControllerUtilImplementation.callControllerUtilsWith(request, response, FindTodoByIdControllerImplementation)
+    new ControllerUtil(request, response).workOn(FindTodoByIdControllerImplementation)
   })
 
   // FindTodosByTaskId
@@ -55,7 +59,8 @@ const todosRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot find todos by task id"
     checkParamsForTaskId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(request, response, FindTodosByTaskIdControllerImplementation)
+    // ControllerUtilImplementation.callControllerUtilsWith(request, response, FindTodosByTaskIdControllerImplementation)
+    new ControllerUtil(request, response).workOn(FindTodosByTaskIdControllerImplementation)
   })
 
   // SetTodosAsDoneRoute
@@ -63,7 +68,8 @@ const todosRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot set todo as done"
     checkParamsForTodoId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(request, response, SetTodoAsDoneControllerImplementation)
+    // ControllerUtilImplementation.callControllerUtilsWith(request, response, SetTodoAsDoneControllerImplementation)
+    new ControllerUtil(request, response).workOn(SetTodoAsDoneControllerImplementation)
   })
 
   // SetTodoAsNotDone
@@ -71,7 +77,8 @@ const todosRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot set todo as not done"
     checkParamsForTodoId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(request, response, SetTodoAsNotDoneControllerImplementation)
+    // ControllerUtilImplementation.callControllerUtilsWith(request, response, SetTodoAsNotDoneControllerImplementation)
+    new ControllerUtil(request, response).workOn(SetTodoAsNotDoneControllerImplementation)
   })
 
   // UpdateTodo
@@ -80,7 +87,8 @@ const todosRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     checkParamsForTodoId(request, response, message)
     checkBodyExists(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    ControllerUtilImplementation.callControllerUtilsWith(request, response, UpdateTodoControllerImplementation)
+    // ControllerUtilImplementation.callControllerUtilsWith(request, response, UpdateTodoControllerImplementation)
+    new ControllerUtil(request, response).workOn(UpdateTodoControllerImplementation)
   })
 }
 
