@@ -20,7 +20,6 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot create task"
     checkBodyExists(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    // ControllerUtilImplementation.callControllerUtilsWith( request, response, CreateTaskControllerImplementation)
     new ControllerUtil(request, response).workOn(CreateTaskControllerImplementation)
   })
 
@@ -29,7 +28,6 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot delete task"
     checkParamsForTaskId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    // ControllerUtilImplementation.callControllerUtilsWith( request, response, DeleteTaskControllerImplementation)
     new ControllerUtil(request, response).workOn(DeleteTaskControllerImplementation)
   })
 
@@ -38,7 +36,6 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot find task by id"
     checkParamsForTaskId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    // ControllerUtilImplementation.callControllerUtilsWith( request, response, FindTaskByIdControllerImplementation)
     new ControllerUtil(request, response).workOn(FindTaskByIdControllerImplementation)
   })
 
@@ -47,7 +44,6 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     const message = "Cannot find tasks by user id"
     checkParamsForUserId(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    // ControllerUtilImplementation.callControllerUtilsWith( request, response, FindTasksByUserIdControllerImplementation)
     new ControllerUtil(request, response).workOn(FindTasksByUserIdControllerImplementation)
   })
 
@@ -57,7 +53,6 @@ const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
     checkParamsForTaskId(request, response, message)
     checkBodyExists(request, response, message)
     checkHeadersForAuthentication(request, response, message)
-    // ControllerUtilImplementation.callControllerUtilsWith( request, response, UpdateTaskControllerImplementation)
     new ControllerUtil(request, response).workOn(UpdateTaskControllerImplementation)
   })
 }

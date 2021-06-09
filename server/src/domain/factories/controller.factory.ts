@@ -1,3 +1,5 @@
+import CreateTaskUseCaseImplementation from "../usecases/tasks/implementations/create-task.usecase"
+
 import CreateTaskControllerImplementation from "../controllers/tasks/implementations/create-task.controller"
 import DeleteTaskControllerImplementation from "../controllers/tasks/implementations/delete-task.controller"
 import FindTaskByIdControllerImplementation from "../controllers/tasks/implementations/find-task-by-id.controller"
@@ -18,7 +20,8 @@ import SignInUserControllerImplementation from "../controllers/users/implementat
 export default class ControllerFactory {
   public static getController(controller: Function) {
     if (controller.toString() === CreateTaskControllerImplementation.toString()) {
-      return new CreateTaskControllerImplementation()
+      const createTaskUseCase = new CreateTaskUseCaseImplementation()
+      return new CreateTaskControllerImplementation(createTaskUseCase)
     }
     if (controller.toString() === DeleteTaskControllerImplementation.toString()) {
       return new DeleteTaskControllerImplementation()

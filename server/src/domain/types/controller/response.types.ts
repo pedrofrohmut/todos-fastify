@@ -6,7 +6,7 @@ export type ClearCompleteTodosByTaskIdResponse = {
 }
 
 export type CreateTaskResponse = {
-  status: 201 | 400 | 500
+  status: 201 | 400 | 401 | 500
   body?: string
 }
 

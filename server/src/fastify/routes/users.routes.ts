@@ -16,7 +16,6 @@ const usersRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
   fastify.post("/api/users", async (request, response) => {
     const message = "Cannot create user"
     checkBodyExists(request, response, message)
-    // ControllerUtilImplementation.callControllerUtilsWith(request, response, CreateUserControllerImplementation)
     new ControllerUtil(request, response).workOn(CreateUserControllerImplementation)
   })
 
@@ -24,7 +23,6 @@ const usersRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
   fastify.get("/api/users/signed", async (request, response) => {
     const message = "Cannot get signed user"
     checkHeadersForAuthentication(request, response, message)
-    // ControllerUtilImplementation.callControllerUtilsWith(request, response, GetSignedUserControllerImplementation)
     new ControllerUtil(request, response).workOn(GetSignedUserControllerImplementation)
   })
 
@@ -32,7 +30,6 @@ const usersRoutesPluginCallback: FastifyPluginCallback = async (fastify, _option
   fastify.post("/api/users/signin", async (request, response) => {
     const message = "Cannot sign in user"
     checkBodyExists(request, response, message)
-    // ControllerUtilImplementation.callControllerUtilsWith(request, response, SignInUserControllerImplementation)
     new ControllerUtil(request, response).workOn(SignInUserControllerImplementation)
   })
 }

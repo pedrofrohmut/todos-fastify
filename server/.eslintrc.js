@@ -1,32 +1,17 @@
+// eslint-disable-next-line
 module.exports = {
   env: {
-    browser: true,
     es2021: true
   },
-  extends: [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    ecmaFeatures: {
-      jsx: true
-    },
     ecmaVersion: 12,
     sourceType: "module"
   },
-  plugins: ["react", "@typescript-eslint"],
-  settings: {
-    react: {
-      version: "detect"
-    }
-  },
+  plugins: ["@typescript-eslint", "eslint-plugin-prettier", "prettier"],
   rules: {
-    "react/react-in-jsx-scope": "off",
-    "@typescript-eslint/explicit-function-return-type": "error",
-    "@typescript-eslint/no-empty-function": "off",
-    "@typescript-eslint/ban-ts-comment": "off"
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-empty-function": "off"
   }
 }

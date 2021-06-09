@@ -1,8 +1,8 @@
 import { Client } from "pg"
 
-import DatabaseConnection from "./database-connection.interface"
+import DatabaseConnection from "../database/database-connection.interface"
 
-import PostgresDatabaseConnection from "./postgres.database-connection"
+import PostgresDatabaseConnection from "../database/postgres.database-connection"
 
 import DataBaseConnectionError from "../errors/database/connection.error"
 

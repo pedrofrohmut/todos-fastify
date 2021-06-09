@@ -4,7 +4,7 @@ import CreateTaskControllerImplementation from "../../../../src/domain/controlle
 import ControllerFactory from "../../../../src/domain/factories/controller.factory"
 import { AdaptedRequest } from "../../../../src/utils/types/controller/util.types"
 
-describe("ControllerFactory | GetController", () => {
+describe("ControllerFactory | GetController | Errors", () => {
   test("with null args throws error", () => {
     const controllerArg = null
     // Given
@@ -57,7 +57,9 @@ describe("ControllerFactory | GetController", () => {
     expect(getterErr).toBeDefined()
     expect(getterErr.message).toBeTruthy()
   })
+})
 
+describe("ControllerFactory | GetController | ListedControllers", () => {
   test("With a valid and listed controller returns a ready instance", () => {
     let getterErr: Error = undefined
     try {

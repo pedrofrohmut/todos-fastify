@@ -75,7 +75,7 @@ describe("CreateTaskRoute", () => {
     // When
     const response = await server.inject({ method, url, payload: body, headers })
     // Then
-    expect(response.statusCode).toBeOneOf([201, 500])
+    expect(response.statusCode).toBeOneOf([201, 400, 401, 500])
     if (response.statusCode === 201) {
       expect(response.payload).toBeFalsy()
     }
