@@ -1,4 +1,4 @@
-import {AdaptedRequest} from "../../../../utils/types/controller/util.types"
+import { AdaptedRequest } from "../../../../utils/types/controller/util.types"
 import { SetTodoAsNotDoneResponse } from "../../../types/controller/response.types"
 
 import SetTodoAsNotDoneController from "../set-todo-as-not-done-controller.interface"

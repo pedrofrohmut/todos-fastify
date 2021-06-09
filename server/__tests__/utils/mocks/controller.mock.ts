@@ -1,4 +1,4 @@
-import { AdaptedRequest } from "../../../src/domain/controllers/controller-executor.types"
+import { AdaptedRequest } from "../../../src/utils/types/controller/util.types"
 
 export class MockControllerStatusPayload {
   private readonly status: number
@@ -9,7 +9,7 @@ export class MockControllerStatusPayload {
     this.body = body
   }
 
-  public async execute(_request: AdaptedRequest) {
+  public async execute(_request?: AdaptedRequest) {
     return {
       status: this.status,
       body: this.body
@@ -39,7 +39,7 @@ export class MockControllerArgsAsResponse {
     this.args = args
   }
 
-  public async execute(_request: AdaptedRequest) {
+  public async execute(_request?: AdaptedRequest) {
     return this.args
   }
 }

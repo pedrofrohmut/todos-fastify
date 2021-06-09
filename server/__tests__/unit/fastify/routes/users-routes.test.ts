@@ -22,7 +22,11 @@ afterAll(() => {
 describe("CreateUserRoute", () => {
   const url = "/api/users"
   const method = POST
-  const body: CreateUserBody = { name: "UserName", email: "user@email.com", password: "UserPassword" }
+  const body: CreateUserBody = {
+    name: "UserName",
+    email: "user@email.com",
+    password: "UserPassword"
+  }
 
   test("Return is not a 404", async () => {
     // Given

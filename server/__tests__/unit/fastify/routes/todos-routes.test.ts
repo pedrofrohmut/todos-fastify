@@ -11,7 +11,6 @@ const PUT = "PUT"
 const PATCH = "PATCH"
 const DELETE = "DELETE"
 
-
 let server: FastifyInstance
 
 beforeAll(() => {
@@ -84,7 +83,12 @@ describe("ClearCompleteTodosByTaskIdRoute", () => {
 describe("CreateTodoRoute", () => {
   const url = "/api/todos"
   const method = POST
-  const body: CreateTodoBody = { name: "TaskName", description: "TaskDescription", taskId: "TaskId", userId: "UserId" }
+  const body: CreateTodoBody = {
+    name: "TaskName",
+    description: "TaskDescription",
+    taskId: "TaskId",
+    userId: "UserId"
+  }
 
   test("Return is not a 404", async () => {
     // Given
@@ -113,7 +117,12 @@ describe("CreateTodoRoute", () => {
     // Given
     expect(url).toBe("/api/todos")
     expect(method).toBe(POST)
-    expect(body).toEqual({ name: "TaskName", description: "TaskDescription", taskId: "TaskId", userId: "UserId" })
+    expect(body).toEqual({
+      name: "TaskName",
+      description: "TaskDescription",
+      taskId: "TaskId",
+      userId: "UserId"
+    })
     // When
     const response = await server.inject({ method, url, payload: body })
     // Then
@@ -126,7 +135,12 @@ describe("CreateTodoRoute", () => {
     // Given
     expect(url).toBe("/api/todos")
     expect(method).toBe(POST)
-    expect(body).toEqual({ name: "TaskName", description: "TaskDescription", taskId: "TaskId", userId: "UserId" })
+    expect(body).toEqual({
+      name: "TaskName",
+      description: "TaskDescription",
+      taskId: "TaskId",
+      userId: "UserId"
+    })
     expect(headers).toEqual({ authentication_token: "TOKEN" })
     // When
     const response = await server.inject({
