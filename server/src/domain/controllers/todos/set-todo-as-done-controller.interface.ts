@@ -1,6 +1,6 @@
-import { SetTodoAsDoneRequest } from "../../types/controller/request.types"
+import { AdaptedRequest } from "../../../utils/types/controller/util.types"
 import { SetTodoAsDoneResponse } from "../../types/controller/response.types"
 
 export default interface SetTodoAsDoneController {
-  execute(request: SetTodoAsDoneRequest): Promise<SetTodoAsDoneResponse>
+  execute(request: AdaptedRequest): Promise<SetTodoAsDoneResponse>
 }

@@ -1,6 +1,6 @@
-import { DeleteTaskRequest } from "../../types/controller/request.types"
+import { AdaptedRequest } from "../../../utils/types/controller/util.types"
 import { DeleteTaskResponse } from "../../types/controller/response.types"
 
 export default interface DeleteTaskController {
-  execute(request: DeleteTaskRequest): Promise<DeleteTaskResponse>
+  execute(request: AdaptedRequest): Promise<DeleteTaskResponse>
 }
