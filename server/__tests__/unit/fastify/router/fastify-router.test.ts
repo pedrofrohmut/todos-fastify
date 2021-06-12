@@ -1,71 +1,48 @@
 import "jest-extended"
+import ControllerFactory from "../../../../src/domain/factories/controller-factory.interface"
+import { Controller } from "../../../../src/domain/types/router.types"
+import ControllerResponseValidator from "../../../../src/domain/validators/controller-response-validator.interface"
+import FastifyRouter from "../../../../src/fastify/router/implementations/fastify.router"
+import RequestAdapter from "../../../../src/fastify/router/request-adapter.interface"
+import Router from "../../../../src/fastify/router/router.interface"
 
-import FastifyRouter from "../../../../src/fastify/router"
-
-import Router from "../../../../src/fastify/router"
+import { MockControllerFactoryImplementation } from "../../../utils/mocks/controller-factory-implementation.mock"
+import { MockControllerResponseValidatorImplementation } from "../../../utils/mocks/controller-response-validator-implementation.mock"
 import {
   MockControllerArgsAsResponse,
-  MockControllerExecuteThrowError,
   MockControllerNoExecute,
-  MockControllerNotListed,
   MockControllerPlaceholder,
   MockControllerStatusPayload
 } from "../../../utils/mocks/controller.mock"
-
+import { MockFastifyRequestAdapter } from "../../../utils/mocks/fastify-request-adapter.mock"
 import MockRequest from "../../../utils/mocks/fastify-request.mock"
 import MockResponse from "../../../utils/mocks/fastify-response.mock"
 
-let request: MockRequest
-let response: MockResponse
-let router: Router = undefined
-
-beforeEach(() => {
-  request = new MockRequest()
-  request.body = {}
-  response = new MockResponse()
-  router = new Router(request, response)
-})
-
-const getConstructorErr = (request?: any, response?: any): Error | undefined => {
+const getControllerFactoryError = (controllerFactory: any, controller: any): null | Error => {
   try {
-    new Router(request, response)
-    return undefined
+    controllerFactory.getController(controller)
+    return null
   } catch (err) {
     return err
   }
 }
 
-const expectsControllerResponseStatusBody = (response: any, status: any, body: any): void => {
-  expect(response.status).toBeDefined()
-  expect(response.status).toBe(status)
-  expect(response.body).toBeDefined()
-  expect(response.body).toEqual(body)
+const getRequestAdapterError = (requestAdapter: any, request: any): null | Error => {
+  try {
+    requestAdapter.adapt(request)
+    return null
+  } catch (err) {
+    return err
+  }
 }
 
-const expectsDefinedAndNotObject = (val?: any) => {
-  expect(val).toBeDefined()
-  expect(val).not.toBeNull()
-  expect(val).not.toBeObject()
-}
-
-const expectsToHaveError = (err: Error | undefined): void => {
-  expect(err).toBeDefined()
-  expect(err).not.toBeNull()
-  expect(err.message).toBeTruthy()
-  expect(err.message).toBeString()
-}
-
-const expectsValidRouter = (router?: any): void => {
-  expect(router).toBeDefined()
-  expect(router).toBeObject()
-  expect(router).toBeInstanceOf(FastifyRouter)
-  expect(router.routeController).toBeDefined()
-}
-
-const expectsResponse500AndMessage = (response: MockResponse): void => {
-  expect(response.statusCode).toBe(500)
-  expect(response.payload).toBeTruthy()
-  expect(response.payload).toBeString()
+const getControllerResponseValidationError = (validator: ControllerResponseValidator, controllerResponse: any): null | Error => {
+  try {
+    validator.validate(controllerResponse)
+    return null
+  } catch (err) {
+    return err
+  }
 }
 
 const expectsResponse400AndMessage = (response: MockResponse): void => {
@@ -74,97 +51,85 @@ const expectsResponse400AndMessage = (response: MockResponse): void => {
   expect(response.payload).toBeString()
 }
 
-describe("Router | Constructor | Invalid request and/or response", () => {
-  test("Constructed with null request throws error", () => {
-    const request = null
-    // Given
-    expect(request).toBeNull()
-    // When
-    const constructorErr = getConstructorErr(request, response)
-    // Then
-    expectsToHaveError(constructorErr)
-  })
+const expectsResponse500AndMessage = (response: MockResponse): void => {
+  expect(response.statusCode).toBe(500)
+  expect(response.payload).toBeTruthy()
+  expect(response.payload).toBeString()
+}
 
-  test("Constructed with undefined request throws error", () => {
-    const request = undefined
-    // Given
-    expect(request).toBeUndefined()
-    // When
-    const constructorErr = getConstructorErr(request, response)
-    // Then
-    expectsToHaveError(constructorErr)
-  })
+const expectsValidRouter = (router: any): void => {
+  expect(router).toBeTruthy()
+  expect(router).toBeInstanceOf(FastifyRouter)
+}
 
-  test("Constructed with not object request throws error", () => {
-    const request = 123
-    // Given
-    expect(request).not.toBeObject()
-    // When
-    const constructorErr = getConstructorErr(request, response)
-    // Then
-    expectsToHaveError(constructorErr)
-  })
+const expectsValidController = (controller: any): void => {
+  expect(controller).toBeTruthy()
+  expect(controller.execute).toBeDefined()
+}
 
-  test("Constructed with null response throws error", () => {
-    const response = null
-    // Given
-    expect(response).toBeNull()
-    // When
-    const constructorErr = getConstructorErr(request, response)
-    // Then
-    expectsToHaveError(constructorErr)
-  })
+let request: MockRequest
+let response: MockResponse
+let requestAdapter: RequestAdapter
+let controllerFactory: ControllerFactory
+let controllerResponseValidator: ControllerResponseValidator
 
-  test("Constructed with undefined response throws error", () => {
-    const response = undefined
-    // Given
-    expect(response).toBeUndefined()
-    // When
-    const constructorErr = getConstructorErr(request, response)
-    // Then
-    expectsToHaveError(constructorErr)
-  })
-
-  test("Constructed with not object response throws error", () => {
-    const response = 123
-    // Given
-    expect(response).not.toBeObject()
-    // When
-    const constructorErr = getConstructorErr(request, response)
-    // Then
-    expectsToHaveError(constructorErr)
-  })
+beforeEach(() => {
+  request = new MockRequest()
+  response = new MockResponse()
+  requestAdapter = new MockFastifyRequestAdapter()
+  controllerFactory = new MockControllerFactoryImplementation()
+  controllerResponseValidator = new MockControllerResponseValidatorImplementation()
 })
 
-describe("Router | RouteController | Invalid controller as argument", () => {
-  test("When null controllerArg. Then response 500/message", async () => {
+describe("Router | RouterController | Invalid controller as argument", () => {
+  let controllerFactory: ControllerFactory
+  let router: Router
+
+  beforeEach(() => {
+    controllerFactory = new MockControllerFactoryImplementation()
+    router = new FastifyRouter(
+      request,
+      response,
+      requestAdapter,
+      controllerFactory,
+      controllerResponseValidator
+    )
+  })
+
+  test("Null then response 500/message", async () => {
     const controller = null
+    const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
     // Given
-    expectsValidRouter(router)
     expect(controller).toBeNull()
+    expect(controllerFactoryErr).toBeTruthy()
+    expectsValidRouter(router)
     // When
     await router.routeController(controller)
     // Then
     expectsResponse500AndMessage(response)
   })
 
-  test("When undefined controllerArg. Then response 500/message", async () => {
+  test("Undefined then response 500/message", async () => {
     const controller = undefined
+    const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
     // Given
-    expectsValidRouter(router)
     expect(controller).toBeUndefined()
+    expect(controllerFactoryErr).toBeTruthy()
+    expectsValidRouter(router)
     // When
     await router.routeController(controller)
     // Then
     expectsResponse500AndMessage(response)
   })
 
-  test("When defined but not Function or Object controllerArg. Then response 500/message", async () => {
+  test("Not typeof object or function then response 500/message", async () => {
     const controller = 123
+    const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
     // Given
-    expectsValidRouter(router)
     expect(controller).not.toBeObject()
     expect(controller).not.toBeFunction()
+    expect(controllerFactoryErr).toBeTruthy()
+    expectsValidRouter(router)
     // When
     // @ts-ignore
     await router.routeController(controller)
@@ -172,178 +137,220 @@ describe("Router | RouteController | Invalid controller as argument", () => {
     expectsResponse500AndMessage(response)
   })
 
-  test("When controllerArg typeof Object and have no execute. Then response 500/message", async () => {
+  test("Typeof object but no execute then response 500/message", async () => {
     const controller = new MockControllerNoExecute()
+    const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
     // Given
-    expectsValidRouter(router)
+    expect(controller).toBeObject()
     // @ts-ignore
     expect(controller.execute).toBeUndefined()
+    expect(controllerFactoryErr).toBeTruthy()
+    expectsValidRouter(router)
     // When
     // @ts-ignore
     await router.routeController(controller)
     // Then
     expectsResponse500AndMessage(response)
   })
+})
 
-  test("When controllerArg typeof Function and not listed. Then response 500/message", async () => {
-    const controller = MockControllerNotListed
+describe("FastifyRouter | RouteController | Invalid request body/headers/params", () => {
+  let requestAdapter: RequestAdapter
+  let controller: Controller
+
+  beforeEach(() => {
+    requestAdapter = new MockFastifyRequestAdapter()
+    controller = new MockControllerPlaceholder()
+  })
+
+  test("Not typeof object request body then response 400/message", async () => {
+    request.body = 123
+    const router = new FastifyRouter(
+      request,
+      response,
+      requestAdapter,
+      controllerFactory,
+      controllerResponseValidator
+    )
+    const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
     // Given
+    expect(request.body).not.toBeObject()
+    expect(requestAdapterErr).toBeTruthy()
     expectsValidRouter(router)
-    expect(controller).toBeFunction()
+    expectsValidController(controller)
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse500AndMessage(response)
-  })
-})
-
-describe("Router | RouteController | Invalid request body/headers/params", () => {
-  test("When Request body not a object. Then response 400/message", async () => {
-    request.body = 123
-    // Given
-    expectsValidRouter(router)
-    expectsDefinedAndNotObject(request.body)
-    // Then
-    await router.routeController(new MockControllerPlaceholder())
-    // When
     expectsResponse400AndMessage(response)
   })
 
-  test("When Request headers not object. Then response 400/message", async () => {
+  test("Not typeof object request headers then response 400/message", async () => {
     // @ts-ignore
     request.headers = 123
+    const router = new FastifyRouter(
+      request,
+      response,
+      requestAdapter,
+      controllerFactory,
+      controllerResponseValidator
+    )
+    const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
     // Given
-    expectsDefinedAndNotObject(request.headers)
+    expect(request.headers).not.toBeObject()
+    expect(requestAdapterErr).toBeTruthy()
+    expectsValidRouter(router)
+    expectsValidController(controller)
     // When
-    await router.routeController(new MockControllerPlaceholder())
+    await router.routeController(controller)
     // Then
     expectsResponse400AndMessage(response)
   })
 
-  test("When Request headers authentication_token not string. Then response 400/message", async () => {
+  test("Not typeof string request headers authentication_token then response 400/message", async () => {
     // @ts-ignore
     request.headers.authentication_token = 123
+    const router = new FastifyRouter(
+      request,
+      response,
+      requestAdapter,
+      controllerFactory,
+      controllerResponseValidator
+    )
+    const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
     // Given
+    expect(request.headers).toBeObject()
+    expect(request.headers.authentication_token).not.toBeObject()
+    expect(requestAdapterErr).toBeTruthy()
     expectsValidRouter(router)
-    expectsDefinedAndNotObject(request.headers.authentication_token)
-    // When
-    await router.routeController(new MockControllerPlaceholder())
-    // Then
-    expectsResponse400AndMessage(response)
-  })
-
-  test("When Request params not object. Then response 400/message", async () => {
-    request.params = 123
-    // Given
-    expectsValidRouter(router)
-    expectsDefinedAndNotObject(request.params)
-    // When
-    await router.routeController(new MockControllerPlaceholder())
-    // Then
-    expectsResponse400AndMessage(response)
-  })
-})
-
-describe("Router | RouteController | Controller throws error", () => {
-  const getControllerError = async (controller?: any): Promise<Error> => {
-    try {
-      await controller.execute(undefined)
-      return null
-    } catch (err) {
-      return err
-    }
-  }
-
-  test("When Controller.Execute throws error. Then response 500/message", async () => {
-    const controller = new MockControllerExecuteThrowError()
-    const controllerErr = await getControllerError(controller)
-    // Given
-    expectsToHaveError(controllerErr)
-    expectsValidRouter(router)
+    expectsValidController(controller)
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse500AndMessage(response)
+    expectsResponse400AndMessage(response)
+  })
+
+  test("Not typeof object request params then response 400/message", async () => {
+    // @ts-ignore
+    request.params = 123
+    const router = new FastifyRouter(
+      request,
+      response,
+      requestAdapter,
+      controllerFactory,
+      controllerResponseValidator
+    )
+    const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
+    // Given
+    expect(request.params).not.toBeObject()
+    expect(requestAdapterErr).toBeTruthy()
+    expectsValidRouter(router)
+    expectsValidController(controller)
+    // When
+    await router.routeController(controller)
+    // Then
+    expectsResponse400AndMessage(response)
   })
 })
 
-describe("Router | RouteController | Invalid controller response", () => {
-  test("When Null controllerResponse. Then response 500/message", async () => {
+describe("FastifyRouter | RouteController | Invalid controller response", () => {
+  let router: Router
+
+  beforeEach(() => {
+    router = new FastifyRouter(
+      request,
+      response,
+      requestAdapter,
+      controllerFactory,
+      controllerResponseValidator
+    )
+  })
+
+  test("Null then response 500/message", async () => {
     const controller = new MockControllerArgsAsResponse(null)
     const controllerResponse = await controller.execute()
+    const controllerResponseErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
     // Given
-    expectsValidRouter(router)
     expect(controllerResponse).toBeNull()
+    expect(controllerResponseErr).toBeTruthy()
+    expectsValidController(controller)
+    expectsValidRouter(router)
     // When
     await router.routeController(controller)
     // Then
     expectsResponse500AndMessage(response)
   })
 
-  test("When Undefined controllerResponse. Then response 500/message", async () => {
+  test("Undefined then response 500/message", async () => {
     const controller = new MockControllerArgsAsResponse(undefined)
     const controllerResponse = await controller.execute()
+    const controllerResponseErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
     // Given
-    expectsValidRouter(router)
     expect(controllerResponse).toBeUndefined()
-    // When
-    await router.routeController(controller)
-    // Then
-    expectsResponse500AndMessage(response)
-  })
-
-  test("When Undefined status. Then response 500/message", async () => {
-    const controller = new MockControllerStatusPayload(undefined, { foo: "bar" })
-    const controllerResponse = await controller.execute()
-    // Given
+    expect(controllerResponseErr).toBeTruthy()
+    expectsValidController(controller)
     expectsValidRouter(router)
-    expect(controllerResponse.status).toBeUndefined()
     // When
     await router.routeController(controller)
     // Then
     expectsResponse500AndMessage(response)
   })
 
-  test("When IsNaN status. Then response 500/message", async () => {
+  test("Status undefined then response 500/message", async () => {
+    const controller = new MockControllerStatusPayload(undefined, "Hello World")
+    const controllerResponse = await controller.execute()
+    const controllerResponseErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    // Given
+    expect(controllerResponse.status).toBeUndefined()
+    expect(controllerResponseErr).toBeTruthy()
+    expectsValidController(controller)
+    expectsValidRouter(router)
+    // When
+    await router.routeController(controller)
+    // Then
+    expectsResponse500AndMessage(response)
+  })
+
+  test("Status isNaN then response 500/message", async () => {
     const controller = new MockControllerStatusPayload("foo", "bar")
     const controllerResponse = await controller.execute()
+    const controllerResponseErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
     // Given
-    expectsValidRouter(router)
-    expect(controllerResponse.status).toBeDefined()
-    expect(controllerResponse.status).not.toBeNull()
     expect(controllerResponse.status).not.toBeNumber()
+    expect(controllerResponseErr).toBeTruthy()
+    expectsValidController(controller)
+    expectsValidRouter(router)
     // When
     await router.routeController(controller)
     // Then
     expectsResponse500AndMessage(response)
   })
 
-  test("When Status 201 with body. Then response 500/message", async () => {
-    const controller = new MockControllerStatusPayload(201, { foo: "bar" })
+  test("Status 201 defined body then response 500/message", async () => {
+    const controller = new MockControllerStatusPayload(201, "bar")
     const controllerResponse = await controller.execute()
+    const controllerResponseErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
     // Given
+    expect(controllerResponse.status).toBe(201)
+    expect(controllerResponse.body).toBeTruthy()
+    expect(controllerResponseErr).toBeTruthy()
+    expectsValidController(controller)
     expectsValidRouter(router)
-    expectsControllerResponseStatusBody(controllerResponse, 201, { foo: "bar" })
-    // expect(controllerResponse.status).toBeDefined()
-    // expect(controllerResponse.status).toBe(201)
-    // expect(controllerResponse.body).toBeDefined()
-    // expect(controllerResponse.body).toEqual({ foo: "bar" })
     // When
     await router.routeController(controller)
     // Then
     expectsResponse500AndMessage(response)
   })
 
-  test("When Status 204 with body. Then response 500/message", async () => {
-    const controller = new MockControllerStatusPayload(204, { foo: "bar" })
+  test("Status 204 defined body then response 500/message", async () => {
+    const controller = new MockControllerStatusPayload(204, "bar")
     const controllerResponse = await controller.execute()
+    const controllerResponseErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
     // Given
+    expect(controllerResponse.status).toBe(204)
+    expect(controllerResponse.body).toBeTruthy()
+    expect(controllerResponseErr).toBeTruthy()
+    expectsValidController(controller)
     expectsValidRouter(router)
-    expectsControllerResponseStatusBody(controllerResponse, 204, { foo: "bar" })
-    // expect(controllerResponse.status).toBeDefined()
-    // expect(controllerResponse.status).toBe(204)
-    // expect(controllerResponse.body).toBeDefined()
-    // expect(controllerResponse.body).toEqual({ foo: "bar" })
     // When
     await router.routeController(controller)
     // Then
@@ -351,73 +358,121 @@ describe("Router | RouteController | Invalid controller response", () => {
   })
 })
 
-describe("Router | RouteController | Valid controller responses", () => {
-  test("When Controller => 200/body. Then response 200/body", async () => {
-    const controller = new MockControllerStatusPayload(200, { foo: "bar" })
-    const controllerResponse = await controller.execute()
-    // Given
-    expectsValidRouter(router)
-    expectsControllerResponseStatusBody(controllerResponse, 200, { foo: "bar" })
-    // When
-    await router.routeController(controller)
-    // Then
-    expect(response.statusCode).toBe(200)
-    expect(response.payload).toEqual({ foo: "bar" })
+describe("FastifyRouter | RouteController | Valid controller response", () => {
+  let router: Router
+
+  beforeEach(() => {
+    router = new FastifyRouter(request, response, requestAdapter, controllerFactory, controllerResponseValidator)
   })
 
-  test("When Controller => 201. Then response 201", async () => {
-    const controller = new MockControllerStatusPayload(201, undefined)
+  test("200/body then response 200/body", async () => {
+    const status = 200
+    const body = { foo: "bar" }
+    const controller = new MockControllerStatusPayload(status, body)
     const controllerResponse = await controller.execute()
+    const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
+    const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
+    const controllerResponseValidatorErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
     // Given
+    expect(controllerResponse. status).toBe(status)
+    expect(controllerResponse.body).toEqual(body)
+    expect(requestAdapterErr).toBeNull()
+    expect(controllerFactoryErr).toBeNull()
+    expect(controllerResponseValidatorErr).toBeNull()
+    expectsValidController(controller)
     expectsValidRouter(router)
-    expect(controllerResponse.status).toBe(201)
-    expect(controllerResponse.body).toBeUndefined()
     // When
     await router.routeController(controller)
     // Then
-    expect(response.statusCode).toBe(201)
+    expect(response.statusCode).toBe(status)
+    expect(response.payload).toEqual(body)
+  })
+
+  test("201 then response 201", async () => {
+    const status = 201
+    const controller = new MockControllerStatusPayload(status)
+    const controllerResponse = await controller.execute()
+    const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
+    const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
+    const controllerResponseValidatorErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    // Given
+    expect(controllerResponse. status).toBe(status)
+    expect(requestAdapterErr).toBeNull()
+    expect(controllerFactoryErr).toBeNull()
+    expect(controllerResponseValidatorErr).toBeNull()
+    expectsValidController(controller)
+    expectsValidRouter(router)
+    // When
+    await router.routeController(controller)
+    // Then
+    expect(response.statusCode).toBe(status)
     expect(response.payload).toBeUndefined()
   })
 
-  test("When Controller => 204. Then response 204", async () => {
-    const controller = new MockControllerStatusPayload(204, undefined)
+  test("204 then response 204", async () => {
+    const status = 204
+    const controller = new MockControllerStatusPayload(status)
     const controllerResponse = await controller.execute()
+    const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
+    const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
+    const controllerResponseValidatorErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
     // Given
+    expect(controllerResponse. status).toBe(status)
+    expect(requestAdapterErr).toBeNull()
+    expect(controllerFactoryErr).toBeNull()
+    expect(controllerResponseValidatorErr).toBeNull()
+    expectsValidController(controller)
     expectsValidRouter(router)
-    expect(controllerResponse.status).toBe(204)
-    expect(controllerResponse.body).toBeUndefined()
     // When
     await router.routeController(controller)
     // Then
-    expect(response.statusCode).toBe(204)
+    expect(response.statusCode).toBe(status)
     expect(response.payload).toBeUndefined()
   })
 
-  test("When Controller => 400/message. Then response 400/message", async () => {
-    const controller = new MockControllerStatusPayload(400, "Bad Request")
+  test("400/message then response 400/message", async () => {
+    const status = 400
+    const body = "Bad Request"
+    const controller = new MockControllerStatusPayload(status, body)
     const controllerResponse = await controller.execute()
+    const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
+    const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
+    const controllerResponseValidatorErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
     // Given
+    expect(controllerResponse. status).toBe(status)
+    expect(controllerResponse.body).toEqual(body)
+    expect(requestAdapterErr).toBeNull()
+    expect(controllerFactoryErr).toBeNull()
+    expect(controllerResponseValidatorErr).toBeNull()
+    expectsValidController(controller)
     expectsValidRouter(router)
-    expectsControllerResponseStatusBody(controllerResponse, 400, "Bad Request")
     // When
     await router.routeController(controller)
     // Then
-    expect(response.statusCode).toBe(400)
-    expect(response.payload).toBeTruthy()
-    expect(response.payload).toBeString()
+    expect(response.statusCode).toBe(status)
+    expect(response.payload).toEqual(body)
   })
 
-  test("When Controller => 401/message. Then response 401/message", async () => {
-    const controller = new MockControllerStatusPayload(401, "Unauthorized")
+  test("401/message then response 401/message", async () => {
+    const status = 401
+    const body = "Unauthorized"
+    const controller = new MockControllerStatusPayload(status, body)
     const controllerResponse = await controller.execute()
+    const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
+    const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
+    const controllerResponseValidatorErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
     // Given
+    expect(controllerResponse. status).toBe(status)
+    expect(controllerResponse.body).toEqual(body)
+    expect(requestAdapterErr).toBeNull()
+    expect(controllerFactoryErr).toBeNull()
+    expect(controllerResponseValidatorErr).toBeNull()
+    expectsValidController(controller)
     expectsValidRouter(router)
-    expectsControllerResponseStatusBody(controllerResponse, 401, "Unauthorized")
     // When
     await router.routeController(controller)
     // Then
-    expect(response.statusCode).toBe(401)
-    expect(response.payload).toBeTruthy()
-    expect(response.payload).toBeString()
+    expect(response.statusCode).toBe(status)
+    expect(response.payload).toEqual(body)
   })
 })

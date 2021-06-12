@@ -7,8 +7,6 @@ import ControllerResponseValidator from "../../../domain/validators/controller-r
 
 import { AdaptedRequest, Controller } from "../../../domain/types/router.types"
 
-import DependencyInjectionError from "../../../domain/errors/dependencies/dependency-injection.error"
-
 export default class FastifyRouter implements Router {
   private readonly request: FastifyRequest
   private readonly response: FastifyReply
@@ -23,37 +21,11 @@ export default class FastifyRouter implements Router {
     controllerFactory: ControllerFactory,
     controllerResponseValidator: ControllerResponseValidator
   ) {
-    if (
-      request === null ||
-      request === undefined ||
-      typeof request !== "object" ||
-      response === null ||
-      response === undefined ||
-      typeof response !== "object"
-    ) {
-      throw new DependencyInjectionError("[FastifyRouter] constructor")
-    }
     this.request = request
     this.response = response
     this.requestAdapter = requestAdapter
     this.controllerFactory = controllerFactory
     this.controllerResponseValidator = controllerResponseValidator
-  }
-
-  private getControllerInstace(controller: Function | Controller): Controller {
-    if (
-      controller === null ||
-      controller === undefined ||
-      (typeof controller !== "object" && typeof controller !== "function") ||
-      (typeof controller === "object" && controller.execute === undefined)
-    ) {
-      throw new DependencyInjectionError("[FastifyRouter] route controller")
-    }
-    const instance =
-      typeof controller === "function"
-        ? this.controllerFactory.getController(controller)
-        : controller
-    return instance as Controller
   }
 
   public async routeController(controller: Function | Controller): Promise<void> {
@@ -65,13 +37,13 @@ export default class FastifyRouter implements Router {
       return
     }
     try {
-      const controllerInstance = this.getControllerInstace(controller)
+      const controllerInstance = this.controllerFactory.getController(controller)
       const controllerResponse = await controllerInstance.execute(adaptedRequest)
       this.controllerResponseValidator.validate(controllerResponse)
       const { status, body } = controllerResponse
       this.response.status(status).send(body)
     } catch (err) {
-      this.response.status(500).send("TODO")
+      this.response.status(500).send(err.message)
     }
   }
 }
