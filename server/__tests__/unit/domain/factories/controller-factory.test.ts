@@ -1,78 +1,69 @@
 import "jest-extended"
 
-import CreateTaskControllerImplementation from "../../../../src/domain/controllers/tasks/implementations/create-task.controller"
-import ControllerFactory from "../../../../src/domain/factories/controller.factory"
-import { AdaptedRequest } from "../../../../src/utils/types/controller/util.types"
+import ControllerFactoryImplementation from "../../../../src/domain/factories/implementations/controller.factory"
 
-describe("ControllerFactory | GetController | Errors", () => {
-  test("with null args throws error", () => {
-    const controllerArg = null
+import { MockControllerNotListed } from "../../../utils/mocks/controller.mock"
+
+const getGetControllerError = (controller: any): null | Error => {
+  try {
+    new ControllerFactoryImplementation().getController(controller)
+    return null
+  } catch (err) {
+    return err
+  }
+}
+
+const expectsToHaveError = (err: any) => {
+  expect(err).toBeDefined()
+  expect(err).not.toBeNull()
+  expect(err.message).toBeTruthy()
+  expect(err.message).toBeString()
+}
+
+describe("ControllerFactoryImplementation | GetController | invalid args", () => {
+  test("Null arg throws error", () => {
+    const controller = null
     // Given
-    expect(controllerArg).toBeNull()
-    // Then
-    let getterErr: Error = undefined
-    try {
-      ControllerFactory.getController(controllerArg)
-    } catch (err) {
-      getterErr = err
-    }
+    expect(controller).toBeNull()
     // When
-    expect(getterErr).toBeDefined()
-    expect(getterErr.message).toBeTruthy()
+    const getControllerErr = getGetControllerError(controller)
+    // Then
+    expectsToHaveError(getControllerErr)
   })
 
-  test("with undefined args throws error", () => {
-    const controllerArg = undefined
+  test("Undefined arg throws error", () => {
+    const controller = undefined
     // Given
-    expect(controllerArg).not.toBeDefined()
-    // Then
-    let getterErr: Error = undefined
-    try {
-      ControllerFactory.getController(controllerArg)
-    } catch (err) {
-      getterErr = err
-    }
+    expect(controller).toBeUndefined()
     // When
-    expect(getterErr).toBeDefined()
-    expect(getterErr.message).toBeTruthy()
+    const getControllerErr = getGetControllerError(controller)
+    // Then
+    expectsToHaveError(getControllerErr)
   })
 
-  test("With a valid but not listed controller throws error", () => {
-    class NonExistentControllerImplementation {
-      public async execute(_: AdaptedRequest) {}
-    }
-    const controllerProps = Object.getOwnPropertyNames(
-      NonExistentControllerImplementation.prototype
-    )
+  test("Not typeof function or object throws error", () => {
+    const controller = 123
     // Given
-    expect(controllerProps).toContain("execute")
+    expect(controller).not.toBeFunction()
+    expect(controller).not.toBeObject()
     // When
-    let getterErr: Error = undefined
-    try {
-      ControllerFactory.getController(NonExistentControllerImplementation)
-    } catch (err) {
-      getterErr = err
-    }
+    const getControllerErr = getGetControllerError(controller)
     // Then
-    expect(getterErr).toBeDefined()
-    expect(getterErr.message).toBeTruthy()
+    expectsToHaveError(getControllerErr)
   })
-})
 
-describe("ControllerFactory | GetController | ListedControllers", () => {
-  test("With a valid and listed controller returns a ready instance", () => {
-    let getterErr: Error = undefined
-    try {
-      ControllerFactory.getController(CreateTaskControllerImplementation)
-    } catch (err) {
-      getterErr = err
-    }
+  test("Does not match any of the controllers listed throws error", () => {
+    const controller = new MockControllerNotListed()
     // Given
-    expect(getterErr).not.toBeDefined()
+    expect(controller).toBeDefined()
+    expect(controller).not.toBeNull()
+    expect(controller).toBeObject()
+
     // When
-    const controllerInstance = ControllerFactory.getController(CreateTaskControllerImplementation)
+    const getControllerErr = getGetControllerError(controller)
     // Then
-    expect(controllerInstance).toBeTruthy()
-    expect(controllerInstance instanceof CreateTaskControllerImplementation).toBeTrue()
+    expectsToHaveError(getControllerErr)
   })
 })
+
+describe("ControllerFactoryImplementation | GetController | listed controller", () => {})
