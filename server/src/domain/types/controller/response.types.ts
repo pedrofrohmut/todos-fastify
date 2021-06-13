@@ -55,6 +55,11 @@ export type GetSignedUserResponse = {
   body: SignedUserBody | string
 }
 
+export type RequestValidationResponse = {
+  status: 400 | 401
+  body: string
+}
+
 export type SetTodoAsDoneResponse = {
   status: 204 | 400 | 500
   body?: string

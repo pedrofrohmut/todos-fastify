@@ -6,10 +6,7 @@ import FindTaskByIdControllerImplementation from "../../domain/controllers/tasks
 import FindTasksByUserIdControllerImplementation from "../../domain/controllers/tasks/implementations/find-tasks-by-user-id.controller"
 import UpdateTaskControllerImplementation from "../../domain/controllers/tasks/implementations/update-task.controller"
 
-import ControllerUtil from "../../utils/controllers/controller.util"
-import { checkBodyExists } from "../../utils/routes/body.util"
-import { checkHeadersForAuthentication } from "../../utils/routes/headers.util"
-import { checkParamsForTaskId, checkParamsForUserId } from "../../utils/routes/params.util"
+import FastifyRouterBuilder from "../router/implementations/fastify-router.builder"
 
 /**
  * TASKS
@@ -17,43 +14,32 @@ import { checkParamsForTaskId, checkParamsForUserId } from "../../utils/routes/p
 const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _options) => {
   // CreateTaskRoute
   fastify.post("/api/tasks", async (request, response) => {
-    const message = "Cannot create task"
-    checkBodyExists(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(CreateTaskControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(CreateTaskControllerImplementation)
   })
 
   // DeleteTaskRoute
   fastify.delete("/api/tasks/:taskId", async (request, response) => {
-    const message = "Cannot delete task"
-    checkParamsForTaskId(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(DeleteTaskControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(DeleteTaskControllerImplementation)
   })
 
   // FindTaskByIdRoute
   fastify.get("/api/tasks/:taskId", async (request, response) => {
-    const message = "Cannot find task by id"
-    checkParamsForTaskId(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(FindTaskByIdControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(FindTaskByIdControllerImplementation)
   })
 
   // FindTasksByUserIdRoute
   fastify.get("/api/tasks/user/:userId", async (request, response) => {
-    const message = "Cannot find tasks by user id"
-    checkParamsForUserId(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(FindTasksByUserIdControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(FindTasksByUserIdControllerImplementation)
   })
 
   // UpdateTaskRoute
   fastify.put("/api/tasks/:taskId", async (request, response) => {
-    const message = "Cannot update task"
-    checkParamsForTaskId(request, response, message)
-    checkBodyExists(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(UpdateTaskControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(UpdateTaskControllerImplementation)
   })
 }
 

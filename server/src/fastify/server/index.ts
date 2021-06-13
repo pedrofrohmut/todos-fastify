@@ -2,20 +2,14 @@ import Fastify, { FastifyInstance } from "fastify"
 import fastifyEnv from "fastify-env"
 import formbody from "fastify-formbody"
 
-import tasksRoutes from "./routes/tasks.routes"
-import todosRoutes from "./routes/todos.routes"
-import usersRoutes from "./routes/users.routes"
+import tasksRoutes from "../routes/tasks.routes"
+import todosRoutes from "../routes/todos.routes"
+import usersRoutes from "../routes/users.routes"
 
 const server: FastifyInstance = Fastify({
   ignoreTrailingSlash: true,
   logger: { prettyPrint: true }
 })
-
-/**
- * MIDDLEWARES
- */
-// Body Parser
-server.register(formbody)
 
 /**
  * ENV Setup/validation
@@ -40,6 +34,12 @@ server
       process.exit(1)
     }
   })
+
+/**
+ * MIDDLEWARES
+ */
+// Body Parser
+server.register(formbody)
 
 /**
  * ROUTES

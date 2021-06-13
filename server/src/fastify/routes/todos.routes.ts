@@ -9,10 +9,7 @@ import SetTodoAsDoneControllerImplementation from "../../domain/controllers/todo
 import SetTodoAsNotDoneControllerImplementation from "../../domain/controllers/todos/implementations/set-todo-as-not-done.controller"
 import UpdateTodoControllerImplementation from "../../domain/controllers/todos/implementations/update-todo.controller"
 
-import ControllerUtil from "../../utils/controllers/controller.util"
-import { checkBodyExists } from "../../utils/routes/body.util"
-import { checkHeadersForAuthentication } from "../../utils/routes/headers.util"
-import { checkParamsForTaskId, checkParamsForTodoId } from "../../utils/routes/params.util"
+import FastifyRouterBuilder from "../router/implementations/fastify-router.builder"
 
 /**
  * TODOS
@@ -20,67 +17,50 @@ import { checkParamsForTaskId, checkParamsForTodoId } from "../../utils/routes/p
 const todosRoutesPluginCallback: FastifyPluginCallback = async (fastify, _options) => {
   // ClearCompleteTodosByTaskId
   fastify.delete("/api/todos/task/:taskId", async (request, response) => {
-    const message = "Cannot clear complete todos by task id"
-    checkParamsForTaskId(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(ClearCompleteTodoByTaskIdControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(ClearCompleteTodoByTaskIdControllerImplementation)
   })
 
   // CreateTodoRoute
   fastify.post("/api/todos", async (request, response) => {
-    const message = "Cannot create todo"
-    checkBodyExists(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(CreateTodoControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(CreateTodoControllerImplementation)
   })
 
   // // DeleteTodoRoute
   fastify.delete("/api/todos/:todoId", async (request, response) => {
-    const message = "Cannot delete todo"
-    checkParamsForTodoId(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(DeleteTodoControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(DeleteTodoControllerImplementation)
   })
 
   // FindTodoById
   fastify.get("/api/todos/:todoId", async (request, response) => {
-    const message = "Cannot find todo by id"
-    checkParamsForTodoId(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(FindTodoByIdControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(FindTodoByIdControllerImplementation)
   })
 
   // FindTodosByTaskId
   fastify.get("/api/todos/task/:taskId", async (request, response) => {
-    const message = "Cannot find todos by task id"
-    checkParamsForTaskId(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(FindTodosByTaskIdControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(FindTodosByTaskIdControllerImplementation)
   })
 
   // SetTodosAsDoneRoute
   fastify.patch("/api/todos/setdone/:todoId", async (request, response) => {
-    const message = "Cannot set todo as done"
-    checkParamsForTodoId(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(SetTodoAsDoneControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(SetTodoAsDoneControllerImplementation)
   })
 
   // SetTodoAsNotDone
   fastify.patch("/api/todos/setnotdone/:todoId", async (request, response) => {
-    const message = "Cannot set todo as not done"
-    checkParamsForTodoId(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(SetTodoAsNotDoneControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(SetTodoAsNotDoneControllerImplementation)
   })
 
   // UpdateTodo
   fastify.put("/api/todos/:todoId", async (request, response) => {
-    const message = "Cannot update todo"
-    checkParamsForTodoId(request, response, message)
-    checkBodyExists(request, response, message)
-    checkHeadersForAuthentication(request, response, message)
-    new ControllerUtil(request, response).workOn(UpdateTodoControllerImplementation)
+    const router = new FastifyRouterBuilder(request, response).buildRouter()
+    router.routeController(UpdateTodoControllerImplementation)
   })
 }
 

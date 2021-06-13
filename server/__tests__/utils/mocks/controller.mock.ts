@@ -1,10 +1,10 @@
-import { AdaptedRequest } from "../../../src/utils/types/controller/util.types"
+import { AdaptedRequest, ControllerResponse } from "../../../src/fastify/router/router.types"
 
 export class MockControllerStatusPayload {
   private readonly status: number
   private readonly body: any
 
-  constructor(status: number, body?: any) {
+  constructor(status: any, body?: any) {
     this.status = status
     this.body = body
   }
@@ -41,5 +41,21 @@ export class MockControllerArgsAsResponse {
 
   public async execute(_request?: AdaptedRequest) {
     return this.args
+  }
+}
+
+export class MockControllerNoExecute {}
+
+export class MockControllerNotListed {}
+
+export class MockControllerPlaceholder {
+  public async execute(_request: AdaptedRequest): Promise<ControllerResponse> {
+    return null
+  }
+}
+
+export class MockControllerExecuteThrowError {
+  public async execute(_request: AdaptedRequest): Promise<ControllerResponse> {
+    throw new Error("MESSAGE")
   }
 }

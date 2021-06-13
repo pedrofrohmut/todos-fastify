@@ -40,4 +40,8 @@ export default class FakeTokenService {
       }
     }
   }
+
+  public static getInvalid(_userId?: string): number {
+    return 123
+  }
 }
