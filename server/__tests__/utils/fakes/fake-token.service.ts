@@ -41,7 +41,9 @@ export default class FakeTokenService {
     }
   }
 
-  public static getInvalid(_userId?: string): number {
-    return 123
+  public static getInvalid(_userId?: string): string {
+    const token = FakeTokenService.getValid()
+    const invalidToken = token.substring(0, token.length - 3)
+    return invalidToken
   }
 }
