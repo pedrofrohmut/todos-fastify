@@ -3,7 +3,7 @@ import { Client } from "pg"
 import ConnectionFactory from "../connection-factory.interface"
 import DatabaseConnection from "../../database/database-connection.interface"
 
-import PostgresDatabaseConnection from "../../database/postgres.database-connection"
+import PostgresDatabaseConnection from "../../database/implementations/postgres.database-connection"
 
 import DataBaseConnectionError from "../../errors/database/connection.error"
 

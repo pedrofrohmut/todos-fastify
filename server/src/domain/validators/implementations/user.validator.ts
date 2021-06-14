@@ -3,7 +3,6 @@ import UserValidator from "../user-validator.interface"
 const UUID_V4_REGEX = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i
 
 export default class UserValidatorImplementation implements UserValidator {
-
   public getMessageForId(id?: string): string | null {
     if (id === null || id === undefined) {
       return "User id is required"

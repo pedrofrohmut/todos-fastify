@@ -1,4 +1,4 @@
-import { AdaptedRequest, ControllerResponse } from "../../../src/fastify/router/router.types"
+import { AdaptedRequest, ControllerResponse } from "../../../src/domain/types/router.types"
 
 export class MockControllerStatusPayload {
   private readonly status: number

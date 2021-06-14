@@ -6,8 +6,8 @@ import FastifyRouter from "../../../../src/fastify/router/implementations/fastif
 import RequestAdapter from "../../../../src/fastify/router/request-adapter.interface"
 import Router from "../../../../src/fastify/router/router.interface"
 
-import { MockControllerFactoryImplementation } from "../../../utils/mocks/controller-factory-implementation.mock"
-import { MockControllerResponseValidatorImplementation } from "../../../utils/mocks/controller-response-validator-implementation.mock"
+import { MockControllerFactoryImplementation } from "../../../utils/mocks/factories/controller-factory-implementation.mock"
+import { MockControllerResponseValidatorImplementation } from "../../../utils/mocks/validators/controller-response-validator-implementation.mock"
 import {
   MockControllerArgsAsResponse,
   MockControllerNoExecute,
@@ -36,7 +36,10 @@ const getRequestAdapterError = (requestAdapter: any, request: any): null | Error
   }
 }
 
-const getControllerResponseValidationError = (validator: ControllerResponseValidator, controllerResponse: any): null | Error => {
+const getControllerResponseValidationError = (
+  validator: ControllerResponseValidator,
+  controllerResponse: any
+): null | Error => {
   try {
     validator.validate(controllerResponse)
     return null
@@ -268,7 +271,10 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
   test("Null then response 500/message", async () => {
     const controller = new MockControllerArgsAsResponse(null)
     const controllerResponse = await controller.execute()
-    const controllerResponseErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    const controllerResponseErr = getControllerResponseValidationError(
+      controllerResponseValidator,
+      controllerResponse
+    )
     // Given
     expect(controllerResponse).toBeNull()
     expect(controllerResponseErr).toBeTruthy()
@@ -283,7 +289,10 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
   test("Undefined then response 500/message", async () => {
     const controller = new MockControllerArgsAsResponse(undefined)
     const controllerResponse = await controller.execute()
-    const controllerResponseErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    const controllerResponseErr = getControllerResponseValidationError(
+      controllerResponseValidator,
+      controllerResponse
+    )
     // Given
     expect(controllerResponse).toBeUndefined()
     expect(controllerResponseErr).toBeTruthy()
@@ -298,7 +307,10 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
   test("Status undefined then response 500/message", async () => {
     const controller = new MockControllerStatusPayload(undefined, "Hello World")
     const controllerResponse = await controller.execute()
-    const controllerResponseErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    const controllerResponseErr = getControllerResponseValidationError(
+      controllerResponseValidator,
+      controllerResponse
+    )
     // Given
     expect(controllerResponse.status).toBeUndefined()
     expect(controllerResponseErr).toBeTruthy()
@@ -313,7 +325,10 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
   test("Status isNaN then response 500/message", async () => {
     const controller = new MockControllerStatusPayload("foo", "bar")
     const controllerResponse = await controller.execute()
-    const controllerResponseErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    const controllerResponseErr = getControllerResponseValidationError(
+      controllerResponseValidator,
+      controllerResponse
+    )
     // Given
     expect(controllerResponse.status).not.toBeNumber()
     expect(controllerResponseErr).toBeTruthy()
@@ -328,7 +343,10 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
   test("Status 201 defined body then response 500/message", async () => {
     const controller = new MockControllerStatusPayload(201, "bar")
     const controllerResponse = await controller.execute()
-    const controllerResponseErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    const controllerResponseErr = getControllerResponseValidationError(
+      controllerResponseValidator,
+      controllerResponse
+    )
     // Given
     expect(controllerResponse.status).toBe(201)
     expect(controllerResponse.body).toBeTruthy()
@@ -344,7 +362,10 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
   test("Status 204 defined body then response 500/message", async () => {
     const controller = new MockControllerStatusPayload(204, "bar")
     const controllerResponse = await controller.execute()
-    const controllerResponseErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    const controllerResponseErr = getControllerResponseValidationError(
+      controllerResponseValidator,
+      controllerResponse
+    )
     // Given
     expect(controllerResponse.status).toBe(204)
     expect(controllerResponse.body).toBeTruthy()
@@ -362,7 +383,13 @@ describe("FastifyRouter | RouteController | Valid controller response", () => {
   let router: Router
 
   beforeEach(() => {
-    router = new FastifyRouter(request, response, requestAdapter, controllerFactory, controllerResponseValidator)
+    router = new FastifyRouter(
+      request,
+      response,
+      requestAdapter,
+      controllerFactory,
+      controllerResponseValidator
+    )
   })
 
   test("200/body then response 200/body", async () => {
@@ -372,9 +399,12 @@ describe("FastifyRouter | RouteController | Valid controller response", () => {
     const controllerResponse = await controller.execute()
     const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
     const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
-    const controllerResponseValidatorErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    const controllerResponseValidatorErr = getControllerResponseValidationError(
+      controllerResponseValidator,
+      controllerResponse
+    )
     // Given
-    expect(controllerResponse. status).toBe(status)
+    expect(controllerResponse.status).toBe(status)
     expect(controllerResponse.body).toEqual(body)
     expect(requestAdapterErr).toBeNull()
     expect(controllerFactoryErr).toBeNull()
@@ -394,9 +424,12 @@ describe("FastifyRouter | RouteController | Valid controller response", () => {
     const controllerResponse = await controller.execute()
     const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
     const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
-    const controllerResponseValidatorErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    const controllerResponseValidatorErr = getControllerResponseValidationError(
+      controllerResponseValidator,
+      controllerResponse
+    )
     // Given
-    expect(controllerResponse. status).toBe(status)
+    expect(controllerResponse.status).toBe(status)
     expect(requestAdapterErr).toBeNull()
     expect(controllerFactoryErr).toBeNull()
     expect(controllerResponseValidatorErr).toBeNull()
@@ -415,9 +448,12 @@ describe("FastifyRouter | RouteController | Valid controller response", () => {
     const controllerResponse = await controller.execute()
     const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
     const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
-    const controllerResponseValidatorErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    const controllerResponseValidatorErr = getControllerResponseValidationError(
+      controllerResponseValidator,
+      controllerResponse
+    )
     // Given
-    expect(controllerResponse. status).toBe(status)
+    expect(controllerResponse.status).toBe(status)
     expect(requestAdapterErr).toBeNull()
     expect(controllerFactoryErr).toBeNull()
     expect(controllerResponseValidatorErr).toBeNull()
@@ -437,9 +473,12 @@ describe("FastifyRouter | RouteController | Valid controller response", () => {
     const controllerResponse = await controller.execute()
     const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
     const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
-    const controllerResponseValidatorErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    const controllerResponseValidatorErr = getControllerResponseValidationError(
+      controllerResponseValidator,
+      controllerResponse
+    )
     // Given
-    expect(controllerResponse. status).toBe(status)
+    expect(controllerResponse.status).toBe(status)
     expect(controllerResponse.body).toEqual(body)
     expect(requestAdapterErr).toBeNull()
     expect(controllerFactoryErr).toBeNull()
@@ -460,9 +499,12 @@ describe("FastifyRouter | RouteController | Valid controller response", () => {
     const controllerResponse = await controller.execute()
     const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
     const controllerFactoryErr = getControllerFactoryError(controllerFactory, controller)
-    const controllerResponseValidatorErr = getControllerResponseValidationError(controllerResponseValidator, controllerResponse)
+    const controllerResponseValidatorErr = getControllerResponseValidationError(
+      controllerResponseValidator,
+      controllerResponse
+    )
     // Given
-    expect(controllerResponse. status).toBe(status)
+    expect(controllerResponse.status).toBe(status)
     expect(controllerResponse.body).toEqual(body)
     expect(requestAdapterErr).toBeNull()
     expect(controllerFactoryErr).toBeNull()

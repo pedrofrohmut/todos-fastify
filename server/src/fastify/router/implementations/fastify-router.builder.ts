@@ -10,6 +10,7 @@ import ControllerFactoryImplementation from "../../../domain/factories/implement
 import ControllerResponseValidatorImplementation from "../../../domain/validators/implementations/controller-response.validator"
 import FastifyRequestAdapter from "./fastify-request.adapter"
 import FastifyRouter from "./fastify.router"
+import TokenDecoderServiceImplementation from "../../../domain/services/auth/implementations/token-decoder.service"
 
 import DependencyInjectionError from "../../../domain/errors/dependencies/dependency-injection.error"
 
@@ -33,7 +34,8 @@ export default class FastifyRouterBuilder implements RouterBuilder {
     }
     this.request = request
     this.response = response
-    this.requestAdapter = new FastifyRequestAdapter()
+    const tokenDecoderService = new TokenDecoderServiceImplementation()
+    this.requestAdapter = new FastifyRequestAdapter(tokenDecoderService)
     this.controllerFactory = new ControllerFactoryImplementation()
     this.controllerResponseValidator = new ControllerResponseValidatorImplementation()
   }

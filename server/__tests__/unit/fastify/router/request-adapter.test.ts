@@ -8,11 +8,11 @@ import FastifyRequestAdapter from "../../../../src/fastify/router/implementation
 import ExpiredTokenError from "../../../../src/domain/errors/auth/expired-token.error"
 import InvalidTokenError from "../../../../src/domain/errors/auth/invalid-token.error"
 
+import FakeTokenService from "../../../utils/fakes/token-service.fake"
+import FakeUserService from "../../../utils/fakes/user-service.fake"
 import MockRequest from "../../../utils/mocks/fastify-request.mock"
-import FakeTokenService from "../../../utils/fakes/fake-token.service"
 import { MockDecoderService } from "../../../utils/mocks/services/decoder-service.mock"
-import { isValidUUIDv4 } from "../../../utils/functions/validation-functions.util"
-import FakeUserService from "../../../utils/fakes/fake-user.service"
+import { isValidUUIDv4 } from "../../../utils/functions/validation.functions"
 
 const getAdaptError = (requestAdapter: RequestAdapter, request: any): null | Error => {
   try {

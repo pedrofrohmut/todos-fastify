@@ -1,8 +1,8 @@
 import { Client } from "pg"
 
-import DatabaseConnection from "./database-connection.interface"
+import DatabaseConnection from "../database-connection.interface"
 
-import DataBaseConnectionError from "../errors/database/connection.error"
+import DataBaseConnectionError from "../../errors/database/connection.error"
 
 export default class PostgresDatabaseConnection implements DatabaseConnection {
   private readonly connection: Client
