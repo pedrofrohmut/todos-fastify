@@ -1,6 +1,7 @@
 import Fastify, { FastifyInstance } from "fastify"
 import fastifyEnv from "fastify-env"
 import formbody from "fastify-formbody"
+import FastifyRouterBuilder from "../router/implementations/fastify-router.builder"
 
 import tasksRoutes from "../routes/tasks.routes"
 import todosRoutes from "../routes/todos.routes"
@@ -40,6 +41,14 @@ server
  */
 // Body Parser
 server.register(formbody)
+
+/**
+ * ROUTER
+ */
+server.decorateRequest("router", null)
+server.addHook("onRequest", async (request, response) => {
+  request.router = new FastifyRouterBuilder(request, response).buildRouter()
+})
 
 /**
  * ROUTES

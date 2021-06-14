@@ -9,58 +9,48 @@ import SetTodoAsDoneControllerImplementation from "../../domain/controllers/todo
 import SetTodoAsNotDoneControllerImplementation from "../../domain/controllers/todos/implementations/set-todo-as-not-done.controller"
 import UpdateTodoControllerImplementation from "../../domain/controllers/todos/implementations/update-todo.controller"
 
-import FastifyRouterBuilder from "../router/implementations/fastify-router.builder"
-
 /**
  * TODOS
  */
 const todosRoutesPluginCallback: FastifyPluginCallback = async (fastify, _options) => {
   // ClearCompleteTodosByTaskId
-  fastify.delete("/api/todos/task/:taskId", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(ClearCompleteTodoByTaskIdControllerImplementation)
+  fastify.delete("/api/todos/task/:taskId", async (request, _response) => {
+    request.router.routeController(ClearCompleteTodoByTaskIdControllerImplementation)
   })
 
   // CreateTodoRoute
-  fastify.post("/api/todos", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(CreateTodoControllerImplementation)
+  fastify.post("/api/todos", async (request, _response) => {
+    request.router.routeController(CreateTodoControllerImplementation)
   })
 
   // // DeleteTodoRoute
-  fastify.delete("/api/todos/:todoId", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(DeleteTodoControllerImplementation)
+  fastify.delete("/api/todos/:todoId", async (request, _response) => {
+    request.router.routeController(DeleteTodoControllerImplementation)
   })
 
   // FindTodoById
-  fastify.get("/api/todos/:todoId", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(FindTodoByIdControllerImplementation)
+  fastify.get("/api/todos/:todoId", async (request, _response) => {
+    request.router.routeController(FindTodoByIdControllerImplementation)
   })
 
   // FindTodosByTaskId
-  fastify.get("/api/todos/task/:taskId", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(FindTodosByTaskIdControllerImplementation)
+  fastify.get("/api/todos/task/:taskId", async (request, _response) => {
+    request.router.routeController(FindTodosByTaskIdControllerImplementation)
   })
 
   // SetTodosAsDoneRoute
-  fastify.patch("/api/todos/setdone/:todoId", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(SetTodoAsDoneControllerImplementation)
+  fastify.patch("/api/todos/setdone/:todoId", async (request, _response) => {
+    request.router.routeController(SetTodoAsDoneControllerImplementation)
   })
 
   // SetTodoAsNotDone
-  fastify.patch("/api/todos/setnotdone/:todoId", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(SetTodoAsNotDoneControllerImplementation)
+  fastify.patch("/api/todos/setnotdone/:todoId", async (request, _response) => {
+    request.router.routeController(SetTodoAsNotDoneControllerImplementation)
   })
 
   // UpdateTodo
-  fastify.put("/api/todos/:todoId", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(UpdateTodoControllerImplementation)
+  fastify.put("/api/todos/:todoId", async (request, _response) => {
+    request.router.routeController(UpdateTodoControllerImplementation)
   })
 }
 

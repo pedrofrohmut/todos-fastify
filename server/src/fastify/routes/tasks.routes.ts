@@ -6,40 +6,33 @@ import FindTaskByIdControllerImplementation from "../../domain/controllers/tasks
 import FindTasksByUserIdControllerImplementation from "../../domain/controllers/tasks/implementations/find-tasks-by-user-id.controller"
 import UpdateTaskControllerImplementation from "../../domain/controllers/tasks/implementations/update-task.controller"
 
-import FastifyRouterBuilder from "../router/implementations/fastify-router.builder"
-
 /**
  * TASKS
  */
 const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _options) => {
   // CreateTaskRoute
-  fastify.post("/api/tasks", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(CreateTaskControllerImplementation)
+  fastify.post("/api/tasks", async (request, _response) => {
+    request.router.routeController(CreateTaskControllerImplementation)
   })
 
   // DeleteTaskRoute
-  fastify.delete("/api/tasks/:taskId", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(DeleteTaskControllerImplementation)
+  fastify.delete("/api/tasks/:taskId", async (request, _response) => {
+    request.router.routeController(DeleteTaskControllerImplementation)
   })
 
   // FindTaskByIdRoute
-  fastify.get("/api/tasks/:taskId", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(FindTaskByIdControllerImplementation)
+  fastify.get("/api/tasks/:taskId", async (request, _response) => {
+    request.router.routeController(FindTaskByIdControllerImplementation)
   })
 
   // FindTasksByUserIdRoute
-  fastify.get("/api/tasks/user/:userId", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(FindTasksByUserIdControllerImplementation)
+  fastify.get("/api/tasks/user/:userId", async (request, _response) => {
+    request.router.routeController(FindTasksByUserIdControllerImplementation)
   })
 
   // UpdateTaskRoute
-  fastify.put("/api/tasks/:taskId", async (request, response) => {
-    const router = new FastifyRouterBuilder(request, response).buildRouter()
-    router.routeController(UpdateTaskControllerImplementation)
+  fastify.put("/api/tasks/:taskId", async (request, _response) => {
+    request.router.routeController(UpdateTaskControllerImplementation)
   })
 }
 
