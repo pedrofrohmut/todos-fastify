@@ -1,0 +1,199 @@
+import "jest-extended"
+
+import { ClientConfig } from "pg"
+
+import ConnectionFactory from "../../../../src/domain/factories/connection-factory.interface"
+
+import PostgreConnectionFactory from "../../../../src/domain/factories/implementations/postgres-connection.factory"
+import PostgresDatabaseConnection from "../../../../src/domain/database/implementations/postgres.database-connection"
+import InvalidConnectionConfigurationError from "../../../../src/domain/errors/database/invalid-connection-configuration.error"
+
+// TODO: move to other file
+const getError = (callback: Function) => {
+  try {
+    callback()
+    return null
+  } catch (err) {
+    return err
+  }
+}
+
+const getConstructorError = (factory: any, config: any): null | Error => {
+  const possibleErr = getError(() => {
+    new factory(config).getConnection()
+  })
+  return possibleErr
+}
+
+// TODO: move to other file
+const expectsToHaveError = (err: any): void => {
+  expect(err).toBeTruthy()
+  expect(err).toBeInstanceOf(Error)
+  expect(err.message).toBeTruthy()
+  expect(err.message).toBeString()
+}
+
+let config: ClientConfig
+
+beforeEach(() => {
+  config = {
+    user: process.env.PGUSER,
+    password: process.env.PGPASSWORD,
+    host: process.env.PGHOST,
+    port: parseInt(process.env.PGPORT),
+    database: process.env.PGDATABASE
+  }
+})
+
+describe("PostgreConnectionFactory | Constructor | Invalid config throws error", () => {
+  test("Falsy user", () => {
+    config.user = null
+    // Given
+    expect(config.user).toBeFalsy()
+    // When
+    const constructorErr = getConstructorError(PostgreConnectionFactory, config)
+    // Then
+    expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
+  })
+
+  test("Not String user", () => {
+    // @ts-ignore
+    config.user = 123
+    // Given
+    expect(config.user).not.toBeString()
+    // When
+    const constructorErr = getConstructorError(PostgreConnectionFactory, config)
+    // Then
+    expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
+  })
+
+  test("Falsy password", () => {
+    config.password = null
+    // Given
+    expect(config.password).toBeFalsy()
+    // When
+    const constructorErr = getConstructorError(PostgreConnectionFactory, config)
+    // Then
+    expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
+  })
+
+  test("Not string password", () => {
+    // @ts-ignore
+    config.password = 123
+    // Given
+    expect(config.password).not.toBeString()
+    // When
+    const constructorErr = getConstructorError(PostgreConnectionFactory, config)
+    // Then
+    expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
+  })
+
+  test("Falsy host", () => {
+    config.host = null
+    // Given
+    expect(config.host).toBeFalsy()
+    // When
+    const constructorErr = getConstructorError(PostgreConnectionFactory, config)
+    // Then
+    expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
+  })
+
+  test("Not string host", () => {
+    // @ts-ignore
+    config.host = 123
+    // Given
+    expect(config.host).not.toBeString()
+    // When
+    const constructorErr = getConstructorError(PostgreConnectionFactory, config)
+    // Then
+    expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
+  })
+
+  test("Falsy port", () => {
+    config.port = null
+    // Given
+    expect(config.port).toBeFalsy()
+    // When
+    const constructorErr = getConstructorError(PostgreConnectionFactory, config)
+    // Then
+    expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
+  })
+
+  test("Not typeof string or number port", () => {
+    // @ts-ignore
+    config.port = { foo: "bar" }
+    // Given
+    expect(config.port).not.toBeNumber()
+    expect(config.port).not.toBeString()
+    // When
+    const constructorErr = getConstructorError(PostgreConnectionFactory, config)
+    // Then
+    expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
+  })
+
+  test("Cant be parsed to number port", () => {
+    // @ts-ignore
+    config.port = "foo"
+    // Given
+    expect(config.port).toBeString()
+    expect(config.port).toBeNaN()
+    // When
+    const constructorErr = getConstructorError(PostgreConnectionFactory, config)
+    // Then
+    expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
+  })
+
+  test("Falsy database", () => {
+    config.database = null
+    // Given
+    expect(config.database).toBeFalsy()
+    // When
+    const constructorErr = getConstructorError(PostgreConnectionFactory, config)
+    // Then
+    expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
+  })
+
+  test("Not string database", () => {
+    // @ts-ignore
+    config.database = 123
+    // Given
+    expect(config.database).not.toBeString()
+    // When
+    const constructorErr = getConstructorError(PostgreConnectionFactory, config)
+    // Then
+    expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
+  })
+})
+
+describe("PostgreConnectionFactory | getConnection | is a valid connection", () => {
+  let connectionFactory: ConnectionFactory
+
+  beforeEach(() => {
+    connectionFactory = new PostgreConnectionFactory(config)
+  })
+
+  test("Typeof of object with open and close methods", () => {
+    // Given
+    expect(connectionFactory).toBeTruthy()
+    expect(connectionFactory).toBeObject()
+    expect(connectionFactory.getConnection).toBeDefined()
+    // When
+    const connection = connectionFactory.getConnection()
+    // Then
+    expect(connection).toBeTruthy()
+    expect(connection).toBeInstanceOf(PostgresDatabaseConnection)
+    expect(connection.open).toBeDefined()
+    expect(connection.close).toBeDefined()
+  })
+})
