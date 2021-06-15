@@ -17,47 +17,34 @@ import {
 import { MockFastifyRequestAdapter } from "../../../utils/mocks/fastify-request-adapter.mock"
 import MockRequest from "../../../utils/mocks/fastify-request.mock"
 import MockResponse from "../../../utils/mocks/fastify-response.mock"
+import { getSyncError } from "../../../utils/functions/error.functions"
+import {
+  expectsResponse400AndMessage,
+  expectsResponse500AndMessage
+} from "../../../utils/functions/expects.functions"
 
 const getControllerFactoryError = (controllerFactory: any, controller: any): null | Error => {
-  try {
+  const possibleErr = getSyncError(() => {
     controllerFactory.getController(controller)
-    return null
-  } catch (err) {
-    return err
-  }
+  })
+  return possibleErr
 }
 
 const getRequestAdapterError = (requestAdapter: any, request: any): null | Error => {
-  try {
+  const possibleErr = getSyncError(() => {
     requestAdapter.adapt(request)
-    return null
-  } catch (err) {
-    return err
-  }
+  })
+  return possibleErr
 }
 
 const getControllerResponseValidationError = (
   validator: ControllerResponseValidator,
   controllerResponse: any
 ): null | Error => {
-  try {
+  const possibleErr = getSyncError(() => {
     validator.validate(controllerResponse)
-    return null
-  } catch (err) {
-    return err
-  }
-}
-
-const expectsResponse400AndMessage = (response: MockResponse): void => {
-  expect(response.statusCode).toBe(400)
-  expect(response.payload).toBeTruthy()
-  expect(response.payload).toBeString()
-}
-
-const expectsResponse500AndMessage = (response: MockResponse): void => {
-  expect(response.statusCode).toBe(500)
-  expect(response.payload).toBeTruthy()
-  expect(response.payload).toBeString()
+  })
+  return possibleErr
 }
 
 const expectsValidRouter = (router: any): void => {
@@ -84,7 +71,7 @@ beforeEach(() => {
   controllerResponseValidator = new MockControllerResponseValidatorImplementation()
 })
 
-describe("Router | RouterController | Invalid controller as argument", () => {
+describe("FastifyRouter | RouterController | Invalid controller as argument", () => {
   let controllerFactory: ControllerFactory
   let router: Router
 

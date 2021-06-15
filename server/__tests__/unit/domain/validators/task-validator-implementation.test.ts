@@ -2,17 +2,25 @@ import "jest-extended"
 
 import TaskValidatorImplementation from "../../../../src/domain/validators/implementations/task.validator"
 
+const getValidationMessageForName = (name?: any) => {
+  return new TaskValidatorImplementation().getMessageForName(name)
+}
+
+const expectsInvalidName = (validationMessage: string | null) => {
+  expect(validationMessage).toBeTruthy()
+  expect(validationMessage).toBeString()
+}
+
+const getValidationMessageForDescription = (description?: any) => {
+  return new TaskValidatorImplementation().getMessageForDescription(description)
+}
+
+const expectsInvalidDescription = (validationMessage: string | null) => {
+  expect(validationMessage).toBeTruthy()
+  expect(validationMessage).toBeString()
+}
+
 describe("TaskValidator | getMessageForName", () => {
-  const getValidationMessageForName = (name?: any) => {
-    return new TaskValidatorImplementation().getMessageForName(name)
-  }
-
-  const expectsInvalidName = (validationMessage: string | null) => {
-    expect(validationMessage).not.toBeNull()
-    expect(validationMessage).toBeTruthy()
-    expect(validationMessage).toBeString()
-  }
-
   test("Null => message", () => {
     const name = null
     // Given
@@ -80,16 +88,6 @@ describe("TaskValidator | getMessageForName", () => {
 })
 
 describe("TaskValidator | getMessageForDescription", () => {
-  const getValidationMessageForDescription = (description?: any) => {
-    return new TaskValidatorImplementation().getMessageForDescription(description)
-  }
-
-  const expectsInvalidDescription = (validationMessage: string | null) => {
-    expect(validationMessage).not.toBeNull()
-    expect(validationMessage).toBeTruthy()
-    expect(validationMessage).toBeString()
-  }
-
   test("Too long => message", () => {
     const description =
       "Ipsum consequatur fugiat ducimus ea maxime? Earum reiciendis sed consectetur perspiciatis officia Quisquam maxime velit fugit consequatur molestiae Porro ducimus consequatur autem odit illum Recusandae nihil nemo minima assumenda ab Minima dolores debitis eius ipsum voluptatibus maiores, tempora? Ipsum asperiores nam neque doloremque sunt Ut ducimus eaque ex magnam maiores!"

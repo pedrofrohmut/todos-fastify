@@ -6,31 +6,17 @@ import ConnectionFactory from "../../../../src/domain/factories/connection-facto
 
 import PostgreConnectionFactory from "../../../../src/domain/factories/implementations/postgres-connection.factory"
 import PostgresDatabaseConnection from "../../../../src/domain/database/implementations/postgres.database-connection"
+
 import InvalidConnectionConfigurationError from "../../../../src/domain/errors/database/invalid-connection-configuration.error"
 
-// TODO: move to other file
-const getError = (callback: Function) => {
-  try {
-    callback()
-    return null
-  } catch (err) {
-    return err
-  }
-}
+import { getSyncError } from "../../../utils/functions/error.functions"
+import { expectsToHaveError } from "../../../utils/functions/expects.functions"
 
 const getConstructorError = (factory: any, config: any): null | Error => {
-  const possibleErr = getError(() => {
+  const possibleErr = getSyncError(() => {
     new factory(config).getConnection()
   })
   return possibleErr
-}
-
-// TODO: move to other file
-const expectsToHaveError = (err: any): void => {
-  expect(err).toBeTruthy()
-  expect(err).toBeInstanceOf(Error)
-  expect(err.message).toBeTruthy()
-  expect(err.message).toBeString()
 }
 
 let config: ClientConfig

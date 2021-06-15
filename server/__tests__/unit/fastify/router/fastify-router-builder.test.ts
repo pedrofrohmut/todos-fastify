@@ -1,11 +1,11 @@
 import "jest-extended"
 
-import { FastifyReply, FastifyRequest } from "fastify"
-
 import FastifyRouterBuilder from "../../../../src/fastify/router/implementations/fastify-router.builder"
 
 import MockRequest from "../../../utils/mocks/fastify-request.mock"
 import MockResponse from "../../../utils/mocks/fastify-response.mock"
+import { expectsToHaveError } from "../../../utils/functions/expects.functions"
+import { getSyncError } from "../../../utils/functions/error.functions"
 
 let request: MockRequest
 let response: MockResponse
@@ -15,41 +15,28 @@ beforeEach(() => {
   response = new MockResponse()
 })
 
-const expectsValidResponse = (response?: FastifyReply): void => {
-  expect(response).toBeDefined()
-  expect(response).not.toBeNull()
+const expectsValidResponse = (response: any): void => {
+  expect(response).toBeTruthy()
   expect(response).toBeObject()
 }
 
-const expectsValidRequest = (request?: FastifyRequest): void => {
-  expect(request).toBeDefined()
-  expect(request).not.toBeNull()
+const expectsValidRequest = (request: any): void => {
+  expect(request).toBeTruthy()
   expect(request).toBeObject()
 }
 
-const expectsToHaveError = (err: Error): void => {
-  expect(err).toBeTruthy()
-  expect(err.message).toBeTruthy()
-  expect(err.message).toBeString()
-}
-
 const getConstructorError = (request: any, response: any): null | Error => {
-  try {
-    // @ts-ignore
+  const possibleErr = getSyncError(() => {
     new FastifyRouterBuilder(request, response)
-    return null
-  } catch (err) {
-    return err
-  }
+  })
+  return possibleErr
 }
 
 const getBuildRouterError = (request: any, response: any): null | Error => {
-  try {
+  const possibleErr = getSyncError(() => {
     new FastifyRouterBuilder(request, response).buildRouter()
-    return null
-  } catch (err) {
-    return err
-  }
+  })
+  return possibleErr
 }
 
 describe("FastifyRouterBuilder | buildRouter", () => {

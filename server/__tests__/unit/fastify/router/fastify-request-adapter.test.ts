@@ -13,43 +13,31 @@ import FakeUserService from "../../../utils/fakes/user-service.fake"
 import MockRequest from "../../../utils/mocks/fastify-request.mock"
 import { MockDecoderService } from "../../../utils/mocks/services/decoder-service.mock"
 import { isValidUUIDv4 } from "../../../utils/functions/validation.functions"
+import { getSyncError } from "../../../utils/functions/error.functions"
+import {expectsToHaveError} from "../../../utils/functions/expects.functions"
 
 const getAdaptError = (requestAdapter: RequestAdapter, request: any): null | Error => {
-  try {
+  const possibleErr = getSyncError(() => {
     requestAdapter.adapt(request)
-    return null
-  } catch (err) {
-    return err
-  }
+  })
+  return possibleErr
 }
 
 const getDecodeError = (decoder: TokenDecoderService, token: string): null | Error => {
-  try {
+  const possibleErr = getSyncError(() => {
     decoder.execute(token)
-    return null
-  } catch (err) {
-    return err
-  }
-}
-
-const expectsToHaveError = (err: any): void => {
-  expect(err).toBeDefined()
-  expect(err).not.toBeNull()
-  expect(err).toBeInstanceOf(Error)
-  expect(err.message).toBeTruthy()
-  expect(err.message).toBeString()
+  })
+  return possibleErr
 }
 
 const expectsValidRequestAdapter = (requestAdapter: any): void => {
-  expect(requestAdapter).toBeDefined()
-  expect(requestAdapter).not.toBeNull()
+  expect(requestAdapter).toBeTruthy()
   expect(requestAdapter).toBeObject()
   expect(requestAdapter).toBeInstanceOf(FastifyRequestAdapter)
 }
 
 const expectsValidDecoderService = (decoderService: any): void => {
-  expect(decoderService).toBeDefined()
-  expect(decoderService).not.toBeNull()
+  expect(decoderService).toBeTruthy()
   expect(decoderService).toBeObject()
   expect(decoderService).toBeInstanceOf(MockDecoderService)
 }
@@ -64,7 +52,7 @@ beforeEach(() => {
   requestAdapter = new FastifyRequestAdapter(tokenDecoderService)
 })
 
-describe("RequestAdapter | adapt | invalid request", () => {
+describe("FastifyRequestAdapter | adapt | invalid request", () => {
   test("Null request throws error", () => {
     const request = null
     // Given
@@ -102,7 +90,7 @@ describe("RequestAdapter | adapt | invalid request", () => {
   })
 })
 
-describe("RequestAdapter | adapt | adapt body", () => {
+describe("FastifyRequestAdapter | adapt | adapt body", () => {
   test("Null body => null request.body", () => {
     request.body = null
     const adaptErr = getAdaptError(requestAdapter, request)
@@ -147,9 +135,7 @@ describe("RequestAdapter | adapt | adapt body", () => {
     const body = { foo: "bar" }
     request.body = body
     // Given
-    expect(request.body).toBeDefined()
     expect(request.body).not.toBeNull()
-    expect(request.body).toBeObject()
     expect(request.body).toEqual(body)
     expectsValidDecoderService(tokenDecoderService)
     expectsValidRequestAdapter(requestAdapter)
@@ -160,7 +146,7 @@ describe("RequestAdapter | adapt | adapt body", () => {
   })
 })
 
-describe("RequestAdapter | adapt | adapt params", () => {
+describe("FastifyRequestAdapter | adapt | adapt params", () => {
   test("Null params => null request.params", () => {
     request.params = null
     const adaptErr = getAdaptError(requestAdapter, request)
@@ -206,9 +192,6 @@ describe("RequestAdapter | adapt | adapt params", () => {
     request.params = params
     const adaptErr = getAdaptError(requestAdapter, request)
     // Given
-    expect(request.params).toBeDefined()
-    expect(request.params).not.toBeNull()
-    expect(request.params).toBeObject()
     expect(request.params).toEqual(params)
     expect(adaptErr).toBeFalsy()
     expectsValidDecoderService(tokenDecoderService)
@@ -220,7 +203,7 @@ describe("RequestAdapter | adapt | adapt params", () => {
   })
 })
 
-describe("RequestAdapter | adapt | headers to authUserId", () => {
+describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
   test("Null headers => null authUserId", () => {
     request.headers = null
     const adaptErr = getAdaptError(requestAdapter, request)

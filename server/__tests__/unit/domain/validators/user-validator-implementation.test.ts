@@ -2,22 +2,18 @@ import "jest-extended"
 
 import UserValidatorImplementation from "../../../../src/domain/validators/implementations/user.validator"
 
+import { isValidUUIDv4 } from "../../../utils/functions/validation.functions"
+
+const getValidationMessageForId = (id?: any) => {
+  return new UserValidatorImplementation().getMessageForId(id)
+}
+
+const expectsInvalidId = (validationMessage?: string | null) => {
+  expect(validationMessage).toBeTruthy()
+  expect(validationMessage).toBeString()
+}
+
 describe("UserValidator | GetMessageForId", () => {
-  const getValidationMessageForId = (id?: any) => {
-    return new UserValidatorImplementation().getMessageForId(id)
-  }
-
-  const expectsInvalidId = (validationMessage?: string | null) => {
-    expect(validationMessage).toBeDefined()
-    expect(validationMessage).toBeTruthy()
-    expect(validationMessage).toBeString()
-  }
-
-  const isValidUUIDv4 = (uuid: string) => {
-    const UUID_V4_REGEX = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i
-    return UUID_V4_REGEX.test(uuid)
-  }
-
   test("Null => message", () => {
     const id = null
     // Given

@@ -39,7 +39,7 @@ export default class PostgresConnectionFactory implements ConnectionFactory {
       const client = new Client(this.configuration)
       return new PostgresDatabaseConnection(client)
     } catch (err) {
-      throw new DataBaseConnectionError(err.message)
+      throw new DataBaseConnectionError("[PostgresConnectionFactory] getConnection. " + err.message)
     }
   }
 }

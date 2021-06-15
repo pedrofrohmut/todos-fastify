@@ -3,21 +3,14 @@ import "jest-extended"
 import ControllerFactoryImplementation from "../../../../src/domain/factories/implementations/controller.factory"
 
 import { MockControllerNotListed } from "../../../utils/mocks/controller.mock"
+import { expectsToHaveError } from "../../../utils/functions/expects.functions"
+import { getSyncError } from "../../../utils/functions/error.functions"
 
-const getGetControllerError = (controller: any): null | Error => {
-  try {
+const getGetControllerError = (controller: any) => {
+  const possibleErr = getSyncError(() => {
     new ControllerFactoryImplementation().getController(controller)
-    return null
-  } catch (err) {
-    return err
-  }
-}
-
-const expectsToHaveError = (err: any) => {
-  expect(err).toBeDefined()
-  expect(err).not.toBeNull()
-  expect(err.message).toBeTruthy()
-  expect(err.message).toBeString()
+  })
+  return possibleErr
 }
 
 describe("ControllerFactoryImplementation | GetController | invalid args", () => {

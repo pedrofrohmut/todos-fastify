@@ -6,25 +6,21 @@ import ControllerResponseValidator from "../../../../src/domain/validators/contr
 
 import ControllerResponseValidatorImplementation from "../../../../src/domain/validators/implementations/controller-response.validator"
 
-import { MockControllerArgsAsResponse, MockControllerStatusPayload } from "../../../utils/mocks/controller.mock"
+import {
+  MockControllerArgsAsResponse,
+  MockControllerStatusPayload
+} from "../../../utils/mocks/controller.mock"
+import { expectsToHaveError } from "../../../utils/functions/expects.functions"
+import { getSyncError } from "../../../utils/functions/error.functions"
 
 const getValidatorError = (
   validator: ControllerResponseValidator,
   response: ControllerResponse
 ): null | Error => {
-  try {
+  const possibleErr = getSyncError(() => {
     validator.validate(response)
-    return null
-  } catch (err) {
-    return err
-  }
-}
-
-const expectsToHaveError = (err: any): void => {
-  expect(err).toBeTruthy()
-  expect(err).toBeInstanceOf(Error)
-  expect(err.message).toBeTruthy()
-  expect(err.message).toBeString()
+  })
+  return possibleErr
 }
 
 let controllerResponseValidator: ControllerResponseValidator
