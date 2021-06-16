@@ -7,8 +7,9 @@
     "dev": "ts-node-dev --respawn --transpile-only src/fastify/server/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node .dist/index.js",
-    "test": "jest",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test:unit": "jest --watchAll --testPathPattern=__tests__/unit",
+    "test:integration": "jest --watchAll --testPathPattern=__tests__/integration"
   },
   "dependencies": {
     "fastify": "^3.17.0",

@@ -1,6 +1,5 @@
-import { AdaptedRequest } from "../../../utils/types/controller/util.types"
-import { SetTodoAsDoneResponse } from "../../types/controller/response.types"
+import { AdaptedRequest, ControllerResponse } from "../../types/router.types"
 
 export default interface SetTodoAsDoneController {
-  execute(request: AdaptedRequest): Promise<SetTodoAsDoneResponse>
+  execute(request: AdaptedRequest<null>): Promise<ControllerResponse<undefined>>
 }

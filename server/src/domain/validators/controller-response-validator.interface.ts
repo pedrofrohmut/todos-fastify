@@ -1,5 +1,5 @@
 import { ControllerResponse } from "../types/router.types"
 
 export default interface ControllerResponseValidator {
-  validate(controllerResponse: ControllerResponse): void
+  validate(controllerResponse: ControllerResponse<any>): void
 }

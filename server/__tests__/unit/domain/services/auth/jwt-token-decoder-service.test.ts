@@ -64,7 +64,7 @@ describe("JwtTokenDecoderService | execute | Invalid tokens throws errors", () =
 
   test("Expired throws Expired Token", () => {
     const token = FakeTokenService.getExpired()
-    const jwtVerifyErr =  getSyncError(() => jwt.verify(token, process.env.JWT_SECRET))
+    const jwtVerifyErr = getSyncError(() => jwt.verify(token, process.env.JWT_SECRET))
     // Given
     expect(token).toBeTruthy()
     expect(token).toBeString()

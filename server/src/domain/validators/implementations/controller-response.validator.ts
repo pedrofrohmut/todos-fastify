@@ -43,7 +43,7 @@ export default class ControllerResponseValidatorImplementation
     }
   }
 
-  public validate(response: ControllerResponse): void {
+  public validate(response: ControllerResponse<any>): void {
     this.validateResponse(response)
     this.validateResponseStatus(response.status)
     this.validateResponseBody(response)

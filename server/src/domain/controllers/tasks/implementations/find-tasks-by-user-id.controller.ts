@@ -1,14 +1,12 @@
-import { AdaptedRequest } from "../../../../utils/types/controller/util.types"
-import { FindTasksByUserIdResponse } from "../../../types/controller/response.types"
+import { AdaptedRequest, ControllerResponse } from "../../../types/router.types"
+import { Task } from "../../../types/task.types"
 
 import FindTasksByUserIdController from "../find-tasks-by-user-id-controller.interface"
 
 export default class FindTasksByUserIdControllerImplementation
   implements FindTasksByUserIdController
 {
-  public constructor() {}
-
-  public async execute(_request: AdaptedRequest): Promise<FindTasksByUserIdResponse> {
+  public async execute(_request: AdaptedRequest<null>): Promise<ControllerResponse<Task[]>> {
     throw new Error("Method not implemented.")
   }
 }

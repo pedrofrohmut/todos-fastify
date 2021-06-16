@@ -1,12 +1,9 @@
-import { AdaptedRequest } from "../../../../utils/types/controller/util.types"
-import { DeleteTodoResponse } from "../../../types/controller/response.types"
+import { AdaptedRequest, ControllerResponse } from "../../../types/router.types"
 
 import DeleteTodoController from "../delete-todo-controller.interface"
 
 export default class DeleteTodoControllerImplementation implements DeleteTodoController {
-  public constructor() {}
-
-  public async execute(_request: AdaptedRequest): Promise<DeleteTodoResponse> {
+  public async execute(_request: AdaptedRequest<null>): Promise<ControllerResponse<undefined>> {
     throw new Error("Method not implemented.")
   }
 }

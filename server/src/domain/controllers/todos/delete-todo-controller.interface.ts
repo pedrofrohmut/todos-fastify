@@ -1,6 +1,5 @@
-import { AdaptedRequest } from "../../../utils/types/controller/util.types"
-import { DeleteTodoResponse } from "../../types/controller/response.types"
+import { AdaptedRequest, ControllerResponse } from "../../types/router.types"
 
 export default interface DeleteTodoController {
-  execute(request: AdaptedRequest): Promise<DeleteTodoResponse>
+  execute(request: AdaptedRequest<null>): Promise<ControllerResponse<undefined>>
 }

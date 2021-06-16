@@ -1,14 +1,11 @@
-import { AdaptedRequest } from "../../../../utils/types/controller/util.types"
-import { ClearCompleteTodosByTaskIdResponse } from "../../../types/controller/response.types"
+import { AdaptedRequest, ControllerResponse } from "../../../types/router.types"
 
 import ClearCompleteTodosByTaskIdController from "../clear-complete-todos-by-task-id-controller.interface"
 
 export default class ClearCompleteTodoByTaskIdControllerImplementation
   implements ClearCompleteTodosByTaskIdController
 {
-  public constructor() {}
-
-  public async execute(_request: AdaptedRequest): Promise<ClearCompleteTodosByTaskIdResponse> {
+  public async execute(_request: AdaptedRequest<null>): Promise<ControllerResponse<undefined>> {
     throw new Error("Method not implemented.")
   }
 }

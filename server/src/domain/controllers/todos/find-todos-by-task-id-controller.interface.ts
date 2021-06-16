@@ -1,6 +1,6 @@
-import { AdaptedRequest } from "../../../utils/types/controller/util.types"
-import { FindTodosByTaskIdResponse } from "../../types/controller/response.types"
+import { AdaptedRequest, ControllerResponse } from "../../types/router.types"
+import { Todo } from "../../types/todo.types"
 
 export default interface FindTodosByTaskIdController {
-  execute(request: AdaptedRequest): Promise<FindTodosByTaskIdResponse>
+  execute(request: AdaptedRequest<null>): Promise<ControllerResponse<Todo[]>>
 }

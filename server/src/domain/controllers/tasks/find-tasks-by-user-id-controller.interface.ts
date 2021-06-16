@@ -1,6 +1,6 @@
-import { AdaptedRequest } from "../../../utils/types/controller/util.types"
-import { FindTasksByUserIdResponse } from "../../types/controller/response.types"
+import { AdaptedRequest, ControllerResponse } from "../../types/router.types"
+import { Task } from "../../types/task.types"
 
 export default interface FindTasksByUserIdController {
-  execute(request: AdaptedRequest): Promise<FindTasksByUserIdResponse>
+  execute(request: AdaptedRequest<null>): Promise<ControllerResponse<Task[]>>
 }

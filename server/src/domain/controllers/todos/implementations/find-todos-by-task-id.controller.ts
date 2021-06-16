@@ -1,14 +1,12 @@
-import { AdaptedRequest } from "../../../../utils/types/controller/util.types"
-import { FindTodosByTaskIdResponse } from "../../../types/controller/response.types"
+import { AdaptedRequest, ControllerResponse } from "../../../types/router.types"
+import { Todo } from "../../../types/todo.types"
 
 import FindTodosByTaskIdController from "../find-todos-by-task-id-controller.interface"
 
 export default class FindTodosByTaskIdControllerImplementation
   implements FindTodosByTaskIdController
 {
-  public constructor() {}
-
-  public async execute(_request: AdaptedRequest): Promise<FindTodosByTaskIdResponse> {
+  public async execute(_request: AdaptedRequest<null>): Promise<ControllerResponse<Todo[]>> {
     throw new Error("Method not implemented.")
   }
 }

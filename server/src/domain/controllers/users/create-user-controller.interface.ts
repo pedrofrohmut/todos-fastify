@@ -1,6 +1,6 @@
-import { AdaptedRequest } from "../../../utils/types/controller/util.types"
-import { CreateUserResponse } from "../../types/controller/response.types"
+import { CreateUserBody } from "../../types/request/body.types"
+import { AdaptedRequest, ControllerResponse } from "../../types/router.types"
 
 export default interface CreateUserController {
-  execute(request: AdaptedRequest): Promise<CreateUserResponse>
+  execute(request: AdaptedRequest<CreateUserBody>): Promise<ControllerResponse<undefined>>
 }

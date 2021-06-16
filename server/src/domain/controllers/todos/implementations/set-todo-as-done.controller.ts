@@ -1,12 +1,9 @@
-import { AdaptedRequest } from "../../../../utils/types/controller/util.types"
-import { SetTodoAsDoneResponse } from "../../../types/controller/response.types"
+import { AdaptedRequest, ControllerResponse } from "../../../types/router.types"
 
 import SetTodoAsDoneController from "../set-todo-as-done-controller.interface"
 
 export default class SetTodoAsDoneControllerImplementation implements SetTodoAsDoneController {
-  public constructor() {}
-
-  public async execute(_request: AdaptedRequest): Promise<SetTodoAsDoneResponse> {
+  public async execute(_request: AdaptedRequest<null>): Promise<ControllerResponse<undefined>> {
     throw new Error("Method not implemented.")
   }
 }

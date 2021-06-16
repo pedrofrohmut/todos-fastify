@@ -1,6 +1,6 @@
-import { CreateTaskResponse } from "../../types/controller/response.types"
-import { AdaptedRequest } from "../../types/router.types"
+import { CreateTaskBody } from "../../types/request/body.types"
+import { AdaptedRequest, ControllerResponse } from "../../types/router.types"
 
 export default interface CreateTaskController {
-  execute(request: AdaptedRequest): Promise<CreateTaskResponse>
+  execute(request: AdaptedRequest<CreateTaskBody>): Promise<ControllerResponse<void>>
 }

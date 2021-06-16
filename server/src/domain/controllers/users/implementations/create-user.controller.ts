@@ -1,12 +1,12 @@
-import { AdaptedRequest } from "../../../../utils/types/controller/util.types"
-import { CreateUserResponse } from "../../../types/controller/response.types"
+import { CreateUserBody } from "../../../types/request/body.types"
+import { AdaptedRequest, ControllerResponse } from "../../../types/router.types"
 
 import CreateUserController from "../create-user-controller.interface"
 
 export default class CreateUserControllerImplementation implements CreateUserController {
-  public constructor() {}
-
-  public async execute(_request: AdaptedRequest): Promise<CreateUserResponse> {
+  public async execute(
+    _request: AdaptedRequest<CreateUserBody>
+  ): Promise<ControllerResponse<undefined>> {
     throw new Error("Method not implemented.")
   }
 }

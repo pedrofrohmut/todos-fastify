@@ -1,19 +1,20 @@
 import { FastifyRequest } from "fastify"
 
-import { AdaptedRequest } from "../../../domain/types/router.types"
+import { AdaptedRequest, Params } from "../../../domain/types/router.types"
+import { AuthenticationToken } from "../../../domain/types/auth/token.types"
 
 import TokenDecoderService from "../../../domain/services/auth/token-decoder-service.interface"
 
+import ExpiredTokenError from "../../../domain/errors/auth/expired-token.error"
 import InvalidRequestBodyError from "../../../domain/errors/request/invalid-request-body.error"
 import InvalidRequestError from "../../../domain/errors/request/invalid-request.error"
 import InvalidRequestHeadersError from "../../../domain/errors/request/invalid-request-headers.error"
 import InvalidRequestParamsError from "../../../domain/errors/request/invalid-request-params.error"
 import InvalidTokenError from "../../../domain/errors/auth/invalid-token.error"
-import RequestNotDefinedError from "../../../domain/errors/request/request-not-defined.error"
-import ExpiredTokenError from "../../../domain/errors/auth/expired-token.error"
-import { AuthenticationToken } from "../../../domain/types/auth/token.types"
-import { isValidUUIDv4 } from "../../../domain/validators/validator.functions"
 import InvalidTokenUserIdError from "../../../domain/errors/auth/invalid-token-user-id.error"
+import RequestNotDefinedError from "../../../domain/errors/request/request-not-defined.error"
+
+import { isValidUUIDv4 } from "../../../domain/validators/validator.functions"
 
 export default class FastifyRequestAdapter {
   private readonly tokenDecoderService: TokenDecoderService
@@ -99,7 +100,7 @@ export default class FastifyRequestAdapter {
     }
   }
 
-  private adaptParams(params: any): null | object {
+  private adaptParams(params: any): null | Params {
     if (params === undefined) {
       return null
     }
@@ -107,7 +108,7 @@ export default class FastifyRequestAdapter {
     return params
   }
 
-  public adapt(request: FastifyRequest): AdaptedRequest {
+  public adapt(request: FastifyRequest): AdaptedRequest<any> {
     this.validateRequest(request)
     const body = this.adaptBody(request.body)
     const authUserId = this.adaptHeaders(request.headers)

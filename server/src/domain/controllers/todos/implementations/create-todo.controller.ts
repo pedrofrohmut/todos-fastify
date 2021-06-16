@@ -1,12 +1,12 @@
-import { AdaptedRequest } from "../../../../utils/types/controller/util.types"
-import { CreateTodoResponse } from "../../../types/controller/response.types"
+import { CreateTodoBody } from "../../../types/request/body.types"
+import { AdaptedRequest, ControllerResponse } from "../../../types/router.types"
 
 import CreateTodoController from "../create-todo-controller.interface"
 
 export default class CreateTodoControllerImplementation implements CreateTodoController {
-  public constructor() {}
-
-  public async execute(_request: AdaptedRequest): Promise<CreateTodoResponse> {
+  public async execute(
+    _request: AdaptedRequest<CreateTodoBody>
+  ): Promise<ControllerResponse<undefined>> {
     throw new Error("Method not implemented.")
   }
 }

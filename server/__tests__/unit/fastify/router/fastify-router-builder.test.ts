@@ -43,7 +43,9 @@ describe("FastifyRouterBuilder | Constructor", () => {
     expectsValidResponse(response)
     expectsValidjwtSecret(jwtSecret)
     // When
-    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
+    const constructorErr = getSyncError(
+      () => new FastifyRouterBuilder(request, response, jwtSecret)
+    )
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(DependencyInjectionError)
@@ -56,7 +58,9 @@ describe("FastifyRouterBuilder | Constructor", () => {
     expectsValidResponse(response)
     expectsValidjwtSecret(jwtSecret)
     // When
-    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
+    const constructorErr = getSyncError(
+      () => new FastifyRouterBuilder(request, response, jwtSecret)
+    )
     // Then
     expectsToHaveError(constructorErr)
   })
@@ -69,7 +73,9 @@ describe("FastifyRouterBuilder | Constructor", () => {
     expectsValidjwtSecret(jwtSecret)
     // When
     // @ts-ignore
-    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
+    const constructorErr = getSyncError(
+      () => new FastifyRouterBuilder(request, response, jwtSecret)
+    )
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(DependencyInjectionError)
@@ -82,7 +88,9 @@ describe("FastifyRouterBuilder | Constructor", () => {
     expectsValidRequest(request)
     expectsValidjwtSecret(jwtSecret)
     // When
-    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
+    const constructorErr = getSyncError(
+      () => new FastifyRouterBuilder(request, response, jwtSecret)
+    )
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(DependencyInjectionError)
@@ -95,7 +103,9 @@ describe("FastifyRouterBuilder | Constructor", () => {
     expectsValidRequest(request)
     expectsValidjwtSecret(jwtSecret)
     // When
-    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
+    const constructorErr = getSyncError(
+      () => new FastifyRouterBuilder(request, response, jwtSecret)
+    )
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(DependencyInjectionError)
@@ -109,7 +119,9 @@ describe("FastifyRouterBuilder | Constructor", () => {
     expectsValidjwtSecret(jwtSecret)
     // When
     // @ts-ignore
-    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
+    const constructorErr = getSyncError(
+      () => new FastifyRouterBuilder(request, response, jwtSecret)
+    )
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(DependencyInjectionError)
@@ -122,7 +134,9 @@ describe("FastifyRouterBuilder | Constructor", () => {
     expectsValidRequest(request)
     expectsValidResponse(response)
     // When
-    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
+    const constructorErr = getSyncError(
+      () => new FastifyRouterBuilder(request, response, jwtSecret)
+    )
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(DependencyInjectionError)
@@ -131,14 +145,18 @@ describe("FastifyRouterBuilder | Constructor", () => {
 
 describe("FastifyRouterBuilder | buildRouter", () => {
   test("No dependency errors build a router and return", () => {
-    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
+    const constructorErr = getSyncError(
+      () => new FastifyRouterBuilder(request, response, jwtSecret)
+    )
     // Given
     expect(constructorErr).toBeFalsy()
     expectsValidRequest(request)
     expectsValidResponse(response)
     expectsValidjwtSecret(jwtSecret)
     // When
-    const buildErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret).buildRouter())
+    const buildErr = getSyncError(() =>
+      new FastifyRouterBuilder(request, response, jwtSecret).buildRouter()
+    )
     // Then
     expect(buildErr).toBeFalsy()
   })

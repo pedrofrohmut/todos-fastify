@@ -28,8 +28,8 @@ export default class FastifyRouter implements Router {
     this.controllerResponseValidator = controllerResponseValidator
   }
 
-  public async routeController(controller: Function | Controller): Promise<void> {
-    let adaptedRequest: AdaptedRequest
+  public async routeController(controller: Function | Controller<any, any>): Promise<void> {
+    let adaptedRequest: AdaptedRequest<any>
     try {
       adaptedRequest = this.requestAdapter.adapt(this.request)
     } catch (err) {

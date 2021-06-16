@@ -47,7 +47,11 @@ server.register(formbody)
  */
 server.decorateRequest("router", null)
 server.addHook("onRequest", async (request, response) => {
-  request.router = new FastifyRouterBuilder(request, response, process.env.JWT_SECRET!).buildRouter()
+  request.router = new FastifyRouterBuilder(
+    request,
+    response,
+    process.env.JWT_SECRET!
+  ).buildRouter()
 })
 
 /**

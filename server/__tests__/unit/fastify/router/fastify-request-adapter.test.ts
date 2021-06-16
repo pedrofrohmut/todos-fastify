@@ -14,7 +14,7 @@ import MockRequest from "../../../utils/mocks/fastify-request.mock"
 import { MockDecoderService } from "../../../utils/mocks/services/decoder-service.mock"
 import { isValidUUIDv4 } from "../../../utils/functions/validation.functions"
 import { getSyncError } from "../../../utils/functions/error.functions"
-import {expectsToHaveError} from "../../../utils/functions/expects.functions"
+import { expectsToHaveError } from "../../../utils/functions/expects.functions"
 
 const getAdaptError = (requestAdapter: RequestAdapter, request: any): null | Error => {
   const possibleErr = getSyncError(() => {

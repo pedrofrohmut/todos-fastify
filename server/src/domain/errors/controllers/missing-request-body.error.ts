@@ -1,5 +1,5 @@
 export default class MissingRequestBodyError extends Error {
-  public static message = "Request body is null or undefined"
+  public static message = "Request body is null"
 
   public constructor(message?: string) {
     if (message) {
