@@ -10,7 +10,7 @@ import ControllerFactoryImplementation from "../../../domain/factories/implement
 import ControllerResponseValidatorImplementation from "../../../domain/validators/implementations/controller-response.validator"
 import FastifyRequestAdapter from "./fastify-request.adapter"
 import FastifyRouter from "./fastify.router"
-import TokenDecoderServiceImplementation from "../../../domain/services/auth/implementations/token-decoder.service"
+import JwtTokenDecoderService from "../../../domain/services/auth/implementations/jwt-token-decoder.service"
 
 import DependencyInjectionError from "../../../domain/errors/dependencies/dependency-injection.error"
 
@@ -21,23 +21,40 @@ export default class FastifyRouterBuilder implements RouterBuilder {
   private readonly controllerFactory: ControllerFactory
   private readonly controllerResponseValidator: ControllerResponseValidator
 
-  constructor(request: FastifyRequest, response: FastifyReply) {
-    if (
-      request === null ||
-      request === undefined ||
-      typeof request !== "object" ||
-      response === null ||
-      response === undefined ||
-      typeof response !== "object"
-    ) {
+  constructor(request: FastifyRequest, response: FastifyReply, jwtSecret: string) {
+    if (!this.isValidArguments(request, response, jwtSecret)) {
       throw new DependencyInjectionError("[FastifyRouterBuilder] constructor")
     }
     this.request = request
     this.response = response
-    const tokenDecoderService = new TokenDecoderServiceImplementation()
+    const tokenDecoderService = new JwtTokenDecoderService(jwtSecret)
     this.requestAdapter = new FastifyRequestAdapter(tokenDecoderService)
     this.controllerFactory = new ControllerFactoryImplementation()
     this.controllerResponseValidator = new ControllerResponseValidatorImplementation()
+  }
+
+  private isValidRequest(request: FastifyRequest): boolean {
+    return request !== null && request !== undefined && typeof request === "object"
+  }
+
+  private isValidResponse(response: FastifyReply): boolean {
+    return response !== null && response !== undefined && typeof response === "object"
+  }
+
+  private isValidJwtSecret(jwtSecret: string): boolean {
+    return jwtSecret !== null && jwtSecret !== undefined && typeof jwtSecret === "string"
+  }
+
+  private isValidArguments(
+    request: FastifyRequest,
+    response: FastifyReply,
+    jwtSecret: string
+  ): boolean {
+    return (
+      this.isValidRequest(request) &&
+      this.isValidResponse(response) &&
+      this.isValidJwtSecret(jwtSecret)
+    )
   }
 
   public buildRouter(): Router {

@@ -2,10 +2,14 @@ import "jest-extended"
 
 import FastifyRouterBuilder from "../../../../src/fastify/router/implementations/fastify-router.builder"
 
+import DependencyInjectionError from "../../../../src/domain/errors/dependencies/dependency-injection.error"
+
 import MockRequest from "../../../utils/mocks/fastify-request.mock"
 import MockResponse from "../../../utils/mocks/fastify-response.mock"
 import { expectsToHaveError } from "../../../utils/functions/expects.functions"
 import { getSyncError } from "../../../utils/functions/error.functions"
+
+const jwtSecret = process.env.JWT_SECRET
 
 let request: MockRequest
 let response: MockResponse
@@ -25,30 +29,24 @@ const expectsValidRequest = (request: any): void => {
   expect(request).toBeObject()
 }
 
-const getConstructorError = (request: any, response: any): null | Error => {
-  const possibleErr = getSyncError(() => {
-    new FastifyRouterBuilder(request, response)
-  })
-  return possibleErr
+const expectsValidjwtSecret = (jwtSecret: string): void => {
+  expect(jwtSecret).toBeTruthy()
+  expect(jwtSecret).toBeString()
+  expect(jwtSecret.length).toBeGreaterThanOrEqual(16)
 }
 
-const getBuildRouterError = (request: any, response: any): null | Error => {
-  const possibleErr = getSyncError(() => {
-    new FastifyRouterBuilder(request, response).buildRouter()
-  })
-  return possibleErr
-}
-
-describe("FastifyRouterBuilder | buildRouter", () => {
+describe("FastifyRouterBuilder | Constructor", () => {
   test("Null request throws error", () => {
     const request = null
     // Given
     expect(request).toBeNull()
     expectsValidResponse(response)
+    expectsValidjwtSecret(jwtSecret)
     // When
-    const constructorErr = getConstructorError(request, response)
+    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
     // Then
     expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(DependencyInjectionError)
   })
 
   test("Undefined request throws error", () => {
@@ -56,8 +54,9 @@ describe("FastifyRouterBuilder | buildRouter", () => {
     // Given
     expect(request).toBeUndefined()
     expectsValidResponse(response)
+    expectsValidjwtSecret(jwtSecret)
     // When
-    const constructorErr = getConstructorError(request, response)
+    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
     // Then
     expectsToHaveError(constructorErr)
   })
@@ -67,10 +66,13 @@ describe("FastifyRouterBuilder | buildRouter", () => {
     // Given
     expect(request).not.toBeObject()
     expectsValidResponse(response)
+    expectsValidjwtSecret(jwtSecret)
     // When
-    const constructorErr = getConstructorError(request, response)
+    // @ts-ignore
+    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
     // Then
     expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(DependencyInjectionError)
   })
 
   test("Null response throws error", () => {
@@ -78,10 +80,12 @@ describe("FastifyRouterBuilder | buildRouter", () => {
     // Given
     expect(response).toBeNull()
     expectsValidRequest(request)
+    expectsValidjwtSecret(jwtSecret)
     // When
-    const constructorErr = getConstructorError(request, response)
+    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
     // Then
     expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(DependencyInjectionError)
   })
 
   test("Undefined response throws error", () => {
@@ -89,10 +93,12 @@ describe("FastifyRouterBuilder | buildRouter", () => {
     // Given
     expect(response).toBeUndefined()
     expectsValidRequest(request)
+    expectsValidjwtSecret(jwtSecret)
     // When
-    const constructorErr = getConstructorError(request, response)
+    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
     // Then
     expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(DependencyInjectionError)
   })
 
   test("Not typeof object response throws error", () => {
@@ -100,20 +106,39 @@ describe("FastifyRouterBuilder | buildRouter", () => {
     // Given
     expect(response).not.toBeObject()
     expectsValidRequest(request)
+    expectsValidjwtSecret(jwtSecret)
     // When
-    const constructorErr = getConstructorError(request, response)
+    // @ts-ignore
+    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
     // Then
     expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(DependencyInjectionError)
   })
 
+  test("No JWT_SECRET in the env throws error", () => {
+    const jwtSecret = null
+    // Given
+    expect(jwtSecret).toBeFalsy()
+    expectsValidRequest(request)
+    expectsValidResponse(response)
+    // When
+    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
+    // Then
+    expectsToHaveError(constructorErr)
+    expect(constructorErr).toBeInstanceOf(DependencyInjectionError)
+  })
+})
+
+describe("FastifyRouterBuilder | buildRouter", () => {
   test("No dependency errors build a router and return", () => {
-    const constructorErr = getConstructorError(request, response)
+    const constructorErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret))
     // Given
     expect(constructorErr).toBeFalsy()
     expectsValidRequest(request)
     expectsValidResponse(response)
+    expectsValidjwtSecret(jwtSecret)
     // When
-    const buildErr = getBuildRouterError(request, response)
+    const buildErr = getSyncError(() => new FastifyRouterBuilder(request, response, jwtSecret).buildRouter())
     // Then
     expect(buildErr).toBeFalsy()
   })
