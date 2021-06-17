@@ -1,12 +1,12 @@
 import { JsonWebTokenError, NotBeforeError, TokenExpiredError, verify } from "jsonwebtoken"
 
-import { AuthenticationToken } from "../../../../src/domain/types/auth/token.types"
+import { AuthenticationToken } from "../../../../../../src/domain/types/auth/token.types"
 
-import TokenDecoderService from "../../../../src/domain/services/auth/token-decoder-service.interface"
+import TokenDecoderService from "../../../../../../src/domain/services/auth/token-decoder-service.interface"
 
-import ServerMissingJwtSecret from "../../../../src/domain/errors/auth/server-missing-jwt-secret.error"
-import ExpiredTokenError from "../../../../src/domain/errors/auth/expired-token.error"
-import InvalidTokenError from "../../../../src/domain/errors/auth/invalid-token.error"
+import ServerMissingJwtSecret from "../../../../../../src/domain/errors/auth/server-missing-jwt-secret.error"
+import ExpiredTokenError from "../../../../../../src/domain/errors/auth/expired-token.error"
+import InvalidTokenError from "../../../../../../src/domain/errors/auth/invalid-token.error"
 
 export class MockDecoderService implements TokenDecoderService {
   public execute(token: string): AuthenticationToken {

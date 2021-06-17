@@ -1,4 +1,5 @@
 import UserValidator from "../../../../../src/domain/validators/user-validator.interface";
+
 import {isValidUUIDv4} from "../../../functions/validation.functions";
 
 export class MockUserValidator implements UserValidator {

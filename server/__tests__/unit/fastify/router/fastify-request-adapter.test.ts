@@ -10,8 +10,8 @@ import InvalidTokenError from "../../../../src/domain/errors/auth/invalid-token.
 
 import FakeTokenService from "../../../utils/fakes/token-service.fake"
 import FakeUserService from "../../../utils/fakes/user-service.fake"
-import MockRequest from "../../../utils/mocks/fastify-request.mock"
-import { MockDecoderService } from "../../../utils/mocks/services/decoder-service.mock"
+import MockRequest from "../../../utils/mocks//fastify/fastify-request.mock"
+import { MockDecoderService } from "../../../utils/mocks/domain/services/auth/decoder-service.mock"
 import { isValidUUIDv4 } from "../../../utils/functions/validation.functions"
 import { getSyncError } from "../../../utils/functions/error.functions"
 import { expectsToHaveError } from "../../../utils/functions/expects.functions"

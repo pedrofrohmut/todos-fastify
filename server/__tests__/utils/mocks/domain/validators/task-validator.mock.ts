@@ -1,4 +1,4 @@
-import TaskValidator from "../../../../../src/domain/validators/task-validator.interface";
+import TaskValidator from "../../../../../src/domain/validators/task-validator.interface"
 
 export class MockTaskValidator implements TaskValidator {
   public getMessageForName(name?: string): string {

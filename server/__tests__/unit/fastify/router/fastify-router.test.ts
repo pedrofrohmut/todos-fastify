@@ -6,17 +6,17 @@ import FastifyRouter from "../../../../src/fastify/router/implementations/fastif
 import RequestAdapter from "../../../../src/fastify/router/request-adapter.interface"
 import Router from "../../../../src/fastify/router/router.interface"
 
-import { MockControllerFactoryImplementation } from "../../../utils/mocks/factories/controller-factory-implementation.mock"
+import { MockControllerFactoryImplementation } from "../../../utils/mocks/domain/factories/controller-factory-implementation.mock"
 import { MockControllerResponseValidatorImplementation } from "../../../utils/mocks/domain/validators/controller-response-validator-implementation.mock"
 import {
   MockControllerArgsAsResponse,
   MockControllerNoExecute,
   MockControllerPlaceholder,
   MockControllerStatusPayload
-} from "../../../utils/mocks/controller.mock"
-import { MockFastifyRequestAdapter } from "../../../utils/mocks/fastify-request-adapter.mock"
-import MockRequest from "../../../utils/mocks/fastify-request.mock"
-import MockResponse from "../../../utils/mocks/fastify-response.mock"
+} from "../../../utils/mocks/domain/controllers/controller.mock"
+import { MockFastifyRequestAdapter } from "../../../utils/mocks/fastify/router/fastify-request-adapter.mock"
+import MockRequest from "../../../utils/mocks/fastify/fastify-request.mock"
+import MockResponse from "../../../utils/mocks/fastify/fastify-response.mock"
 import { getSyncError } from "../../../utils/functions/error.functions"
 import {
   expectsResponse400AndMessage,

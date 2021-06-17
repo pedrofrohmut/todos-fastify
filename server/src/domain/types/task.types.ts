@@ -4,3 +4,9 @@ export type Task = {
   description?: string
   userId: string
 }
+
+export type CreateTask = {
+  name: string
+  description: string
+  userId: string
+}

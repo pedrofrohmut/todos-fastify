@@ -9,13 +9,13 @@ import ControllerResponseValidatorImplementation from "../../../../src/domain/va
 import {
   MockControllerArgsAsResponse,
   MockControllerStatusPayload
-} from "../../../utils/mocks/controller.mock"
+} from "../../../utils/mocks/domain/controllers/controller.mock"
 import { expectsToHaveError } from "../../../utils/functions/expects.functions"
 import { getSyncError } from "../../../utils/functions/error.functions"
 
 const getValidatorError = (
   validator: ControllerResponseValidator,
-  response: ControllerResponse
+  response: ControllerResponse<any>
 ): null | Error => {
   const possibleErr = getSyncError(() => {
     validator.validate(response)

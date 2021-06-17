@@ -4,8 +4,8 @@ import FastifyRouterBuilder from "../../../../src/fastify/router/implementations
 
 import DependencyInjectionError from "../../../../src/domain/errors/dependencies/dependency-injection.error"
 
-import MockRequest from "../../../utils/mocks/fastify-request.mock"
-import MockResponse from "../../../utils/mocks/fastify-response.mock"
+import MockRequest from "../../../utils/mocks/fastify/fastify-request.mock"
+import MockResponse from "../../../utils/mocks/fastify/fastify-response.mock"
 import { expectsToHaveError } from "../../../utils/functions/expects.functions"
 import { getSyncError } from "../../../utils/functions/error.functions"
 
@@ -72,8 +72,8 @@ describe("FastifyRouterBuilder | Constructor", () => {
     expectsValidResponse(response)
     expectsValidjwtSecret(jwtSecret)
     // When
-    // @ts-ignore
     const constructorErr = getSyncError(
+      // @ts-ignore
       () => new FastifyRouterBuilder(request, response, jwtSecret)
     )
     // Then
@@ -118,8 +118,8 @@ describe("FastifyRouterBuilder | Constructor", () => {
     expectsValidRequest(request)
     expectsValidjwtSecret(jwtSecret)
     // When
-    // @ts-ignore
     const constructorErr = getSyncError(
+      // @ts-ignore
       () => new FastifyRouterBuilder(request, response, jwtSecret)
     )
     // Then

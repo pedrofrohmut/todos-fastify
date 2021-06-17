@@ -1,11 +1,11 @@
-import { Controller } from "../../../../src/domain/types/router.types"
+import { Controller } from "../../../../../src/domain/types/router.types"
 
-import ControllerFactory from "../../../../src/domain/factories/controller-factory.interface"
+import ControllerFactory from "../../../../../src/domain/factories/controller-factory.interface"
 
-import { MockControllerPlaceholder } from ".././controller.mock"
+import { MockControllerPlaceholder } from "../controllers/controller.mock"
 
 export class MockControllerFactoryImplementation implements ControllerFactory {
-  public getController(controller: Function | Controller): Controller {
+  public getController(controller: Function | Controller<any, any>): Controller<any, any> {
     if (
       controller === null ||
       controller === undefined ||

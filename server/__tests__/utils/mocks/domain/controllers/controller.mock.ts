@@ -1,4 +1,4 @@
-import { AdaptedRequest, ControllerResponse } from "../../../src/domain/types/router.types"
+import { AdaptedRequest, ControllerResponse } from "../../../../../src/domain/types/router.types"
 
 export class MockControllerStatusPayload {
   private readonly status: number
@@ -9,7 +9,7 @@ export class MockControllerStatusPayload {
     this.body = body
   }
 
-  public async execute(_request?: AdaptedRequest) {
+  public async execute(_request?: AdaptedRequest<any>) {
     return {
       status: this.status,
       body: this.body
@@ -24,7 +24,7 @@ export class MockControllerRequestAsPayload {
     this.status = status
   }
 
-  public async execute(request: AdaptedRequest) {
+  public async execute(request: AdaptedRequest<any>) {
     return {
       status: this.status,
       body: request
@@ -39,7 +39,7 @@ export class MockControllerArgsAsResponse {
     this.args = args
   }
 
-  public async execute(_request?: AdaptedRequest) {
+  public async execute(_request?: AdaptedRequest<any>) {
     return this.args
   }
 }
@@ -49,13 +49,13 @@ export class MockControllerNoExecute {}
 export class MockControllerNotListed {}
 
 export class MockControllerPlaceholder {
-  public async execute(_request: AdaptedRequest): Promise<ControllerResponse> {
+  public async execute(_request: AdaptedRequest<any>): Promise<ControllerResponse<any>> {
     return null
   }
 }
 
 export class MockControllerExecuteThrowError {
-  public async execute(_request: AdaptedRequest): Promise<ControllerResponse> {
+  public async execute(_request: AdaptedRequest<any>): Promise<ControllerResponse<any>> {
     throw new Error("MESSAGE")
   }
 }

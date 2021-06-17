@@ -2,7 +2,7 @@ import "jest-extended"
 
 import ControllerFactoryImplementation from "../../../../src/domain/factories/implementations/controller.factory"
 
-import { MockControllerNotListed } from "../../../utils/mocks/controller.mock"
+import { MockControllerNotListed } from "../../../utils/mocks/domain/controllers/controller.mock"
 import { expectsToHaveError } from "../../../utils/functions/expects.functions"
 import { getSyncError } from "../../../utils/functions/error.functions"
 

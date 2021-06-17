@@ -1,7 +1,7 @@
 import { FastifyContext, FastifyLoggerInstance, FastifyReply, FastifyRequest } from "fastify"
-// import { RouteGenericInterface } from "fastify/types/route"
 import { ServerResponse, Server, IncomingMessage } from "http"
 
+// eslint-disable-next-line
 interface RouteGenericInterface {}
 
 export default class MockResponse implements FastifyReply {

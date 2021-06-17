@@ -1,16 +1,16 @@
 import { FastifyRequest } from "fastify"
 
-import { AdaptedRequest } from "../../../src/domain/types/router.types"
+import { AdaptedRequest } from "../../../../../src/domain/types/router.types"
 
-import RequestAdapter from "../../../src/fastify/router/request-adapter.interface"
+import RequestAdapter from "../../../../../src/fastify/router/request-adapter.interface"
 
-import InvalidRequestBodyError from "../../../src/domain/errors/request/invalid-request-body.error"
-import InvalidRequestHeadersError from "../../../src/domain/errors/request/invalid-request-headers.error"
-import InvalidRequestParamsError from "../../../src/domain/errors/request/invalid-request-params.error"
-import InvalidRequestTokenError from "../../../src/domain/errors/request/invalid-request-token.error"
+import InvalidRequestBodyError from "../../../../../src/domain/errors/request/invalid-request-body.error"
+import InvalidRequestHeadersError from "../../../../../src/domain/errors/request/invalid-request-headers.error"
+import InvalidRequestParamsError from "../../../../../src/domain/errors/request/invalid-request-params.error"
+import InvalidRequestTokenError from "../../../../../src/domain/errors/request/invalid-request-token.error"
 
 export class MockFastifyRequestAdapter implements RequestAdapter {
-  public adapt(request: FastifyRequest): AdaptedRequest {
+  public adapt(request: FastifyRequest): AdaptedRequest<any> {
     if (request.body && typeof request.body !== "object") {
       throw new InvalidRequestBodyError("[MockFastifyRequestAdapter] body")
     }

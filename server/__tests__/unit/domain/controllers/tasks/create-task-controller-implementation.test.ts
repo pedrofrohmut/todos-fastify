@@ -16,7 +16,7 @@ import { isValidUUIDv4 } from "../../../../utils/functions/validation.functions"
 import {
   MockCreateTaskUseCasePlaceholder,
   MockCreateTaskUseCaseThrowsUserNotFound
-} from "../../../../utils/mocks/domain/usecases/create-task-usecase.mock"
+} from "../../../../utils/mocks/domain/usecases/tasks/create-task-usecase.mock"
 import { getError } from "../../../../utils/functions/error.functions"
 import UserNotFoundByIdError from "../../../../../src/domain/errors/users/user-not-found-by-id.error"
 import {MockTaskValidator} from "../../../../utils/mocks/domain/validators/task-validator.mock"
