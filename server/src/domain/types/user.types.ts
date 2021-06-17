@@ -11,3 +11,10 @@ export type User = {
   email: string
   passwordHash: string
 }
+
+export type UserTable = {
+  id: string
+  name: string
+  email: string
+  password_hash: string
+}

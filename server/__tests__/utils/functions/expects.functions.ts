@@ -7,6 +7,19 @@ export const expectsToHaveError = (err: any): void => {
   expect(err.message).toBeString()
 }
 
+export const expectsValidUser = (user: any) => {
+  expect(user).toBeTruthy()
+  expect(user).toBeObject()
+  expect(user.id).toBeTruthy()
+  expect(user.id).toBeString()
+  expect(user.name).toBeTruthy()
+  expect(user.name).toBeString()
+  expect(user.email).toBeTruthy()
+  expect(user.email).toBeString()
+  expect(user.passwordHash).toBeTruthy()
+  expect(user.passwordHash).toBeString()
+}
+
 export const expectsControllerResponse201 = (response: any): void => {
   expect(response.status).toBe(201)
   expect(response.body).toBeUndefined()

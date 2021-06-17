@@ -60,7 +60,10 @@ describe("CreateTaskUseCaseImplementation | Execute", () => {
     const createTaskErr = await getError(() =>
       createTaskService.execute({ name: newTask.name, description: "", userId })
     )
-    const createTaskUseCase = new CreateTaskUseCaseImplementation(findUserByIdService, createTaskService)
+    const createTaskUseCase = new CreateTaskUseCaseImplementation(
+      findUserByIdService,
+      createTaskService
+    )
     // Given
     expect(userId).toBeTruthy()
     expect(isValidUUIDv4(userId)).toBeTrue()

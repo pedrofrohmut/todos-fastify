@@ -3,7 +3,6 @@ import { Client } from "pg"
 import DatabaseConnection from "../database-connection.interface"
 
 import DataBaseConnectionError from "../../errors/database/connection.error"
-import DependencyInjectionError from "../../errors/dependencies/dependency-injection.error"
 
 export default class PostgresDatabaseConnection implements DatabaseConnection {
   private readonly connection: Client
@@ -12,14 +11,16 @@ export default class PostgresDatabaseConnection implements DatabaseConnection {
     this.connection = connection
   }
 
-  private validateTheConnection() {
-    if (!this.connection) {
-      throw new DependencyInjectionError("[PostgresDatabaseConnection] open")
+  public async query<T>(queryString: string, queryArguments: any[]): Promise<T[]> {
+    try {
+      const { rows } = await this.connection.query<T>(queryString, queryArguments)
+      return rows
+    } catch (err) {
+      throw new DataBaseConnectionError("[PostgresDatabaseConnection] query. " + err.message)
     }
   }
 
   public async open(): Promise<void> {
-    this.validateTheConnection()
     try {
       await this.connection.connect()
     } catch (err) {
@@ -28,7 +29,6 @@ export default class PostgresDatabaseConnection implements DatabaseConnection {
   }
 
   public async close(): Promise<void> {
-    this.validateTheConnection()
     try {
       await this.connection.end()
     } catch (err) {

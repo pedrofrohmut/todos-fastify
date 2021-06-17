@@ -1,5 +1,5 @@
 import { User } from "../../types/user.types"
 
 export default interface FindUserByIdService {
-  execute(userId: string): Promise<User>
+  execute(userId: string): Promise<User | null>
 }

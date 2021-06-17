@@ -1,6 +1,6 @@
-import UserValidator from "../../../../../src/domain/validators/user-validator.interface";
+import UserValidator from "../../../../../src/domain/validators/user-validator.interface"
 
-import {isValidUUIDv4} from "../../../functions/validation.functions";
+import { isValidUUIDv4 } from "../../../functions/validation.functions"
 
 export class MockUserValidator implements UserValidator {
   public getMessageForId(id?: string): string {

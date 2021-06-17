@@ -9,11 +9,13 @@ import DataBaseConnectionError from "../../errors/database/connection.error"
 import InvalidConnectionConfigurationError from "../../errors/database/invalid-connection-configuration.error"
 
 export default class PostgresConnectionFactory implements ConnectionFactory {
-  private readonly configuration: ClientConfig
+  private readonly configuration: ClientConfig | undefined
 
-  constructor(configuration: ClientConfig) {
-    this.validateConfiguration(configuration)
-    this.configuration = configuration
+  constructor(configuration?: ClientConfig) {
+    if (configuration) {
+      this.validateConfiguration(configuration)
+      this.configuration = configuration
+    }
   }
 
   private validateConfiguration(configuration: any): void {
@@ -36,8 +38,8 @@ export default class PostgresConnectionFactory implements ConnectionFactory {
 
   public getConnection(): DatabaseConnection {
     try {
-      const client = new Client(this.configuration)
-      return new PostgresDatabaseConnection(client)
+      const postgresClient = new Client(this.configuration)
+      return new PostgresDatabaseConnection(postgresClient)
     } catch (err) {
       throw new DataBaseConnectionError("[PostgresConnectionFactory] getConnection. " + err.message)
     }
