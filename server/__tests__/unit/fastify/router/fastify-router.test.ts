@@ -7,7 +7,7 @@ import RequestAdapter from "../../../../src/fastify/router/request-adapter.inter
 import Router from "../../../../src/fastify/router/router.interface"
 
 import { MockControllerFactoryImplementation } from "../../../utils/mocks/factories/controller-factory-implementation.mock"
-import { MockControllerResponseValidatorImplementation } from "../../../utils/mocks/validators/controller-response-validator-implementation.mock"
+import { MockControllerResponseValidatorImplementation } from "../../../utils/mocks/domain/validators/controller-response-validator-implementation.mock"
 import {
   MockControllerArgsAsResponse,
   MockControllerNoExecute,
@@ -146,7 +146,7 @@ describe("FastifyRouter | RouterController | Invalid controller as argument", ()
 
 describe("FastifyRouter | RouteController | Invalid request body/headers/params", () => {
   let requestAdapter: RequestAdapter
-  let controller: Controller
+  let controller: Controller<any, any>
 
   beforeEach(() => {
     requestAdapter = new MockFastifyRequestAdapter()

@@ -4,7 +4,6 @@ import { CreateTaskBody } from "../../../../../src/domain/types/request/body.typ
 import CreateTaskController from "../../../../../src/domain/controllers/tasks/create-task-controller.interface"
 
 import CreateTaskControllerImplementation from "../../../../../src/domain/controllers/tasks/implementations/create-task.controller"
-import TaskValidatorImplementation from "../../../../../src/domain/validators/implementations/task.validator"
 
 import {
   expectsControllerResponse201,
@@ -20,6 +19,8 @@ import {
 } from "../../../../utils/mocks/domain/usecases/create-task-usecase.mock"
 import { getError } from "../../../../utils/functions/error.functions"
 import UserNotFoundByIdError from "../../../../../src/domain/errors/users/user-not-found-by-id.error"
+import {MockTaskValidator} from "../../../../utils/mocks/domain/validators/task-validator.mock"
+import {MockUserValidator} from "../../../../utils/mocks/domain/validators/user-validator.mock"
 
 const expectsValidController = (controller: any): void => {
   expect(controller).toBeTruthy()
@@ -40,7 +41,8 @@ const expectsValidAdaptedRequest = (req: any): void => {
   expect(req.params).toBeNull()
 }
 
-const taskValidator = new TaskValidatorImplementation()
+const taskValidator = new MockTaskValidator()
+const userValidator = new MockUserValidator()
 const createTaskUseCase = new MockCreateTaskUseCasePlaceholder()
 const userId = FakeUserService.getValidUserId()
 
@@ -53,7 +55,7 @@ beforeEach(() => {
     authUserId: userId,
     params: null
   }
-  controller = new CreateTaskControllerImplementation(taskValidator, createTaskUseCase)
+  controller = new CreateTaskControllerImplementation(taskValidator, userValidator, createTaskUseCase)
 })
 
 describe("CreateTaskControllerImplementation | Execute | Validate request body", () => {
@@ -104,12 +106,24 @@ describe("CreateTaskControllerImplementation | Execute | Validate authUserId", (
     // Then
     expectsControllerResponse401AndMessage(controllerResponse)
   })
+
+  test("Not a valid uuidv4 => 401/message", async () => {
+    adaptedRequest.authUserId = "123"
+    // Given
+    expect(adaptedRequest.authUserId).toBeTruthy()
+    expect(adaptedRequest.authUserId).toBeString()
+    expect(isValidUUIDv4(adaptedRequest.authUserId)).toBeFalse()
+    // When
+    const controllerResponse = await controller.execute(adaptedRequest)
+    // Then
+    expectsControllerResponse401AndMessage(controllerResponse)
+  })
 })
 
 describe("CreateTaskControllerImplementation | Execute | When useCase execute. Then return the right status/body", () => {
   test("UseCase execute with no error. Then => 201", async () => {
     const createTaskUseCase = new MockCreateTaskUseCasePlaceholder()
-    const controller = new CreateTaskControllerImplementation(taskValidator, createTaskUseCase)
+    const controller = new CreateTaskControllerImplementation(taskValidator, userValidator, createTaskUseCase)
     // @ts-ignore
     const useCaseErr = await getError(() => createTaskUseCase.execute())
     // Given
@@ -124,7 +138,7 @@ describe("CreateTaskControllerImplementation | Execute | When useCase execute. T
 
   test("UseCase throws UserNotFoundError. Then => 400/message", async () => {
     const createTaskUseCase = new MockCreateTaskUseCaseThrowsUserNotFound()
-    const controller = new CreateTaskControllerImplementation(taskValidator, createTaskUseCase)
+    const controller = new CreateTaskControllerImplementation(taskValidator, userValidator, createTaskUseCase)
     // @ts-ignore
     const useCaseErr = await getError(() => createTaskUseCase.execute())
     // Given
