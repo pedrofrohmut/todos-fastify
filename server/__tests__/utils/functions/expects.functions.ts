@@ -1,5 +1,7 @@
 import "jest-extended"
 
+import { isValidUUIDv4 } from "./validation.functions"
+
 export const expectsToHaveError = (err: any): void => {
   expect(err).toBeTruthy()
   expect(err).toBeInstanceOf(Error)
@@ -18,6 +20,12 @@ export const expectsValidUser = (user: any) => {
   expect(user.email).toBeString()
   expect(user.passwordHash).toBeTruthy()
   expect(user.passwordHash).toBeString()
+}
+
+export const expectsValidUserId = (userId: any): void => {
+  expect(userId).toBeTruthy()
+  expect(userId).toBeString()
+  expect(isValidUUIDv4(userId)).toBeTrue()
 }
 
 export const expectsControllerResponse201 = (response: any): void => {
