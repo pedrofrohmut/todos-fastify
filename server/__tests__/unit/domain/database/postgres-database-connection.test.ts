@@ -1,9 +1,5 @@
 import "jest-extended"
 
-import { Client } from "pg"
-
-import DatabaseConnection from "../../../../src/domain/database/database-connection.interface"
-
 import PostgresDatabaseConnection from "../../../../src/domain/database/implementations/postgres.database-connection"
 
 import DataBaseConnectionError from "../../../../src/domain/errors/database/connection.error"
@@ -11,69 +7,79 @@ import DataBaseConnectionError from "../../../../src/domain/errors/database/conn
 import { getError } from "../../../utils/functions/error.functions"
 import { expectsToHaveError } from "../../../utils/functions/expects.functions"
 
-const getOpenError = async (databaseConnection: DatabaseConnection): Promise<null | Error> => {
-  const possibleErr = await getError(async () => {
-    await databaseConnection.open()
-  })
-  return possibleErr
-}
-
-const getCloseError = async (databaseConnection: DatabaseConnection): Promise<null | Error> => {
-  const possibleErr = await getError(async () => {
-    await databaseConnection.close()
-  })
-  return possibleErr
-}
-
 const expectsValidDatabaseConnection = (conn: any): void => {
   expect(conn).toBeTruthy()
   expect(conn).toBeObject()
   expect(conn.open).toBeDefined()
   expect(conn.close).toBeDefined()
+  expect(conn.query).toBeDefined()
+  expect(conn.mutate).toBeDefined()
 }
 
-class MockPGClient extends Client {
-  async connect(): Promise<void> {
-    throw new Error("Mock Error connect")
-  }
+const mockConnect = jest.fn(() => {
+  throw new Error("Mock error connect")
+})
 
-  async end(): Promise<void> {
-    throw new Error("Mock Error end")
-  }
-}
+const mockEnd = jest.fn(() => {
+  throw new Error("Mock error end")
+})
 
-let databaseConnection: DatabaseConnection
+const mockQuery = jest.fn(() => {
+  throw new Error("Mock error query")
+})
+
+const MockPostgresClient = jest.fn().mockImplementation(() => {
+  return {
+    connect: mockConnect,
+    end: mockEnd,
+    query: mockQuery
+  }
+})
+
+beforeEach(() => {
+  mockConnect.mockClear()
+  mockEnd.mockClear()
+  MockPostgresClient.mockClear()
+})
 
 describe("PostgresDatabaseConnection | Open", () => {
   test("If the connection throws error to connect throws domain error", async () => {
-    const connection = new MockPGClient()
-    databaseConnection = new PostgresDatabaseConnection(connection)
+    const databaseConnection = new PostgresDatabaseConnection(MockPostgresClient())
     // Given
-    expect(connection).toBeTruthy()
-    expect(connection.connect).toBeDefined()
-    expect(connection.connect).toBeFunction()
     expectsValidDatabaseConnection(databaseConnection)
     // When
-    const openErr = await getOpenError(databaseConnection)
+    const openErr = await getError(() => databaseConnection.open())
     // Then
     expectsToHaveError(openErr)
     expect(openErr).toBeInstanceOf(DataBaseConnectionError)
+    expect(mockConnect).toHaveBeenCalled()
   })
 })
 
 describe("PostgresDatabaseConnection | Close", () => {
   test("If the connection throws error to end throws domain error", async () => {
-    const connection = new MockPGClient()
-    databaseConnection = new PostgresDatabaseConnection(connection)
+    const databaseConnection = new PostgresDatabaseConnection(MockPostgresClient())
     // Given
-    expect(connection).toBeTruthy()
-    expect(connection.end).toBeDefined()
-    expect(connection.end).toBeFunction()
     expectsValidDatabaseConnection(databaseConnection)
     // When
-    const closeErr = await getCloseError(databaseConnection)
+    const closeErr = await getError(() => databaseConnection.close())
     // Then
     expectsToHaveError(closeErr)
     expect(closeErr).toBeInstanceOf(DataBaseConnectionError)
+    expect(mockEnd).toHaveBeenCalled()
+  })
+})
+
+describe("PostgresDatabaseConnection | Query & Mutate", () => {
+  test("If the connection throws error to query throws domain error", async () => {
+    const databaseConnection = new PostgresDatabaseConnection(MockPostgresClient())
+    // Given
+    expectsValidDatabaseConnection(databaseConnection)
+    // When
+    const queryErr = await getError(() => databaseConnection.query("", [123]))
+    // Then
+    expectsToHaveError(queryErr)
+    expect(queryErr).toBeInstanceOf(DataBaseConnectionError)
+    expect(mockQuery).toHaveBeenCalled()
   })
 })

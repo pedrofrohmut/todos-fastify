@@ -11,6 +11,14 @@ export default class PostgresDatabaseConnection implements DatabaseConnection {
     this.connection = connection
   }
 
+  public async mutate(queryString: string, queryArguments: any[]): Promise<void> {
+    try {
+      await this.connection.query(queryString, queryArguments)
+    } catch (err) {
+      throw new DataBaseConnectionError("[PostgresDatabaseConnection] mutate. " + err.message)
+    }
+  }
+
   public async query<T>(queryString: string, queryArguments: any[]): Promise<T[]> {
     try {
       const { rows } = await this.connection.query<T>(queryString, queryArguments)
