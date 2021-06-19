@@ -45,13 +45,13 @@ export const expectsControllerResponse400AndMessage = (response: any): void => {
   expect(response.body).toBeString()
 }
 
-export const expectsResponse400AndMessage = (response: any): void => {
+export const expectsInjectResponse400AndMessage = (response: any): void => {
   expect(response.statusCode).toBe(400)
   expect(response.payload).toBeTruthy()
   expect(response.payload).toBeString()
 }
 
-export const expectsResponse500AndMessage = (response: any): void => {
+export const expectsInjectResponse500AndMessage = (response: any): void => {
   expect(response.statusCode).toBe(500)
   expect(response.payload).toBeTruthy()
   expect(response.payload).toBeString()

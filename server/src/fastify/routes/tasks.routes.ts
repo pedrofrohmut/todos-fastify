@@ -12,7 +12,9 @@ import UpdateTaskControllerImplementation from "../../domain/controllers/tasks/i
 const tasksRoutesPluginCallback: FastifyPluginCallback = async (fastify, _options) => {
   // CreateTaskRoute
   fastify.post("/api/tasks", async (request, _response) => {
-    request.router.routeController(CreateTaskControllerImplementation)
+    // const router = new FastifyRouterBuilder(request, _response, process.env.JWT_SECRET!).buildRouter()
+    // await router.routeController(CreateTaskControllerImplementation)
+    await request.router.routeController(CreateTaskControllerImplementation)
   })
 
   // DeleteTaskRoute

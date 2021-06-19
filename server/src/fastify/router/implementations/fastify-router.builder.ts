@@ -13,6 +13,8 @@ import FastifyRouter from "./fastify.router"
 import JwtTokenDecoderService from "../../../domain/services/auth/implementations/jwt-token-decoder.service"
 
 import DependencyInjectionError from "../../../domain/errors/dependencies/dependency-injection.error"
+import PostgresConnectionFactory from "../../../domain/factories/implementations/postgres-connection.factory"
+import DatabaseConnection from "../../../domain/database/database-connection.interface"
 
 export default class FastifyRouterBuilder implements RouterBuilder {
   private readonly request: FastifyRequest
@@ -20,6 +22,7 @@ export default class FastifyRouterBuilder implements RouterBuilder {
   private readonly requestAdapter: RequestAdapter
   private readonly controllerFactory: ControllerFactory
   private readonly controllerResponseValidator: ControllerResponseValidator
+  private readonly connection: DatabaseConnection
 
   constructor(request: FastifyRequest, response: FastifyReply, jwtSecret: string) {
     if (!this.isValidArguments(request, response, jwtSecret)) {
@@ -31,6 +34,7 @@ export default class FastifyRouterBuilder implements RouterBuilder {
     this.requestAdapter = new FastifyRequestAdapter(tokenDecoderService)
     this.controllerFactory = new ControllerFactoryImplementation()
     this.controllerResponseValidator = new ControllerResponseValidatorImplementation()
+    this.connection = new PostgresConnectionFactory().getConnection()
   }
 
   private isValidRequest(request: FastifyRequest): boolean {
@@ -63,7 +67,8 @@ export default class FastifyRouterBuilder implements RouterBuilder {
       this.response,
       this.requestAdapter,
       this.controllerFactory,
-      this.controllerResponseValidator
+      this.controllerResponseValidator,
+      this.connection
     )
     return router
   }

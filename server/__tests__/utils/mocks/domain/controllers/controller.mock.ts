@@ -46,7 +46,10 @@ export class MockControllerArgsAsResponse {
 
 export class MockControllerNoExecute {}
 
-export class MockControllerNotListed {}
+export class MockControllerNotListed {
+  public async execute(request: AdaptedRequest<any>) {
+  }
+}
 
 export class MockControllerPlaceholder {
   public async execute(_request: AdaptedRequest<any>): Promise<ControllerResponse<any>> {

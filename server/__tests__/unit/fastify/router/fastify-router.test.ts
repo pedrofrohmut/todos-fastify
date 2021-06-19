@@ -19,9 +19,17 @@ import MockRequest from "../../../utils/mocks/fastify/fastify-request.mock"
 import MockResponse from "../../../utils/mocks/fastify/fastify-response.mock"
 import { getSyncError } from "../../../utils/functions/error.functions"
 import {
-  expectsResponse400AndMessage,
-  expectsResponse500AndMessage
+  expectsInjectResponse400AndMessage,
+  expectsInjectResponse500AndMessage
 } from "../../../utils/functions/expects.functions"
+import DatabaseConnection from "../../../../src/domain/database/database-connection.interface"
+
+const mockOpenConnection = jest.fn()
+const mockCloseConnection = jest.fn()
+const MockConnection = jest.fn().mockImplementation(() => ({
+  open: mockOpenConnection,
+  close: mockCloseConnection
+}))
 
 const getControllerFactoryError = (controllerFactory: any, controller: any): null | Error => {
   const possibleErr = getSyncError(() => {
@@ -62,6 +70,7 @@ let response: MockResponse
 let requestAdapter: RequestAdapter
 let controllerFactory: ControllerFactory
 let controllerResponseValidator: ControllerResponseValidator
+let connection: DatabaseConnection
 
 beforeEach(() => {
   request = new MockRequest()
@@ -69,6 +78,55 @@ beforeEach(() => {
   requestAdapter = new MockFastifyRequestAdapter()
   controllerFactory = new MockControllerFactoryImplementation()
   controllerResponseValidator = new MockControllerResponseValidatorImplementation()
+  connection = MockConnection()
+})
+
+describe("FastifyRouter | RouteController | Open and close connection", () => {
+  let router: Router
+  let controller: jest.Mock
+
+  beforeEach(() => {
+    router = new FastifyRouter(
+      request,
+      response,
+      requestAdapter,
+      controllerFactory,
+      controllerResponseValidator,
+      connection
+    )
+    controller = jest.fn()
+  })
+
+  test("The connection is opened", async () => {
+    // Given
+    expect(router).toBeTruthy()
+    expect(controller).toBeTruthy()
+    // When
+    await router.routeController(controller)
+    // Then
+    expect(mockOpenConnection).toHaveBeenCalled()
+  })
+
+  test("The connection is closed", async () => {
+    // Given
+    expect(router).toBeTruthy()
+    expect(controller).toBeTruthy()
+    // When
+    await router.routeController(controller)
+    // Then
+    expect(mockCloseConnection).toHaveBeenCalled()
+  })
+
+  test("The connection is opened and closed", async () => {
+    // Given
+    expect(router).toBeTruthy()
+    expect(controller).toBeTruthy()
+    // When
+    await router.routeController(controller)
+    // Then
+    expect(mockOpenConnection).toHaveBeenCalled()
+    expect(mockCloseConnection).toHaveBeenCalled()
+  })
 })
 
 describe("FastifyRouter | RouterController | Invalid controller as argument", () => {
@@ -82,7 +140,8 @@ describe("FastifyRouter | RouterController | Invalid controller as argument", ()
       response,
       requestAdapter,
       controllerFactory,
-      controllerResponseValidator
+      controllerResponseValidator,
+      connection
     )
   })
 
@@ -96,7 +155,7 @@ describe("FastifyRouter | RouterController | Invalid controller as argument", ()
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse500AndMessage(response)
+    expectsInjectResponse500AndMessage(response)
   })
 
   test("Undefined then response 500/message", async () => {
@@ -109,7 +168,7 @@ describe("FastifyRouter | RouterController | Invalid controller as argument", ()
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse500AndMessage(response)
+    expectsInjectResponse500AndMessage(response)
   })
 
   test("Not typeof object or function then response 500/message", async () => {
@@ -124,7 +183,7 @@ describe("FastifyRouter | RouterController | Invalid controller as argument", ()
     // @ts-ignore
     await router.routeController(controller)
     // Then
-    expectsResponse500AndMessage(response)
+    expectsInjectResponse500AndMessage(response)
   })
 
   test("Typeof object but no execute then response 500/message", async () => {
@@ -140,7 +199,7 @@ describe("FastifyRouter | RouterController | Invalid controller as argument", ()
     // @ts-ignore
     await router.routeController(controller)
     // Then
-    expectsResponse500AndMessage(response)
+    expectsInjectResponse500AndMessage(response)
   })
 })
 
@@ -160,7 +219,8 @@ describe("FastifyRouter | RouteController | Invalid request body/headers/params"
       response,
       requestAdapter,
       controllerFactory,
-      controllerResponseValidator
+      controllerResponseValidator,
+      connection
     )
     const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
     // Given
@@ -171,7 +231,7 @@ describe("FastifyRouter | RouteController | Invalid request body/headers/params"
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse400AndMessage(response)
+    expectsInjectResponse400AndMessage(response)
   })
 
   test("Not typeof object request headers then response 400/message", async () => {
@@ -182,7 +242,8 @@ describe("FastifyRouter | RouteController | Invalid request body/headers/params"
       response,
       requestAdapter,
       controllerFactory,
-      controllerResponseValidator
+      controllerResponseValidator,
+      connection
     )
     const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
     // Given
@@ -193,7 +254,7 @@ describe("FastifyRouter | RouteController | Invalid request body/headers/params"
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse400AndMessage(response)
+    expectsInjectResponse400AndMessage(response)
   })
 
   test("Not typeof string request headers authentication_token then response 400/message", async () => {
@@ -204,7 +265,8 @@ describe("FastifyRouter | RouteController | Invalid request body/headers/params"
       response,
       requestAdapter,
       controllerFactory,
-      controllerResponseValidator
+      controllerResponseValidator,
+      connection
     )
     const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
     // Given
@@ -216,7 +278,7 @@ describe("FastifyRouter | RouteController | Invalid request body/headers/params"
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse400AndMessage(response)
+    expectsInjectResponse400AndMessage(response)
   })
 
   test("Not typeof object request params then response 400/message", async () => {
@@ -227,7 +289,8 @@ describe("FastifyRouter | RouteController | Invalid request body/headers/params"
       response,
       requestAdapter,
       controllerFactory,
-      controllerResponseValidator
+      controllerResponseValidator,
+      connection
     )
     const requestAdapterErr = getRequestAdapterError(requestAdapter, request)
     // Given
@@ -238,7 +301,7 @@ describe("FastifyRouter | RouteController | Invalid request body/headers/params"
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse400AndMessage(response)
+    expectsInjectResponse400AndMessage(response)
   })
 })
 
@@ -251,7 +314,8 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
       response,
       requestAdapter,
       controllerFactory,
-      controllerResponseValidator
+      controllerResponseValidator,
+      connection
     )
   })
 
@@ -270,7 +334,7 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse500AndMessage(response)
+    expectsInjectResponse500AndMessage(response)
   })
 
   test("Undefined then response 500/message", async () => {
@@ -288,7 +352,7 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse500AndMessage(response)
+    expectsInjectResponse500AndMessage(response)
   })
 
   test("Status undefined then response 500/message", async () => {
@@ -306,7 +370,7 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse500AndMessage(response)
+    expectsInjectResponse500AndMessage(response)
   })
 
   test("Status isNaN then response 500/message", async () => {
@@ -324,7 +388,7 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse500AndMessage(response)
+    expectsInjectResponse500AndMessage(response)
   })
 
   test("Status 201 defined body then response 500/message", async () => {
@@ -343,7 +407,7 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse500AndMessage(response)
+    expectsInjectResponse500AndMessage(response)
   })
 
   test("Status 204 defined body then response 500/message", async () => {
@@ -362,7 +426,7 @@ describe("FastifyRouter | RouteController | Invalid controller response", () => 
     // When
     await router.routeController(controller)
     // Then
-    expectsResponse500AndMessage(response)
+    expectsInjectResponse500AndMessage(response)
   })
 })
 
@@ -375,7 +439,8 @@ describe("FastifyRouter | RouteController | Valid controller response", () => {
       response,
       requestAdapter,
       controllerFactory,
-      controllerResponseValidator
+      controllerResponseValidator,
+      connection
     )
   })
 

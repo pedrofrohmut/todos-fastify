@@ -11,7 +11,7 @@ export default class CreateTaskServiceImplementation implements CreateTaskServic
 
   public async execute({ name, description, userId }: CreateTask): Promise<void> {
     await this.connection.mutate(
-      "INSERT INTO app.tasks (name, description, userId) VALUES ($1, $2, $3)",
+      "INSERT INTO app.tasks (name, description, user_id) VALUES ($1, $2, $3)",
       [name, description, userId]
     )
   }

@@ -19,6 +19,21 @@ afterAll(() => {
   server.close()
 })
 
+describe("CreateTaskRoute", () => {
+  const url = "/api/tasks"
+  const method = POST
+
+  test("Return is not a 404", async () => {
+    // Given
+    expect(url).toBe("/api/tasks")
+    expect(method).toBe(POST)
+    // When
+    const response = await server.inject({ method, url })
+    // Then
+    expect(response.statusCode).not.toBe(404)
+  })
+})
+
 describe("DeleteTaskRoute", () => {
   const url = "/api/tasks/1"
   const method = DELETE

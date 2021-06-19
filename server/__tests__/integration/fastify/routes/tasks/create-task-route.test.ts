@@ -1,46 +1,13 @@
-import "jest-extended"
-
-import { FastifyInstance } from "fastify"
-
-import { buildTestServerWithTasksRoutes } from "../../../../utils/server/fastify-test.server"
-
-const POST = "POST"
-
-let server: FastifyInstance
-
-beforeAll(() => {
-  server = buildTestServerWithTasksRoutes()
-})
-
-afterAll(() => {
-  server.close()
-})
-
 describe("CreateTaskRoute", () => {
-  const url = "/api/tasks"
-  const method = POST
+  test.todo("No body then response 400/message")
 
-  test("Return is not a 404", async () => {
-    // Given
-    expect(url).toBe("/api/tasks")
-    expect(method).toBe(POST)
-    // When
-    const response = await server.inject({ method, url })
-    // Then
-    expect(response.statusCode).not.toBe(404)
-  })
+  test.todo("No task name in the body then response 400/message")
 
-  test.todo("No payload => 400/message")
+  test.todo("No body then response 400/message")
 
-  test.todo("Falsy payload.name => 400/message")
+  test.todo("No headers then response 401/message")
 
-  test.todo("No headers => 401/message")
+  test.todo("UserId from token doesnt exists then response 400/message")
 
-  test.todo("Headers with no authentication_token => 401/message")
-
-  test.todo("Headers with invalid token in the authentication_token => 400/message")
-
-  test.todo("The User from authentication_token doesnt exists => 400/message")
-
-  test.todo("Valid payload and headers => 201")
+  test.todo("Valid body, valid userId and user registered then response 201")
 })

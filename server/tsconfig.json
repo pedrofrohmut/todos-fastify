@@ -17,5 +17,5 @@
     "outDir": "./.dist"
   },
   "include": ["src/custom.d.ts", "**/*.ts"],
-  "exclude": ["node_modules", "__tests__", "docs", ".dist"]
+  "exclude": ["node_modules", "docs", ".dist", "__tests__"]
 }
