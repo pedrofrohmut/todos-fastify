@@ -1,68 +1,46 @@
 import "jest-extended"
 
-import FindUserByIdService from "../../../../../src/domain/services/users/find-user-by-id-service.interface"
-
 import FindUserByIdServiceImplementation from "../../../../../src/domain/services/users/implementations/find-user-by-id.service"
-import PostgresConnectionFactory from "../../../../../src/domain/factories/implementations/postgres-connection.factory"
-import DatabaseConnection from "../../../../../src/domain/database/database-connection.interface"
 
-import { expectsValidUser, expectsValidUserId } from "../../../../utils/functions/expects.functions"
-import { createUserQuery, findUserByIdQuery } from "../../../../utils/functions/queries.functions"
-import { getError } from "../../../../utils/functions/error.functions"
-
-const insertUserIfNull = async (connection: DatabaseConnection, userId: string) => {
-  const possibleError = await getError(async () => {
-    const foundUser = await findUserByIdQuery(connection, userId)
-    if (foundUser === null) {
-      await createUserQuery(connection, {
-        id: userId,
-        name: "John Doe",
-        email: "john@doe.com",
-        password_hash: "password_hash"
-      })
-    }
-  })
-  return possibleError
-}
-
-const connection = new PostgresConnectionFactory().getConnection()
-
-let findUserByIdService: FindUserByIdService
-
-beforeAll(async () => {
-  await connection.open()
-})
-
-beforeEach(() => {
-  findUserByIdService = new FindUserByIdServiceImplementation(connection)
-})
-
-afterAll(async () => {
-  await connection.close()
-})
+import { expectsValidConnection, expectsValidService, expectsValidUserId } from "../../../../utils/functions/expects.functions"
+import FakeUserService from "../../../../utils/fakes/user-service.fake"
+import {MockConnectionAcceptQuery} from "../../../../utils/mocks/domain/database/database-connection.mock"
 
 describe("FindUserByIdServiceImplementation | Execute", () => {
   test("If user not found return null", async () => {
-    const userId = "8da10246-715e-4142-9490-ba841715778b"
-    const foundUser = await findUserByIdQuery(connection, userId)
+    const userId = FakeUserService.getValidUserId()
+    const mockQuery = jest.fn(() => [])
+    const connection = MockConnectionAcceptQuery(mockQuery)()
+    const findUserByIdService = new FindUserByIdServiceImplementation(connection)
     // Given
-    expect(foundUser).toBeFalsy()
-    expectsValidUserId(userId)
-    // When
-    const foundUserService = await findUserByIdService.execute(userId)
-    // Then
-    expect(foundUserService).toBeNull()
-  })
-
-  test("If user found return user", async () => {
-    const userId = "1d0ae93c-8e9f-4f3b-a48d-668a1bcd2ed1"
-    const foundUserErr = await insertUserIfNull(connection, userId)
-    // Given
-    expect(foundUserErr).toBeFalsy()
-    expectsValidUserId(userId)
+    expectsValidConnection(connection)
+    expectsValidService(findUserByIdService)
     // When
     const foundUser = await findUserByIdService.execute(userId)
     // Then
-    expectsValidUser(foundUser)
+    expect(foundUser).toBeNull()
+    expect(mockQuery).toHaveBeenCalledTimes(1)
+  })
+
+  test("If user found return user", async () => {
+    const userId = FakeUserService.getValidUserId()
+    const name = "John Doe"
+    const email = "john@doe.com"
+    const password_hash = "password_hash"
+    const mockQuery = jest.fn(() => [ { name, email, password_hash } ])
+    const connection = MockConnectionAcceptQuery(mockQuery)()
+    const findUserByIdService = new FindUserByIdServiceImplementation(connection)
+    // Given
+    expectsValidConnection(connection)
+    expectsValidService(findUserByIdService)
+    // When
+    const foundUser = await findUserByIdService.execute(userId)
+    // Then
+    expect(foundUser).toBeTruthy()
+    expect(foundUser.id).toBe(userId)
+    expect(foundUser.name).toBe(name)
+    expect(foundUser.email).toBe(email)
+    expect(foundUser.passwordHash).toBe(password_hash)
+    expect(mockQuery).toHaveBeenCalledTimes(1)
   })
 })

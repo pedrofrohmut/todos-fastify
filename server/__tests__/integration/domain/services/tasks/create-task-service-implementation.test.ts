@@ -5,35 +5,21 @@ import CreateTaskServiceImplementation from "../../../../../src/domain/services/
 import { getError } from "../../../../utils/functions/error.functions"
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
 
-const mockMutate = jest.fn()
-const mockConnection = jest.fn().mockImplementation(() => ({
-  mutate: mockMutate
-}))
-
-beforeEach(() => {
-  mockMutate.mockClear()
-  mockConnection.mockClear()
-})
-
 describe("CreateTaskServiceImplementation | Execute", () => {
   test("Vaid task should be added with no errors", async () => {
+    const userId = FakeUserService.getValidUserId()
     const newTask = {
       name: "TaskName",
       description: "TaskDescription",
-      userId: FakeUserService.getValidUserId()
+      userId
     }
-    const taskValidator = new TaskValidatorImplementation()
-    const userValidator = new UserValidatorImplementation()
-    const createTaskService = new CreateTaskServiceImplementation(mockConnection())
-    const taskNameValidationMessage = taskValidator.getMessageForName(newTask.name)
-    const taskDescriptionValidationMessage = taskValidator.getMessageForDescription(
-      newTask.description
-    )
-    const userIdValidatonMessage = userValidator.getMessageForId(newTask.userId)
+    const mockMutate = jest.fn()
+    const MockConnection = jest.fn().mockImplementation(() => ({
+      mutate: mockMutate
+    }))()
+    const createTaskService = new CreateTaskServiceImplementation(MockConnection)
     // Given
-    expect(taskNameValidationMessage).toBeNull()
-    expect(taskDescriptionValidationMessage).toBeNull()
-    expect(userIdValidatonMessage).toBeNull()
+    expect(MockConnection.mutate).toBeDefined()
     // When
     const serviceErr = await getError(() => createTaskService.execute(newTask))
     // Then

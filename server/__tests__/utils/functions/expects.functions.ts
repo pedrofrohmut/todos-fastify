@@ -9,6 +9,21 @@ export const expectsToHaveError = (err: any): void => {
   expect(err.message).toBeString()
 }
 
+export const expectsValidConnection = (con: any): void => {
+  expect(con).toBeTruthy()
+  expect(con).toBeObject()
+  expect(con.open).toBeDefined()
+  expect(con.close).toBeDefined()
+  expect(con.query).toBeDefined()
+  expect(con.mutate).toBeDefined()
+}
+
+export const expectsValidService = (service: any): void => {
+  expect(service).toBeTruthy()
+  expect(service).toBeObject()
+  expect(service.execute).toBeDefined()
+}
+
 export const expectsValidUser = (user: any) => {
   expect(user).toBeTruthy()
   expect(user).toBeObject()
