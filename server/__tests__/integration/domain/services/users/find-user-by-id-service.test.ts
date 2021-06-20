@@ -1,17 +1,21 @@
 import "jest-extended"
 
-import FindUserByIdServiceImplementation from "../../../../../src/domain/services/users/implementations/find-user-by-id.service"
+import PostgresFindUserByIdService from "../../../../../src/domain/services/users/implementations/postgres-find-user-by-id.service"
 
-import { expectsValidConnection, expectsValidService, expectsValidUserId } from "../../../../utils/functions/expects.functions"
+import {
+  expectsValidConnection,
+  expectsValidService,
+  expectsValidUserId
+} from "../../../../utils/functions/expects.functions"
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
-import {MockConnectionAcceptQuery} from "../../../../utils/mocks/domain/database/database-connection.mock"
+import { MockConnectionAcceptQuery } from "../../../../utils/mocks/domain/database/database-connection.mock"
 
 describe("FindUserByIdServiceImplementation | Execute", () => {
   test("If user not found return null", async () => {
     const userId = FakeUserService.getValidUserId()
     const mockQuery = jest.fn(() => [])
     const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new FindUserByIdServiceImplementation(connection)
+    const findUserByIdService = new PostgresFindUserByIdService(connection)
     // Given
     expectsValidConnection(connection)
     expectsValidService(findUserByIdService)
@@ -27,9 +31,9 @@ describe("FindUserByIdServiceImplementation | Execute", () => {
     const name = "John Doe"
     const email = "john@doe.com"
     const password_hash = "password_hash"
-    const mockQuery = jest.fn(() => [ { name, email, password_hash } ])
+    const mockQuery = jest.fn(() => [{ name, email, password_hash }])
     const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new FindUserByIdServiceImplementation(connection)
+    const findUserByIdService = new PostgresFindUserByIdService(connection)
     // Given
     expectsValidConnection(connection)
     expectsValidService(findUserByIdService)

@@ -1,9 +1,12 @@
-import TaskValidatorImplementation from "../../../../../src/domain/validators/implementations/task.validator"
-import UserValidatorImplementation from "../../../../../src/domain/validators/implementations/user.validator"
-import CreateTaskServiceImplementation from "../../../../../src/domain/services/tasks/implementations/create-task.service"
+import PostgresCreateTaskService from "../../../../../src/domain/services/tasks/implementations/postgres-create-task.service"
 
 import { getError } from "../../../../utils/functions/error.functions"
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
+import {
+  expectsValidConnection,
+  expectsValidService
+} from "../../../../utils/functions/expects.functions"
+import { MockConnectionAcceptMutate } from "../../../../utils/mocks/domain/database/database-connection.mock"
 
 describe("CreateTaskServiceImplementation | Execute", () => {
   test("Vaid task should be added with no errors", async () => {
@@ -14,16 +17,15 @@ describe("CreateTaskServiceImplementation | Execute", () => {
       userId
     }
     const mockMutate = jest.fn()
-    const MockConnection = jest.fn().mockImplementation(() => ({
-      mutate: mockMutate
-    }))()
-    const createTaskService = new CreateTaskServiceImplementation(MockConnection)
+    const connection = MockConnectionAcceptMutate(mockMutate)()
+    const createTaskService = new PostgresCreateTaskService(connection)
     // Given
-    expect(MockConnection.mutate).toBeDefined()
+    expectsValidConnection(connection)
+    expectsValidService(createTaskService)
     // When
     const serviceErr = await getError(() => createTaskService.execute(newTask))
     // Then
     expect(serviceErr).toBeFalsy()
-    expect(mockMutate).toHaveBeenCalled()
+    expect(mockMutate).toHaveBeenCalledTimes(1)
   })
 })

@@ -8,8 +8,8 @@ import CreateTaskControllerImplementation from "../../controllers/tasks/implemen
 import TaskValidatorImplementation from "../../validators/implementations/task.validator"
 import UserValidatorImplementation from "../../validators/implementations/user.validator"
 import CreateTaskUseCaseImplementation from "../../usecases/tasks/implementations/create-task.usecase"
-import CreateTaskServiceImplementation from "../../services/tasks/implementations/create-task.service"
-import FindUserByIdServiceImplementation from "../../services/users/implementations/find-user-by-id.service"
+import PostgresCreateTaskService from "../../services/tasks/implementations/postgres-create-task.service"
+import PostgresFindUserByIdService from "../../services/users/implementations/postgres-find-user-by-id.service"
 
 import DependencyInjectionError from "../../errors/dependencies/dependency-injection.error"
 import ControllerNotListedInFactoryError from "../../errors/factories/controller-not-listed-in-the-factory.error"
@@ -32,8 +32,8 @@ export default class ControllerFactoryImplementation implements ControllerFactor
   private buildCreateTaskController(connection: DatabaseConnection): CreateTaskController {
       const taskValidator = new TaskValidatorImplementation()
       const userValidator = new UserValidatorImplementation()
-      const findUserByIdService = new FindUserByIdServiceImplementation(connection)
-      const createTaskService = new CreateTaskServiceImplementation(connection)
+      const findUserByIdService = new PostgresFindUserByIdService(connection)
+      const createTaskService = new PostgresCreateTaskService(connection)
       const createTaskUseCase = new CreateTaskUseCaseImplementation(
         findUserByIdService,
         createTaskService

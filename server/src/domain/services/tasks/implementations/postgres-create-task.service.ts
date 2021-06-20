@@ -2,7 +2,7 @@ import DatabaseConnection from "../../../database/database-connection.interface"
 import { CreateTask } from "../../../types/task.types"
 import CreateTaskService from "../create-task-service.interface"
 
-export default class CreateTaskServiceImplementation implements CreateTaskService {
+export default class PostgresCreateTaskService implements CreateTaskService {
   private readonly connection: DatabaseConnection
 
   constructor(connection: DatabaseConnection) {

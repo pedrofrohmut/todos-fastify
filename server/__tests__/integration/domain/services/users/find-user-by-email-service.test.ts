@@ -1,6 +1,6 @@
 import "jest-extended"
 
-import PostgresFindUserByEmailService from "../../../../../src/domain/services/users/implementations/find-user-by-email.service"
+import PostgresFindUserByEmailService from "../../../../../src/domain/services/users/implementations/postgres-find-user-by-email.service"
 
 import {
   expectsValidConnection,

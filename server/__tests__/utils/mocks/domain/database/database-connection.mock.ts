@@ -12,3 +12,10 @@ export const MockConnectionAcceptQuery = (mockQuery: jest.Mock) => jest.fn().moc
   query: mockQuery,
   mutate: mockMutate
 }))
+
+export const MockConnectionAcceptMutate = (mockMutate: jest.Mock) => jest.fn().mockImplementation(() => ({
+  open: mockOpen,
+  close: mockClose,
+  query: mockQuery,
+  mutate: mockMutate
+}))

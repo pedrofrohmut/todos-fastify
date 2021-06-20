@@ -3,7 +3,7 @@ import { User, UserTable } from "../../../types/user.types"
 
 import FindUserByIdService from "../find-user-by-id-service.interface"
 
-export default class FindUserByIdServiceImplementation implements FindUserByIdService {
+export default class PostgresFindUserByIdService implements FindUserByIdService {
   private readonly connection: DatabaseConnection
 
   constructor(connection: DatabaseConnection) {
