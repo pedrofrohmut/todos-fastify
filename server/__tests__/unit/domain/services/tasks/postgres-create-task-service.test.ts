@@ -1,4 +1,4 @@
-import { CreateTask } from "../../../../../src/domain/types/task.types"
+import { CreateTaskDto } from "../../../../../src/domain/types/task.types"
 
 import PostgresCreateTaskService from "../../../../../src/domain/services/tasks/implementations/postgres-create-task.service"
 
@@ -13,7 +13,7 @@ import { MockConnectionAcceptMutate } from "../../../../utils/mocks/domain/datab
 describe("CreateTaskServiceImplementation | Execute", () => {
   test("Valid task should be added with no errors", async () => {
     const userId = FakeUserService.getValidUserId()
-    const newTask: CreateTask = {
+    const newTask: CreateTaskDto = {
       name: "TaskName",
       description: "TaskDescription",
       userId

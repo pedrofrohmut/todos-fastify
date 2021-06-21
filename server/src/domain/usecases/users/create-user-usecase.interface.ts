@@ -1,5 +1,5 @@
-import { CreateUserDto } from "../../types/user.types"
+import { CreateUserBody } from "../../types/request/body.types"
 
 export default interface CreateUserUseCase {
-  execute(newUser: CreateUserDto): Promise<void>
+  execute(newUser: CreateUserBody): Promise<void>
 }

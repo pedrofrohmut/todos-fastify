@@ -1,5 +1,5 @@
 export default class EmailAlreadyRegisteredError extends Error {
-  public static message = "User was not found with the userId passed"
+  public static message = "User e-mail is already registered"
 
   public constructor(message?: string) {
     if (message) {

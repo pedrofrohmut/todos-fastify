@@ -1,4 +1,4 @@
-import { CreateUserDto } from "../../../types/user.types"
+import { CreateUserBody } from "../../../types/request/body.types"
 
 import CreateUserUseCase from "../create-user-usecase.interface"
 import FindUserByEmailService from "../../../services/users/find-user-by-email-service.interface"
@@ -10,16 +10,22 @@ export default class CreateUserUseCaseImplementation implements CreateUserUseCas
   private readonly findUserByEmailService: FindUserByEmailService
   private readonly createUserService: CreateUserService
 
-  constructor(findUserByEmailService: FindUserByEmailService, createUserService: CreateUserService) {
+  constructor(
+    findUserByEmailService: FindUserByEmailService,
+    createUserService: CreateUserService
+  ) {
     this.findUserByEmailService = findUserByEmailService
     this.createUserService = createUserService
   }
 
-  public async execute(newUser: CreateUserDto): Promise<void> {
-    const foundUser = await this.findUserByEmailService.execute(newUser.email)
+  public async execute(newUser: CreateUserBody): Promise<void> {
+    const { name, email, password } = newUser
+    const foundUser = await this.findUserByEmailService.execute(email)
     if (foundUser !== null) {
       throw new EmailAlreadyRegisteredError("[CreateUserUseCase] execute")
     }
-    this.createUserService.execute(newUser)
+    // TODO: Implement the HashPasswordService
+    const passwordHash = "TODO_HASH_" + password
+    await this.createUserService.execute({ name, email, passwordHash })
   }
 }

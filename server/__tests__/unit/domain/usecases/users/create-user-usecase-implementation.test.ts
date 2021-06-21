@@ -20,18 +20,20 @@ import {
 import { getError } from "../../../../utils/functions/error.functions"
 
 describe("CreateUserUseCaseImplementation", () => {
-    const newUser: CreateUserDto = {
-      name: "User Name",
-      email: "user@mail.com",
-      passwordHash: "passwordHash"
-    }
+  const newUser: CreateUserDto = {
+    name: "User Name",
+    email: "user@mail.com",
+    passwordHash: "passwordHash"
+  }
 
   test("User is found by email throw EmailAlreadyRegisteredError", async () => {
-    const mockQuery = jest.fn(() => [{
-      name: "User Name",
-      email: "user@mail.com",
-      passwordHash: "passwordHash"
-    }])
+    const mockQuery = jest.fn(() => [
+      {
+        name: "User Name",
+        email: "user@mail.com",
+        passwordHash: "passwordHash"
+      }
+    ])
     const connection = MockConnectionAcceptQuery(mockQuery)()
     const findUserByEmailService = new PostgresFindUserByEmailService(connection)
     const createUserService = new PostgresCreateUserService(connection)
