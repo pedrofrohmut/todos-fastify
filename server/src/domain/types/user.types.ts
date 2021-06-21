@@ -18,3 +18,9 @@ export type UserTable = {
   email: string
   password_hash: string
 }
+
+export type CreateUser = {
+  name: string
+  email: string
+  passwordHash: string
+}

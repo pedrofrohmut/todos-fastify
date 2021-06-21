@@ -1,3 +1,5 @@
+import { CreateTask } from "../../../../../src/domain/types/task.types"
+
 import PostgresCreateTaskService from "../../../../../src/domain/services/tasks/implementations/postgres-create-task.service"
 
 import { getError } from "../../../../utils/functions/error.functions"
@@ -9,9 +11,9 @@ import {
 import { MockConnectionAcceptMutate } from "../../../../utils/mocks/domain/database/database-connection.mock"
 
 describe("CreateTaskServiceImplementation | Execute", () => {
-  test("Vaid task should be added with no errors", async () => {
+  test("Valid task should be added with no errors", async () => {
     const userId = FakeUserService.getValidUserId()
-    const newTask = {
+    const newTask: CreateTask = {
       name: "TaskName",
       description: "TaskDescription",
       userId
@@ -22,6 +24,8 @@ describe("CreateTaskServiceImplementation | Execute", () => {
     // Given
     expectsValidConnection(connection)
     expectsValidService(createTaskService)
+    // @ts-ignore
+    expect(createTaskService.connection).toBeTruthy()
     // When
     const serviceErr = await getError(() => createTaskService.execute(newTask))
     // Then

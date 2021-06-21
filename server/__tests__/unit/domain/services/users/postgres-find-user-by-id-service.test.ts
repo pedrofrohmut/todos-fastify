@@ -4,8 +4,7 @@ import PostgresFindUserByIdService from "../../../../../src/domain/services/user
 
 import {
   expectsValidConnection,
-  expectsValidService,
-  expectsValidUserId
+  expectsValidService
 } from "../../../../utils/functions/expects.functions"
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
 import { MockConnectionAcceptQuery } from "../../../../utils/mocks/domain/database/database-connection.mock"
@@ -19,6 +18,8 @@ describe("FindUserByIdServiceImplementation | Execute", () => {
     // Given
     expectsValidConnection(connection)
     expectsValidService(findUserByIdService)
+    // @ts-ignore
+    expect(findUserByIdService.connection).toBeTruthy()
     // When
     const foundUser = await findUserByIdService.execute(userId)
     // Then
@@ -37,6 +38,8 @@ describe("FindUserByIdServiceImplementation | Execute", () => {
     // Given
     expectsValidConnection(connection)
     expectsValidService(findUserByIdService)
+    // @ts-ignore
+    expect(findUserByIdService.connection).toBeTruthy()
     // When
     const foundUser = await findUserByIdService.execute(userId)
     // Then

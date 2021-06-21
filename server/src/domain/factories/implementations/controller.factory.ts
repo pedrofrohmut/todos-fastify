@@ -30,15 +30,15 @@ export default class ControllerFactoryImplementation implements ControllerFactor
   }
 
   private buildCreateTaskController(connection: DatabaseConnection): CreateTaskController {
-      const taskValidator = new TaskValidatorImplementation()
-      const userValidator = new UserValidatorImplementation()
-      const findUserByIdService = new PostgresFindUserByIdService(connection)
-      const createTaskService = new PostgresCreateTaskService(connection)
-      const createTaskUseCase = new CreateTaskUseCaseImplementation(
-        findUserByIdService,
-        createTaskService
-      )
-      return new CreateTaskControllerImplementation(taskValidator, userValidator, createTaskUseCase)
+    const taskValidator = new TaskValidatorImplementation()
+    const userValidator = new UserValidatorImplementation()
+    const findUserByIdService = new PostgresFindUserByIdService(connection)
+    const createTaskService = new PostgresCreateTaskService(connection)
+    const createTaskUseCase = new CreateTaskUseCaseImplementation(
+      findUserByIdService,
+      createTaskService
+    )
+    return new CreateTaskControllerImplementation(taskValidator, userValidator, createTaskUseCase)
   }
 
   public getController(

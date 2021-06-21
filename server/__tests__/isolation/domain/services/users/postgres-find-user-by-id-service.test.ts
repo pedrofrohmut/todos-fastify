@@ -1,18 +1,18 @@
-import FindUserByIdServiceImplementation from "../../../../../src/domain/services/users/implementations/find-user-by-id.service"
+import PostgresFindUserByIdService from "../../../../../src/domain/services/users/implementations/postgres-find-user-by-id.service"
 
 const userId = "userId"
 const userName = "userName"
 const userEmail = "user@email.com"
 const userPasswordHash = "password_hash"
 
-describe("FindUserByIdServiceImplementation", () => {
+describe("PostgresFindUserByIdService", () => {
   test("User not found => null", async () => {
     // Given
     const mockQuery = jest.fn(() => [])
     const mockConnection = jest.fn().mockImplementation(() => ({
       query: mockQuery
     }))()
-    const findUserByIdService = new FindUserByIdServiceImplementation(mockConnection)
+    const findUserByIdService = new PostgresFindUserByIdService(mockConnection)
     // When
     const foundUser = await findUserByIdService.execute("")
     // Then
@@ -33,7 +33,7 @@ describe("FindUserByIdServiceImplementation", () => {
     const mockConnection = jest.fn().mockImplementation(() => ({
       query: mockQuery
     }))()
-    const findUserByIdService = new FindUserByIdServiceImplementation(mockConnection)
+    const findUserByIdService = new PostgresFindUserByIdService(mockConnection)
     // When
     const foundUser = await findUserByIdService.execute(userId)
     // Then

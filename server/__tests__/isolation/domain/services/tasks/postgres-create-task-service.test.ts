@@ -1,9 +1,9 @@
-import CreateTaskServiceImplementation from "../../../../../src/domain/services/tasks/implementations/create-task.service"
+import PostgresCreateTaskService from "../../../../../src/domain/services/tasks/implementations/postgres-create-task.service"
 
 import { getError } from "../../../../utils/functions/error.functions"
 import { CreateTask } from "../../../../../src/domain/types/task.types"
 
-describe("CreateTaskServiceImplementation", () => {
+describe("PostgresCreateTaskService", () => {
   test("With valid values throws no errors", async () => {
     // Given
     const newTask: CreateTask = {
@@ -15,7 +15,7 @@ describe("CreateTaskServiceImplementation", () => {
     const mockConnection = jest.fn().mockImplementation(() => ({
       mutate: mockMutate
     }))()
-    const createTaskService = new CreateTaskServiceImplementation(mockConnection)
+    const createTaskService = new PostgresCreateTaskService(mockConnection)
     // When
     const serviceErr = await getError(() => createTaskService.execute(newTask))
     // Then

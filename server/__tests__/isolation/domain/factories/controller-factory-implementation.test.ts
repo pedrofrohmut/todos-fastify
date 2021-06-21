@@ -7,13 +7,11 @@ import DatabaseConnection from "../../../../src/domain/database/database-connect
 import ControllerFactoryImplementation from "../../../../src/domain/factories/implementations/controller.factory"
 import CreateTaskControllerImplementation from "../../../../src/domain/controllers/tasks/implementations/create-task.controller"
 
-import {
-  MockControllerPlaceholder
-} from "../../../utils/mocks/domain/controllers/controller.mock"
+import { MockControllerPlaceholder } from "../../../utils/mocks/domain/controllers/controller.mock"
 import { expectsToHaveError } from "../../../utils/functions/expects.functions"
 import { getSyncError } from "../../../utils/functions/error.functions"
 import PostgresDatabaseConnection from "../../../../src/domain/database/implementations/postgres.database-connection"
-import {Client} from "pg"
+import { Client } from "pg"
 
 const expectsValidController = (c: any): void => {
   expect(c).toBeTruthy()
