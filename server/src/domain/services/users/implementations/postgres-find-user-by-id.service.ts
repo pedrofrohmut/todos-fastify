@@ -1,5 +1,5 @@
 import DatabaseConnection from "../../../database/database-connection.interface"
-import { User, UserTable } from "../../../types/user.types"
+import { UserDto, UserTableDto } from "../../../types/user.types"
 
 import FindUserByIdService from "../find-user-by-id-service.interface"
 
@@ -10,8 +10,8 @@ export default class PostgresFindUserByIdService implements FindUserByIdService 
     this.connection = connection
   }
 
-  public async execute(userId: string): Promise<User | null> {
-    const queryResultRows = await this.connection.query<UserTable>(
+  public async execute(userId: string): Promise<UserDto | null> {
+    const queryResultRows = await this.connection.query<UserTableDto>(
       "SELECT name, email, password_hash FROM app.users WHERE id = $1",
       [userId]
     )

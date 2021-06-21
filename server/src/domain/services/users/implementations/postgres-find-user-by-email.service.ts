@@ -1,7 +1,7 @@
 import DatabaseConnection from "../../../database/database-connection.interface"
-import { User, UserTable } from "../../../types/user.types"
+import { UserDto, UserTableDto } from "../../../types/user.types"
 
-import FindUserByEmailService from "../find-user-by-email-service.test"
+import FindUserByEmailService from "../find-user-by-email-service.interface"
 
 export default class PostgresFindUserByEmailService implements FindUserByEmailService {
   private readonly connection: DatabaseConnection
@@ -10,8 +10,8 @@ export default class PostgresFindUserByEmailService implements FindUserByEmailSe
     this.connection = connection
   }
 
-  public async execute(email: string): Promise<User | null> {
-    const queryResultRows = await this.connection.query<UserTable>(
+  public async execute(email: string): Promise<UserDto | null> {
+    const queryResultRows = await this.connection.query<UserTableDto>(
       "SELECT id, name, password_hash FROM app.users WHERE email = $1",
       [email]
     )

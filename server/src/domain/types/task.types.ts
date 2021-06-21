@@ -1,11 +1,11 @@
-export type Task = {
+export type TaskDto = {
   id: string
   name: string
   description?: string
   userId: string
 }
 
-export type CreateTask = {
+export type CreateTaskDto = {
   name: string
   description: string
   userId: string

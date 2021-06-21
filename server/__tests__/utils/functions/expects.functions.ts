@@ -2,11 +2,14 @@ import "jest-extended"
 
 import { isValidUUIDv4 } from "./validation.functions"
 
-export const expectsToHaveError = (err: any): void => {
+export const expectsToHaveError = (err: any, instance?: any): void => {
   expect(err).toBeTruthy()
   expect(err).toBeInstanceOf(Error)
   expect(err.message).toBeTruthy()
   expect(err.message).toBeString()
+  if (instance) {
+    expect(err).toBeInstanceOf(instance)
+  }
 }
 
 export const expectsValidConnection = (con: any): void => {
@@ -22,6 +25,13 @@ export const expectsValidService = (service: any): void => {
   expect(service).toBeTruthy()
   expect(service).toBeObject()
   expect(service.execute).toBeDefined()
+}
+
+export const expectsValidDBService = (service: any): void => {
+  expect(service).toBeTruthy()
+  expect(service).toBeObject()
+  expect(service.execute).toBeDefined()
+  expect(service.connection).toBeTruthy()
 }
 
 export const expectsValidUser = (user: any) => {

@@ -1,25 +1,25 @@
-export type SignedUser = {
+export type SignedUserDto = {
   id: string
   name: string
   email: string
   token: string
 }
 
-export type User = {
+export type UserDto = {
   id: string
   name: string
   email: string
   passwordHash: string
 }
 
-export type UserTable = {
+export type UserTableDto = {
   id: string
   name: string
   email: string
   password_hash: string
 }
 
-export type CreateUser = {
+export type CreateUserDto = {
   name: string
   email: string
   passwordHash: string

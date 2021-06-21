@@ -1,5 +1,5 @@
-import { User } from "../../types/user.types"
+import { UserDto } from "../../types/user.types"
 
 export default interface FindUserByIdService {
-  execute(userId: string): Promise<User | null>
+  execute(userId: string): Promise<UserDto | null>
 }

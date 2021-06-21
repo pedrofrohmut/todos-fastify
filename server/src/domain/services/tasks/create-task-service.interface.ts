@@ -1,5 +1,5 @@
-import { CreateTask } from "../../types/task.types"
+import { CreateTaskDto } from "../../types/task.types"
 
 export default interface CreateTaskService {
-  execute(newTask: CreateTask): Promise<void>
+  execute(newTask: CreateTaskDto): Promise<void>
 }
