@@ -18,6 +18,7 @@ import MockConnection, {
   MockConnectionAcceptQuery
 } from "../../../../utils/mocks/domain/database/database-connection.mock"
 import { CreateUserBody } from "../../../../../src/domain/types/request/body.types"
+import BcryptjsHashPasswordService from "../../../../../src/domain/services/auth/implementations/bcryptjs-hash-password.service"
 
 const expectsValidUserValidator = (userValidator: any): void => {
   expect(userValidator).toBeTruthy()
@@ -32,6 +33,8 @@ const expectsValidCreateUserUseCase = (createUserUseCase: any): void => {
   expect(createUserUseCase).toBeObject()
   // @ts-ignore
   expect(createUserUseCase.findUserByEmailService).toBeTruthy()
+  // @ts-ignore
+  expect(createUserUseCase.hashPasswordService).toBeTruthy()
   // @ts-ignore
   expect(createUserUseCase.createUserService).toBeTruthy()
 }
@@ -70,9 +73,11 @@ const expectsValidRequestBody = (requestBody: any): void => {
 
 const connection = MockConnection()
 const findUserByEmailService = new PostgresFindUserByEmailService(connection)
+const hashPasswordService = new BcryptjsHashPasswordService()
 const createUserService = new PostgresCreateUserService(connection)
 const createUserUseCase = new CreateUserUseCaseImplementation(
   findUserByEmailService,
+  hashPasswordService,
   createUserService
 )
 const userValidator = new UserValidatorImplementation()
@@ -225,6 +230,7 @@ describe("CreateUserControllerImplementation", () => {
     const createUserService = new PostgresCreateUserService(connection)
     const createUserUseCase = new CreateUserUseCaseImplementation(
       findUserByEmailService,
+      hashPasswordService,
       createUserService
     )
     const createUserController = new CreateUserControllerImplementation(
@@ -249,6 +255,8 @@ describe("CreateUserControllerImplementation", () => {
     const controllerResponse = await createUserController.execute(request)
     // Then
     expectsControllerResponse400AndMessage(controllerResponse)
+    expect(connection.query).toHaveBeenCalledTimes(2)
+    expect(connection.mutate).toHaveBeenCalledTimes(0)
   })
 
   test("Valid body and user email is not registered => 201", async () => {
@@ -267,6 +275,7 @@ describe("CreateUserControllerImplementation", () => {
     const createUserService = new PostgresCreateUserService(connection)
     const createUserUseCase = new CreateUserUseCaseImplementation(
       findUserByEmailService,
+      hashPasswordService,
       createUserService
     )
     const createUserController = new CreateUserControllerImplementation(
@@ -291,5 +300,7 @@ describe("CreateUserControllerImplementation", () => {
     const controllerResponse = await createUserController.execute(request)
     // Then
     expectsControllerResponse201(controllerResponse)
+    expect(connection.query).toHaveBeenCalledTimes(2)
+    expect(connection.mutate).toHaveBeenCalledTimes(1)
   })
 })
