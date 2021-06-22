@@ -6,7 +6,7 @@ import UserValidator from "../user-validator.interface"
 export default class UserValidatorImplementation implements UserValidator {
   public getMessageForName(name?: string): string | null {
     if (name === null || name === undefined) {
-      return "User name id required"
+      return "User name is required"
     }
     if (typeof name !== "string") {
       return "User name is not a valid string"

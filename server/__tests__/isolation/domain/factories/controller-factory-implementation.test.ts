@@ -12,6 +12,7 @@ import { expectsToHaveError } from "../../../utils/functions/expects.functions"
 import { getSyncError } from "../../../utils/functions/error.functions"
 import PostgresDatabaseConnection from "../../../../src/domain/database/implementations/postgres.database-connection"
 import { Client } from "pg"
+import CreateUserControllerImplementation from "../../../../src/domain/controllers/users/implementations/create-user.controller"
 
 const expectsValidController = (c: any): void => {
   expect(c).toBeTruthy()
@@ -133,5 +134,21 @@ describe("ControllerFactoryImplementation | GetController | listed controller pa
     // Then
     expect(controller).toBeTruthy()
     expect(controller).toBeInstanceOf(CreateTaskControllerImplementation)
+  })
+
+  test("CreateUserImplementation => ready to use CreateUserImplementation", () => {
+    const arg = CreateUserControllerImplementation
+    const connection = new PostgresDatabaseConnection(new Client())
+    // Given
+    expect(arg).toBeTruthy()
+    expect(arg.toString()).toEqual(CreateUserControllerImplementation.toString())
+    // When
+    const controller = new ControllerFactoryImplementation().getController(
+      CreateUserControllerImplementation,
+      connection
+    )
+    // Then
+    expect(controller).toBeTruthy()
+    expect(controller).toBeInstanceOf(CreateUserControllerImplementation)
   })
 })

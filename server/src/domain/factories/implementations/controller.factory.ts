@@ -13,6 +13,12 @@ import PostgresFindUserByIdService from "../../services/users/implementations/po
 
 import DependencyInjectionError from "../../errors/dependencies/dependency-injection.error"
 import ControllerNotListedInFactoryError from "../../errors/factories/controller-not-listed-in-the-factory.error"
+import CreateUserController from "../../controllers/users/create-user-controller.interface"
+import CreateUserControllerImplementation from "../../controllers/users/implementations/create-user.controller"
+import CreateUserUseCaseImplementation from "../../usecases/users/implementations/create-user-implementation.usecase"
+import PostgresFindUserByEmailService from "../../services/users/implementations/postgres-find-user-by-email.service"
+import BcryptjsHashPasswordService from "../../services/auth/implementations/bcryptjs-hash-password.service"
+import PostgresCreateUserService from "../../services/users/implementations/postgres-create-user.service"
 
 export default class ControllerFactoryImplementation implements ControllerFactory {
   private isValidController(controller: any): boolean {
@@ -41,6 +47,19 @@ export default class ControllerFactoryImplementation implements ControllerFactor
     return new CreateTaskControllerImplementation(taskValidator, userValidator, createTaskUseCase)
   }
 
+  private buildCreateUserController(connection: DatabaseConnection): CreateUserController {
+    const userValidator = new UserValidatorImplementation()
+    const findUserByEmailService = new PostgresFindUserByEmailService(connection)
+    const hashPasswordService = new BcryptjsHashPasswordService()
+    const createUserService = new PostgresCreateUserService(connection)
+    const createUserUseCase = new CreateUserUseCaseImplementation(
+      findUserByEmailService,
+      hashPasswordService,
+      createUserService
+    )
+    return new CreateUserControllerImplementation(userValidator, createUserUseCase)
+  }
+
   public getController(
     controller: Function | Controller<any, any>,
     connection: DatabaseConnection
@@ -50,6 +69,9 @@ export default class ControllerFactoryImplementation implements ControllerFactor
     }
     if (controller.toString() === CreateTaskControllerImplementation.toString()) {
       return this.buildCreateTaskController(connection)
+    }
+    if (controller.toString() === CreateUserControllerImplementation.toString()) {
+      return this.buildCreateUserController(connection)
     }
     throw new ControllerNotListedInFactoryError("[ControllerFactoryImplementation] getController")
   }

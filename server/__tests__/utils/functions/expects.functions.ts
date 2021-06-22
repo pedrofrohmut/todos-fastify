@@ -70,6 +70,11 @@ export const expectsControllerResponse400AndMessage = (response: any): void => {
   expect(response.body).toBeString()
 }
 
+export const expectsInjectResponse201 = (response: any): void => {
+  expect(response.statusCode).toBe(201)
+  expect(response.payload).toBeFalsy()
+}
+
 export const expectsInjectResponse400AndMessage = (response: any): void => {
   expect(response.statusCode).toBe(400)
   expect(response.payload).toBeTruthy()

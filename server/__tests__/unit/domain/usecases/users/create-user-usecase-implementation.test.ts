@@ -11,9 +11,7 @@ import PostgresFindUserByEmailService from "../../../../../src/domain/services/u
 
 import EmailAlreadyRegisteredError from "../../../../../src/domain/errors/users/email-already-registered.error"
 
-import {
-  MockConnectionAcceptQuery
-} from "../../../../utils/mocks/domain/database/database-connection.mock"
+import { MockConnectionAcceptQuery } from "../../../../utils/mocks/domain/database/database-connection.mock"
 import {
   expectsToHaveError,
   expectsValidConnection,

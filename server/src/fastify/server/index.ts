@@ -45,7 +45,8 @@ server.register(formbody)
 /**
  * ROUTER
  */
-server.decorateRequest("router", null)
+const defaultRouter = null
+server.decorateRequest("router", defaultRouter)
 server.addHook("onRequest", async (request, response) => {
   request.router = new FastifyRouterBuilder(
     request,

@@ -64,13 +64,6 @@ const expectsValidDependencies = (
   expectsValidCreateUserController(createUserController)
 }
 
-const expectsValidRequestBody = (requestBody: any): void => {
-  expect(requestBody).toBeTruthy()
-  expect(requestBody.name).toBeTruthy()
-  expect(requestBody.email).toBeTruthy()
-  expect(requestBody.password).toBeTruthy()
-}
-
 const connection = MockConnection()
 const findUserByEmailService = new PostgresFindUserByEmailService(connection)
 const hashPasswordService = new BcryptjsHashPasswordService()
@@ -134,18 +127,18 @@ describe("CreateUserControllerImplementation", () => {
       createUserController
     )
     expect(request.body).toBeTruthy()
-    expect(request.authUserId).toBeNull()
-    expect(request.params).toBeNull()
     expect(nameValidationMessage).toBeString()
     expect(emailValidationMessage).toBeNull()
     expect(passwordValidationMessage).toBeNull()
+    expect(request.authUserId).toBeNull()
+    expect(request.params).toBeNull()
     // When
     const controllerResponse = await createUserController.execute(request)
     // Then
     expectsControllerResponse400AndMessage(controllerResponse)
   })
 
-  test("No body.email => 400/message", async () => {
+  test("Invalid body.email => 400/message", async () => {
     const request: AdaptedRequest<CreateUserBody> = {
       body: {
         name: "user name",
@@ -155,6 +148,9 @@ describe("CreateUserControllerImplementation", () => {
       authUserId: null,
       params: null
     }
+    const nameValidationMessage = userValidator.getMessageForName(request.body.name)
+    const emailValidationMessage = userValidator.getMessageForEmail(request.body.email)
+    const passwordValidationMessage = userValidator.getMessageForPassword(request.body.password)
     // Given
     expectsValidDependencies(
       connection,
@@ -165,9 +161,9 @@ describe("CreateUserControllerImplementation", () => {
       createUserController
     )
     expect(request.body).toBeTruthy()
-    expect(request.body.name).toBeTruthy()
-    expect(request.body.email).toBeFalsy()
-    expect(request.body.password).toBeTruthy()
+    expect(nameValidationMessage).toBeNull()
+    expect(emailValidationMessage).toBeTruthy()
+    expect(passwordValidationMessage).toBeNull()
     expect(request.authUserId).toBeNull()
     expect(request.params).toBeNull()
     // When
@@ -186,6 +182,9 @@ describe("CreateUserControllerImplementation", () => {
       authUserId: null,
       params: null
     }
+    const nameValidationMessage = userValidator.getMessageForName(request.body.name)
+    const emailValidationMessage = userValidator.getMessageForEmail(request.body.email)
+    const passwordValidationMessage = userValidator.getMessageForPassword(request.body.password)
     // Given
     expectsValidDependencies(
       connection,
@@ -196,9 +195,9 @@ describe("CreateUserControllerImplementation", () => {
       createUserController
     )
     expect(request.body).toBeTruthy()
-    expect(request.body.name).toBeTruthy()
-    expect(request.body.email).toBeTruthy()
-    expect(request.body.password).toBeFalsy()
+    expect(nameValidationMessage).toBeNull()
+    expect(emailValidationMessage).toBeNull()
+    expect(passwordValidationMessage).toBeTruthy()
     expect(request.authUserId).toBeNull()
     expect(request.params).toBeNull()
     // When
@@ -217,6 +216,9 @@ describe("CreateUserControllerImplementation", () => {
       authUserId: null,
       params: null
     }
+    const nameValidationMessage = userValidator.getMessageForName(request.body.name)
+    const emailValidationMessage = userValidator.getMessageForEmail(request.body.email)
+    const passwordValidationMessage = userValidator.getMessageForPassword(request.body.password)
     const mockQuery = jest.fn(() => [
       {
         id: "userId",
@@ -247,7 +249,10 @@ describe("CreateUserControllerImplementation", () => {
       createUserUseCase,
       createUserController
     )
-    expectsValidRequestBody(request.body)
+    expect(request.body).toBeTruthy()
+    expect(nameValidationMessage).toBeNull()
+    expect(emailValidationMessage).toBeNull()
+    expect(passwordValidationMessage).toBeNull()
     expect(request.authUserId).toBeNull()
     expect(request.params).toBeNull()
     expect(userRegistered).toBeTruthy()
@@ -269,6 +274,9 @@ describe("CreateUserControllerImplementation", () => {
       authUserId: null,
       params: null
     }
+    const nameValidationMessage = userValidator.getMessageForName(request.body.name)
+    const emailValidationMessage = userValidator.getMessageForEmail(request.body.email)
+    const passwordValidationMessage = userValidator.getMessageForPassword(request.body.password)
     const mockQuery = jest.fn(() => [])
     const connection = MockConnectionAcceptQuery(mockQuery)()
     const findUserByEmailService = new PostgresFindUserByEmailService(connection)
@@ -292,7 +300,10 @@ describe("CreateUserControllerImplementation", () => {
       createUserUseCase,
       createUserController
     )
-    expectsValidRequestBody(request.body)
+    expect(request.body).toBeTruthy()
+    expect(nameValidationMessage).toBeNull()
+    expect(emailValidationMessage).toBeNull()
+    expect(passwordValidationMessage).toBeNull()
     expect(request.authUserId).toBeNull()
     expect(request.params).toBeNull()
     expect(userRegistered).toBeFalsy()
