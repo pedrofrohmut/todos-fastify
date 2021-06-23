@@ -22,7 +22,11 @@ import PostgresCreateUserService from "../../services/users/implementations/post
 
 export default class ControllerFactoryImplementation implements ControllerFactory {
   private isValidController(controller: any): boolean {
-    if (typeof controller !== "function" && typeof controller !== "object") {
+    if (
+      !controller ||
+      (typeof controller !== "function" && typeof controller !== "object") ||
+      (typeof controller === "object" && controller.execute === undefined)
+    ) {
       return false
     }
     return true

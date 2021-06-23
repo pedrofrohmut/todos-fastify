@@ -1,21 +1,9 @@
 import { AdaptedRequest, ControllerResponse } from "../../../../../src/domain/types/router.types"
 
-export class MockControllerStatusPayload {
-  private readonly status: number
-  private readonly body: any
-
-  constructor(status: any, body?: any) {
-    this.status = status
-    this.body = body
-  }
-
-  public async execute(_request?: AdaptedRequest<any>) {
-    return {
-      status: this.status,
-      body: this.body
-    }
-  }
-}
+export const MockControllerStatusPayload = (status: number, payload?: any) =>
+  jest.fn().mockImplementation(() => ({
+    execute: jest.fn(() => ({ status, body: payload }))
+  }))
 
 export class MockControllerRequestAsPayload {
   private readonly status: number = 200
@@ -32,19 +20,10 @@ export class MockControllerRequestAsPayload {
   }
 }
 
-export class MockControllerArgsAsResponse {
-  private readonly args: any
-
-  constructor(args: any) {
-    this.args = args
-  }
-
-  public async execute(_request?: AdaptedRequest<any>) {
-    return this.args
-  }
-}
-
-export class MockControllerNoExecute {}
+export const MockControllerArgsAsResponse = (args: any) =>
+  jest.fn().mockImplementation(() => ({
+    execute: jest.fn(() => args)
+  }))
 
 export class MockControllerNotListed {
   public async execute(request: AdaptedRequest<any>) {}
@@ -61,3 +40,13 @@ export class MockControllerExecuteThrowError {
     throw new Error("MESSAGE")
   }
 }
+
+export const mockExecute = jest.fn()
+
+const MockController = jest.fn().mockImplementation(() => ({
+  execute: mockExecute
+}))
+
+export const MockControllerNoExecute = jest.fn().mockImplementation(() => ({}))
+
+export default MockController

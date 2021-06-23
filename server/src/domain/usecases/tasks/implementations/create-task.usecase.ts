@@ -15,11 +15,15 @@ export default class CreatTaskUseCaseImplementation implements CreateTaskUseCase
     this.createTaskService = createTaskService
   }
 
-  public async execute({ name, description }: CreateTaskBody, userId: string): Promise<void> {
+  public async execute(newTask: CreateTaskBody, userId: string): Promise<void> {
     const foundUser = await this.findUserByIdService.execute(userId)
     if (foundUser === null) {
       throw new UserNotFoundByIdError("[CreateTaskUseCase] execute")
     }
-    await this.createTaskService.execute({ name, description: description || "", userId })
+    await this.createTaskService.execute({
+      name: newTask.name,
+      description: newTask.description || "",
+      userId
+    })
   }
 }

@@ -1,50 +1,40 @@
-import { AdaptedRequest } from "../../../../../src/domain/types/router.types"
 import { CreateTaskBody } from "../../../../../src/domain/types/request/body.types"
+import { AdaptedRequest } from "../../../../../src/domain/types/router.types"
 
 import CreateTaskController from "../../../../../src/domain/controllers/tasks/create-task-controller.interface"
 
+import TaskValidatorImplementation from "../../../../../src/domain/validators/implementations/task.validator"
+import UserValidatorImplementation from "../../../../../src/domain/validators/implementations/user.validator"
+import PostgresFindUserByIdService from "../../../../../src/domain/services/users/implementations/postgres-find-user-by-id.service"
+import PostgresCreateTaskService from "../../../../../src/domain/services/tasks/implementations/postgres-create-task.service"
+import CreateTaskUseCaseImplementation from "../../../../../src/domain/usecases/tasks/implementations/create-task.usecase"
 import CreateTaskControllerImplementation from "../../../../../src/domain/controllers/tasks/implementations/create-task.controller"
 
+import UserNotFoundByIdError from "../../../../../src/domain/errors/users/user-not-found-by-id.error"
+
+import FakeUserService from "../../../../utils/fakes/user-service.fake"
+import { getError } from "../../../../utils/functions/error.functions"
 import {
   expectsControllerResponse201,
   expectsControllerResponse400AndMessage,
   expectsControllerResponse401AndMessage,
   expectsToHaveError
 } from "../../../../utils/functions/expects.functions"
-import FakeUserService from "../../../../utils/fakes/user-service.fake"
-import { isValidUUIDv4 } from "../../../../utils/functions/validation.functions"
-import {
-  MockCreateTaskUseCasePlaceholder,
-  MockCreateTaskUseCaseThrowsUserNotFound
-} from "../../../../utils/mocks/domain/usecases/tasks/create-task-usecase.mock"
-import { getError } from "../../../../utils/functions/error.functions"
-import UserNotFoundByIdError from "../../../../../src/domain/errors/users/user-not-found-by-id.error"
-import { MockTaskValidator } from "../../../../utils/mocks/domain/validators/task-validator.mock"
-import { MockUserValidator } from "../../../../utils/mocks/domain/validators/user-validator.mock"
+import MockConnection, {
+  MockConnectionAcceptQuery
+} from "../../../../utils/mocks/domain/database/database-connection.mock"
 
-const expectsValidController = (controller: any): void => {
-  expect(controller).toBeTruthy()
-  expect(controller).toBeObject()
-  expect(controller).toBeInstanceOf(CreateTaskControllerImplementation)
-}
+const connection = MockConnection()
 
-const expectsValidAdaptedRequest = (req: any): void => {
-  expect(req).toBeTruthy()
-  expect(req).toBeObject()
-  expect(req.body).toBeTruthy()
-  expect(req.body).toBeObject()
-  expect(req.body.name).toBeTruthy()
-  expect(req.body.name).toBeString()
-  expect(req.authUserId).toBeTruthy()
-  expect(req.authUserId).toBeString()
-  expect(isValidUUIDv4(req.authUserId)).toBeTrue()
-  expect(req.params).toBeNull()
-}
-
-const taskValidator = new MockTaskValidator()
-const userValidator = new MockUserValidator()
-const createTaskUseCase = new MockCreateTaskUseCasePlaceholder()
 const userId = FakeUserService.getValidUserId()
+const taskValidator = new TaskValidatorImplementation()
+const userValidator = new UserValidatorImplementation()
+const findUserByIdService = new PostgresFindUserByIdService(connection)
+const createTaskService = new PostgresCreateTaskService(connection)
+const createTaskUseCase = new CreateTaskUseCaseImplementation(
+  findUserByIdService,
+  createTaskService
+)
 
 let adaptedRequest: AdaptedRequest<CreateTaskBody>
 let controller: CreateTaskController
@@ -67,7 +57,6 @@ describe("CreateTaskControllerImplementation | Execute | Validate request body",
     adaptedRequest.body = null
     // Given
     expect(adaptedRequest.body).toBeNull()
-    expectsValidController(controller)
     // When
     const controllerResponse = await controller.execute(adaptedRequest)
     // Then
@@ -78,20 +67,18 @@ describe("CreateTaskControllerImplementation | Execute | Validate request body",
     adaptedRequest.body = { name: undefined }
     // Given
     expect(adaptedRequest.body.name).toBeFalsy()
-    expectsValidController(controller)
     // When
     const controllerResponse = await controller.execute(adaptedRequest)
     // Then
     expectsControllerResponse400AndMessage(controllerResponse)
   })
 
-  test("Invalid name => 400/message", async () => {
+  test("Not type of string name => 400/message", async () => {
     // @ts-ignore
     adaptedRequest.body = { name: 123 }
     // Given
     expect(adaptedRequest.body.name).toBeTruthy()
     expect(adaptedRequest.body.name).not.toBeString()
-    expectsValidController(controller)
     // When
     const controllerResponse = await controller.execute(adaptedRequest)
     // Then
@@ -100,23 +87,21 @@ describe("CreateTaskControllerImplementation | Execute | Validate request body",
 })
 
 describe("CreateTaskControllerImplementation | Execute | Validate authUserId", () => {
-  test("Null => 401/message", async () => {
+  test("Null authUserId => 401/message", async () => {
     adaptedRequest.authUserId = null
     // Given
     expect(adaptedRequest.authUserId).toBeNull()
-    expectsValidController(controller)
     // When
     const controllerResponse = await controller.execute(adaptedRequest)
     // Then
     expectsControllerResponse401AndMessage(controllerResponse)
   })
 
-  test("Not a valid uuidv4 => 401/message", async () => {
+  test("Not valid authUserId => 401/message", async () => {
     adaptedRequest.authUserId = "123"
+    const authUserIdvalidationMessage = userValidator.getMessageForId(adaptedRequest.authUserId)
     // Given
-    expect(adaptedRequest.authUserId).toBeTruthy()
-    expect(adaptedRequest.authUserId).toBeString()
-    expect(isValidUUIDv4(adaptedRequest.authUserId)).toBeFalse()
+    expect(authUserIdvalidationMessage).toBeTruthy()
     // When
     const controllerResponse = await controller.execute(adaptedRequest)
     // Then
@@ -124,19 +109,31 @@ describe("CreateTaskControllerImplementation | Execute | Validate authUserId", (
   })
 })
 
-describe("CreateTaskControllerImplementation | Execute | When useCase execute. Then return the right status/body", () => {
-  test("UseCase execute with no error. Then => 201", async () => {
-    const createTaskUseCase = new MockCreateTaskUseCasePlaceholder()
+describe("CreateTaskControllerImplementation | Execute | When useCase execute", () => {
+  test("UseCase executes with no errors", async () => {
+    const mockQuery = jest.fn(() => [
+      {
+        id: "user_id",
+        name: "User Name",
+        email: "user@mail.com",
+        password_hash: "user_hash"
+      }
+    ])
+    const connection = MockConnectionAcceptQuery(mockQuery)()
+    const findUserByIdService = new PostgresFindUserByIdService(connection)
+    const createTaskUseCase = new CreateTaskUseCaseImplementation(
+      findUserByIdService,
+      createTaskService
+    )
     const controller = new CreateTaskControllerImplementation(
       taskValidator,
       userValidator,
       createTaskUseCase
     )
-    // @ts-ignore
-    const useCaseErr = await getError(() => createTaskUseCase.execute())
+    const useCaseErr = await getError(() =>
+      createTaskUseCase.execute(adaptedRequest.body, adaptedRequest.authUserId)
+    )
     // Given
-    expectsValidAdaptedRequest(adaptedRequest)
-    expectsValidController(controller)
     expect(useCaseErr).toBeFalsy()
     // When
     const controllerResponse = await controller.execute(adaptedRequest)
@@ -145,22 +142,26 @@ describe("CreateTaskControllerImplementation | Execute | When useCase execute. T
   })
 
   test("UseCase throws UserNotFoundError. Then => 400/message", async () => {
-    const createTaskUseCase = new MockCreateTaskUseCaseThrowsUserNotFound()
+    const mockQuery = jest.fn(() => [])
+    const connection = MockConnectionAcceptQuery(mockQuery)()
+    const findUserByIdService = new PostgresFindUserByIdService(connection)
+    const createTaskUseCase = new CreateTaskUseCaseImplementation(
+      findUserByIdService,
+      createTaskService
+    )
     const controller = new CreateTaskControllerImplementation(
       taskValidator,
       userValidator,
       createTaskUseCase
     )
-    // @ts-ignore
-    const useCaseErr = await getError(() => createTaskUseCase.execute())
+    const useCaseErr = await getError(() => createTaskUseCase.execute(adaptedRequest.body, userId))
     // Given
-    expectsValidAdaptedRequest(adaptedRequest)
-    expectsValidController(controller)
     expectsToHaveError(useCaseErr)
     expect(useCaseErr).toBeInstanceOf(UserNotFoundByIdError)
     // When
     const controllerResponse = await controller.execute(adaptedRequest)
     // Then
     expectsControllerResponse400AndMessage(controllerResponse)
+    expect(controllerResponse.body).toContain(UserNotFoundByIdError.message)
   })
 })

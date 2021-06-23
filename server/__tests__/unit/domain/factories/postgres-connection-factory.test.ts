@@ -2,22 +2,15 @@ import "jest-extended"
 
 import { ClientConfig } from "pg"
 
-import ConnectionFactory from "../../../../src/domain/factories/connection-factory.interface"
-
 import PostgresConnectionFactory from "../../../../src/domain/factories/implementations/postgres-connection.factory"
-import PostgresDatabaseConnection from "../../../../src/domain/database/implementations/postgres.database-connection"
 
 import InvalidConnectionConfigurationError from "../../../../src/domain/errors/database/invalid-connection-configuration.error"
 
 import { getSyncError } from "../../../utils/functions/error.functions"
-import { expectsToHaveError } from "../../../utils/functions/expects.functions"
-
-const getConstructorError = (factory: any, config: any): null | Error => {
-  const possibleErr = getSyncError(() => {
-    new factory(config).getConnection()
-  })
-  return possibleErr
-}
+import {
+  expectsToHaveError,
+  expectsValidConnection
+} from "../../../utils/functions/expects.functions"
 
 let config: ClientConfig
 
@@ -37,7 +30,7 @@ describe("PostgreConnectionFactory | Constructor | Defined but invalid config th
     // Given
     expect(config.user).toBeFalsy()
     // When
-    const constructorErr = getConstructorError(PostgresConnectionFactory, config)
+    const constructorErr = getSyncError(() => new PostgresConnectionFactory(config))
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
@@ -49,7 +42,7 @@ describe("PostgreConnectionFactory | Constructor | Defined but invalid config th
     // Given
     expect(config.user).not.toBeString()
     // When
-    const constructorErr = getConstructorError(PostgresConnectionFactory, config)
+    const constructorErr = getSyncError(() => new PostgresConnectionFactory(config))
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
@@ -60,7 +53,7 @@ describe("PostgreConnectionFactory | Constructor | Defined but invalid config th
     // Given
     expect(config.password).toBeFalsy()
     // When
-    const constructorErr = getConstructorError(PostgresConnectionFactory, config)
+    const constructorErr = getSyncError(() => new PostgresConnectionFactory(config))
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
@@ -72,7 +65,7 @@ describe("PostgreConnectionFactory | Constructor | Defined but invalid config th
     // Given
     expect(config.password).not.toBeString()
     // When
-    const constructorErr = getConstructorError(PostgresConnectionFactory, config)
+    const constructorErr = getSyncError(() => new PostgresConnectionFactory(config))
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
@@ -83,7 +76,7 @@ describe("PostgreConnectionFactory | Constructor | Defined but invalid config th
     // Given
     expect(config.host).toBeFalsy()
     // When
-    const constructorErr = getConstructorError(PostgresConnectionFactory, config)
+    const constructorErr = getSyncError(() => new PostgresConnectionFactory(config))
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
@@ -95,7 +88,7 @@ describe("PostgreConnectionFactory | Constructor | Defined but invalid config th
     // Given
     expect(config.host).not.toBeString()
     // When
-    const constructorErr = getConstructorError(PostgresConnectionFactory, config)
+    const constructorErr = getSyncError(() => new PostgresConnectionFactory(config))
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
@@ -106,7 +99,7 @@ describe("PostgreConnectionFactory | Constructor | Defined but invalid config th
     // Given
     expect(config.port).toBeFalsy()
     // When
-    const constructorErr = getConstructorError(PostgresConnectionFactory, config)
+    const constructorErr = getSyncError(() => new PostgresConnectionFactory(config))
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
@@ -119,7 +112,7 @@ describe("PostgreConnectionFactory | Constructor | Defined but invalid config th
     expect(config.port).not.toBeNumber()
     expect(config.port).not.toBeString()
     // When
-    const constructorErr = getConstructorError(PostgresConnectionFactory, config)
+    const constructorErr = getSyncError(() => new PostgresConnectionFactory(config))
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
@@ -132,7 +125,7 @@ describe("PostgreConnectionFactory | Constructor | Defined but invalid config th
     expect(config.port).toBeString()
     expect(config.port).toBeNaN()
     // When
-    const constructorErr = getConstructorError(PostgresConnectionFactory, config)
+    const constructorErr = getSyncError(() => new PostgresConnectionFactory(config))
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
@@ -143,7 +136,7 @@ describe("PostgreConnectionFactory | Constructor | Defined but invalid config th
     // Given
     expect(config.database).toBeFalsy()
     // When
-    const constructorErr = getConstructorError(PostgresConnectionFactory, config)
+    const constructorErr = getSyncError(() => new PostgresConnectionFactory(config))
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
@@ -155,7 +148,7 @@ describe("PostgreConnectionFactory | Constructor | Defined but invalid config th
     // Given
     expect(config.database).not.toBeString()
     // When
-    const constructorErr = getConstructorError(PostgresConnectionFactory, config)
+    const constructorErr = getSyncError(() => new PostgresConnectionFactory(config))
     // Then
     expectsToHaveError(constructorErr)
     expect(constructorErr).toBeInstanceOf(InvalidConnectionConfigurationError)
@@ -163,33 +156,45 @@ describe("PostgreConnectionFactory | Constructor | Defined but invalid config th
 })
 
 describe("PostgreConnectionFactory | getConnection | is a valid connection", () => {
-  let connectionFactory: ConnectionFactory
-
-  beforeEach(() => {
-    connectionFactory = new PostgresConnectionFactory(config)
-  })
-
   test("Falsy config throws no errors", () => {
     config = null
+    const factory = new PostgresConnectionFactory(config)
     // Given
     expect(config).toBeFalsy()
     // When
-    const constructorErr = getSyncError(() => new PostgresConnectionFactory(config))
+    const getConnectionErr = getSyncError(() => factory.getConnection())
     // Then
-    expect(constructorErr).toBeFalsy()
+    expect(getConnectionErr).toBeFalsy()
   })
 
-  test("Typeof of object with open and close methods", () => {
+  test("Truthy config throws no errors", () => {
+    const factory = new PostgresConnectionFactory(config)
     // Given
-    expect(connectionFactory).toBeTruthy()
-    expect(connectionFactory).toBeObject()
-    expect(connectionFactory.getConnection).toBeDefined()
+    expect(config).toBeTruthy()
     // When
-    const connection = connectionFactory.getConnection()
+    const getConnectionErr = getSyncError(() => factory.getConnection())
     // Then
-    expect(connection).toBeTruthy()
-    expect(connection).toBeInstanceOf(PostgresDatabaseConnection)
-    expect(connection.open).toBeDefined()
-    expect(connection.close).toBeDefined()
+    expect(getConnectionErr).toBeFalsy()
+  })
+
+  test("Falsy config returns a valid connection", () => {
+    const config = null
+    const factory = new PostgresConnectionFactory(config)
+    // Given
+    expect(config).toBeFalsy()
+    // When
+    const connection = factory.getConnection()
+    // Then
+    expectsValidConnection(connection)
+  })
+
+  test("Truthy config returns a valid connection", () => {
+    const factory = new PostgresConnectionFactory(config)
+    // Given
+    expect(config).toBeTruthy()
+    // When
+    const connection = factory.getConnection()
+    // Then
+    expectsValidConnection(connection)
   })
 })
