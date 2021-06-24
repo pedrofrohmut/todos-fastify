@@ -11,7 +11,7 @@ export default class PostgresCreateUserService implements CreateUserService {
   }
 
   public async execute({ name, email, passwordHash }: CreateUserDto): Promise<void> {
-    await this.connection.mutate(
+    this.connection.mutate(
       "INSERT INTO app.users (name, email, password_hash) VALUES ($1, $2, $3)",
       [name, email, passwordHash]
     )

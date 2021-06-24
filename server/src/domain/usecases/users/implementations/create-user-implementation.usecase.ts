@@ -29,6 +29,6 @@ export default class CreateUserUseCaseImplementation implements CreateUserUseCas
       throw new EmailAlreadyRegisteredError("[CreateUserUseCase] execute")
     }
     const passwordHash = await this.hashPasswordService.execute(password)
-    await this.createUserService.execute({ name, email, passwordHash })
+    this.createUserService.execute({ name, email, passwordHash })
   }
 }
