@@ -4,9 +4,20 @@ import { JsonWebTokenError, sign, TokenExpiredError, NotBeforeError, verify } fr
 import ExpiredTokenError from "../../../src/domain/errors/auth/expired-token.error"
 import InvalidTokenError from "../../../src/domain/errors/auth/invalid-token.error"
 
+export type DecodedToken = { userId: string; iat: number; exp: number }
+
 export default class FakeTokenService {
   private static getUserId(id?: string): string {
     return id !== undefined ? id : uuid()
+  }
+
+  public static getExpired(userId?: string): string {
+    const token = sign({ userId: this.getUserId(userId) }, process.env.JWT_SECRET, { expiresIn: 0 })
+    return token
+  }
+
+  public static getSecret(): string {
+    return process.env.JWT_SECRET || "1234567890123456"
   }
 
   public static getValid(userId?: string): string {
@@ -16,17 +27,12 @@ export default class FakeTokenService {
     return token
   }
 
-  public static getExpired(userId?: string): string {
-    const token = sign({ userId: this.getUserId(userId) }, process.env.JWT_SECRET, { expiresIn: 0 })
-    return token
-  }
-
-  public static decode(token?: string): { userId: string } {
+  public static decode(token?: string): DecodedToken {
     if (!token) {
       return null
     }
     try {
-      const decoded = verify(token, process.env.JWT_SECRET) as { userId: string }
+      const decoded = verify(token, process.env.JWT_SECRET) as DecodedToken
       return decoded
     } catch (err) {
       if (err instanceof TokenExpiredError) {

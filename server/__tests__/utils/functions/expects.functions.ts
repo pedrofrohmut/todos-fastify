@@ -34,6 +34,20 @@ export const expectsValidDBService = (service: any): void => {
   expect(service.connection).toBeTruthy()
 }
 
+export const expectsValidTokenOneHourExpiration = (
+  token: any,
+  decoded: any,
+  userId: string
+): void => {
+  expect(token).toBeTruthy()
+  expect(token).toBeString()
+  expect(decoded).toBeTruthy()
+  expect(decoded).toBeObject()
+  expect(decoded.userId).toBe(userId)
+  const oneDay = 24 * 60 * 60
+  expect(decoded.exp).toBe(decoded.iat + oneDay)
+}
+
 export const expectsValidUser = (user: any) => {
   expect(user).toBeTruthy()
   expect(user).toBeObject()

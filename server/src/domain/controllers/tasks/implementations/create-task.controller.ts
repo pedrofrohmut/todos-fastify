@@ -58,7 +58,7 @@ export default class CreateTaskControllerImplementation implements CreateTaskCon
       return { status: 401, body: authUserIdValidationMessage }
     }
     try {
-      // @ts-ignore
+      // @ts-ignore TS cannot null safe authUserId after refactoring
       await this.createTaskUseCase.execute(request.body, request.authUserId)
       return { status: 201 }
     } catch (err) {
