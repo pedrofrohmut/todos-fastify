@@ -5,7 +5,7 @@ import { CreateUserBody } from "../../../../src/domain/types/request/body.types"
 import CreateUserControllerImplementation from "../../../../src/domain/controllers/users/implementations/create-user.controller"
 import FastifyRouter from "../../../../src/fastify/router/implementations/fastify.router"
 import FastifyRequestAdapter from "../../../../src/fastify/router/implementations/fastify-request.adapter"
-import JwtTokenDecoderService from "../../../../src/domain/services/auth/implementations/jwt-token-decoder.service"
+import JwtDecodeTokenService from "../../../../src/domain/services/auth/implementations/jwt-decode-token.service"
 import ControllerFactoryImplementation from "../../../../src/domain/factories/implementations/controller.factory"
 import ControllerResponseValidatorImplementation from "../../../../src/domain/validators/implementations/controller-response.validator"
 
@@ -40,7 +40,7 @@ beforeEach(() => {
 
 const buildRouter = (request: any, response: any, connection: any): Router => {
   const jwtSecret = process.env.JWT_SECRET
-  const tokenDecoderService = new JwtTokenDecoderService(jwtSecret)
+  const tokenDecoderService = new JwtDecodeTokenService(jwtSecret)
   const requestAdapter = new FastifyRequestAdapter(tokenDecoderService)
   const controllerFactory = new ControllerFactoryImplementation()
   const controllerResponseValidator = new ControllerResponseValidatorImplementation()

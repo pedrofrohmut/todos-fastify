@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify"
 
 import ControllerFactory from "../../../domain/factories/controller-factory.interface"
 import ControllerResponseValidator from "../../../domain/validators/controller-response-validator.interface"
+import DatabaseConnection from "../../../domain/database/database-connection.interface"
 import RequestAdapter from "../request-adapter.interface"
 import Router from "../router.interface"
 import RouterBuilder from "../router-builder.interface"
@@ -10,11 +11,10 @@ import ControllerFactoryImplementation from "../../../domain/factories/implement
 import ControllerResponseValidatorImplementation from "../../../domain/validators/implementations/controller-response.validator"
 import FastifyRequestAdapter from "./fastify-request.adapter"
 import FastifyRouter from "./fastify.router"
-import JwtTokenDecoderService from "../../../domain/services/auth/implementations/jwt-token-decoder.service"
+import JwtDecodeTokenService from "../../../domain/services/auth/implementations/jwt-decode-token.service"
+import PostgresConnectionFactory from "../../../domain/factories/implementations/postgres-connection.factory"
 
 import DependencyInjectionError from "../../../domain/errors/dependencies/dependency-injection.error"
-import PostgresConnectionFactory from "../../../domain/factories/implementations/postgres-connection.factory"
-import DatabaseConnection from "../../../domain/database/database-connection.interface"
 
 export default class FastifyRouterBuilder implements RouterBuilder {
   private readonly request: FastifyRequest
@@ -30,7 +30,7 @@ export default class FastifyRouterBuilder implements RouterBuilder {
     }
     this.request = request
     this.response = response
-    const tokenDecoderService = new JwtTokenDecoderService(jwtSecret)
+    const tokenDecoderService = new JwtDecodeTokenService(jwtSecret)
     this.requestAdapter = new FastifyRequestAdapter(tokenDecoderService)
     this.controllerFactory = new ControllerFactoryImplementation()
     this.controllerResponseValidator = new ControllerResponseValidatorImplementation()

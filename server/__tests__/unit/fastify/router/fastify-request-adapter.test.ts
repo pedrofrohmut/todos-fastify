@@ -1,8 +1,8 @@
 import "jest-extended"
 
-import JwtTokenDecoderService from "../../../../src/domain/services/auth/implementations/jwt-token-decoder.service"
 import UserValidatorImplementation from "../../../../src/domain/validators/implementations/user.validator"
 import FastifyRequestAdapter from "../../../../src/fastify/router/implementations/fastify-request.adapter"
+import JwtDecodeTokenService from "../../../../src/domain/services/auth/implementations/jwt-decode-token.service"
 
 import ExpiredTokenError from "../../../../src/domain/errors/auth/expired-token.error"
 import InvalidTokenError from "../../../../src/domain/errors/auth/invalid-token.error"
@@ -13,8 +13,8 @@ import { getSyncError } from "../../../utils/functions/error.functions"
 import { expectsToHaveError } from "../../../utils/functions/expects.functions"
 import MockRequest from "../../../utils/mocks/fastify/fastify-request.mock"
 
-const tokenDecoderService = new JwtTokenDecoderService(process.env.JWT_SECRET)
-const requestAdapter = new FastifyRequestAdapter(tokenDecoderService)
+const decodeTokenService = new JwtDecodeTokenService(process.env.JWT_SECRET)
+const requestAdapter = new FastifyRequestAdapter(decodeTokenService)
 const userValidator = new UserValidatorImplementation()
 
 let request: MockRequest
@@ -234,7 +234,7 @@ describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
   test("Expired token throws error", () => {
     request.headers.authentication_token = FakeTokenService.getExpired()
     const decodeErr = getSyncError(() =>
-      tokenDecoderService.execute(request.headers.authentication_token as string)
+      decodeTokenService.execute(request.headers.authentication_token as string)
     )
     // Given
     expect(request.headers).toBeTruthy()
@@ -251,7 +251,7 @@ describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
   test("Invalid token throws error", () => {
     request.headers.authentication_token = FakeTokenService.getInvalid()
     const decodeErr = getSyncError(() =>
-      tokenDecoderService.execute(request.headers.authentication_token as string)
+      decodeTokenService.execute(request.headers.authentication_token as string)
     )
     // Given
     expect(request.headers).toBeTruthy()
@@ -268,9 +268,9 @@ describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
   test("Valid token and not valid userId throws error", () => {
     request.headers.authentication_token = FakeTokenService.getValid("123")
     const decodeErr = getSyncError(() =>
-      tokenDecoderService.execute(request.headers.authentication_token as string)
+      decodeTokenService.execute(request.headers.authentication_token as string)
     )
-    const { userId } = tokenDecoderService.execute(request.headers.authentication_token)
+    const { userId } = decodeTokenService.execute(request.headers.authentication_token)
     const userIdValidationMessage = userValidator.getMessageForId(userId)
     // Given
     expect(request.headers).toBeTruthy()
@@ -289,9 +289,9 @@ describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
     request.headers.authentication_token = FakeTokenService.getValid(id)
     const adaptErr = getSyncError(() => requestAdapter.adapt(request))
     const decodeErr = getSyncError(() =>
-      tokenDecoderService.execute(request.headers.authentication_token as string)
+      decodeTokenService.execute(request.headers.authentication_token as string)
     )
-    const { userId } = tokenDecoderService.execute(request.headers.authentication_token)
+    const { userId } = decodeTokenService.execute(request.headers.authentication_token)
     const userIdValidationMessage = userValidator.getMessageForId(userId)
     // Given
     expect(request.headers).toBeTruthy()

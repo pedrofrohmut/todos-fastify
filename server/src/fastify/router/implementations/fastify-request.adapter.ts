@@ -3,7 +3,7 @@ import { FastifyRequest } from "fastify"
 import { AdaptedRequest, Params } from "../../../domain/types/router.types"
 import { AuthenticationToken } from "../../../domain/types/auth/token.types"
 
-import TokenDecoderService from "../../../domain/services/auth/token-decoder-service.interface"
+import DecodeTokenService from "../../../domain/services/auth/decode-token-service.interface"
 
 import ExpiredTokenError from "../../../domain/errors/auth/expired-token.error"
 import InvalidRequestBodyError from "../../../domain/errors/request/invalid-request-body.error"
@@ -17,10 +17,10 @@ import RequestNotDefinedError from "../../../domain/errors/request/request-not-d
 import { isValidUUIDv4 } from "../../../domain/validators/validator.functions"
 
 export default class FastifyRequestAdapter {
-  private readonly tokenDecoderService: TokenDecoderService
+  private readonly decodeTokenService: DecodeTokenService
 
-  constructor(tokenDecoderService: TokenDecoderService) {
-    this.tokenDecoderService = tokenDecoderService
+  constructor(tokenDecoderService: DecodeTokenService) {
+    this.decodeTokenService = tokenDecoderService
   }
 
   private validateRequest(request: any): void {
@@ -48,7 +48,7 @@ export default class FastifyRequestAdapter {
 
   private decodeToken(token: string): AuthenticationToken {
     try {
-      const decoded = this.tokenDecoderService.execute(token)
+      const decoded = this.decodeTokenService.execute(token)
       return decoded
     } catch (err) {
       if (err instanceof InvalidTokenError) {

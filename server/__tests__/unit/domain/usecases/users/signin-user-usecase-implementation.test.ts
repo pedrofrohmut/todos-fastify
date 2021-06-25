@@ -19,13 +19,13 @@ import { expectsToHaveError, expectsValidTokenOneHourExpiration } from "../../..
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
 import FakeTokenService from "../../../../utils/fakes/token-service.fake"
 
-const tokenSecret = FakeTokenService.getSecret()
+const jwtSecret = FakeTokenService.getSecret()
 const credentials: SignInUserBody = {
   email: "user@email.com",
   password: "password"
 }
 const comparePasswordAndHashService = new BcryptjsComparePasswordAndHashService()
-const generateAuthTokenService = new JwtGenerateAuthTokenService()
+const generateAuthTokenService = new JwtGenerateAuthTokenService(jwtSecret)
 const hashPasswordService = new BcryptjsHashPasswordService()
 
 describe("SignInUserUseCaseImplementation | execute", () => {
@@ -33,8 +33,7 @@ describe("SignInUserUseCaseImplementation | execute", () => {
     const signInUserUseCase = new SignInUserUseCaseImplementation(
       findUserByEmailService,
       comparePasswordAndHashService,
-      generateAuthTokenService,
-      tokenSecret
+      generateAuthTokenService
     )
     return signInUserUseCase
   }

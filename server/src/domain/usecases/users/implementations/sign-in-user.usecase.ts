@@ -13,18 +13,15 @@ export default class SignInUserUseCaseImplementation implements SignInUserUseCas
   private readonly findUserByEmailService: FindUserByEmailService
   private readonly comparePasswordAndHashService: ComparePasswordAndHashService
   private readonly generateAuthTokenService: GenerateAuthTokenService
-  private readonly jwtSecret: string
 
   constructor(
     findUserByEmailService: FindUserByEmailService,
     comparePasswordAndHashService: ComparePasswordAndHashService,
-    generateAuthTokenService: GenerateAuthTokenService,
-    jwtSecret: string
+    generateAuthTokenService: GenerateAuthTokenService
   ) {
     this.findUserByEmailService = findUserByEmailService
     this.comparePasswordAndHashService = comparePasswordAndHashService
     this.generateAuthTokenService = generateAuthTokenService
-    this.jwtSecret = jwtSecret
   }
 
   public async execute(credentials: SignInUserBody): Promise<SignedUserDto> {
@@ -40,7 +37,7 @@ export default class SignInUserUseCaseImplementation implements SignInUserUseCas
     if (!isMatch) {
       throw new PasswordAndHashDontMatchError(errorMessage)
     }
-    const token = this.generateAuthTokenService.execute(foundUser.id, this.jwtSecret)
+    const token = this.generateAuthTokenService.execute(foundUser.id)
     const { id, name, email } = foundUser
     return {
       id,

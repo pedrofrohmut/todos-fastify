@@ -1,3 +1,3 @@
 export default interface GenerateAuthTokenService {
-  execute(userId: string, secret: string): string
+  execute(userId: string, exp?: number): string
 }

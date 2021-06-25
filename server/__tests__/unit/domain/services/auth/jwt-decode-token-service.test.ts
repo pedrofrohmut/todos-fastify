@@ -2,9 +2,9 @@ import "jest-extended"
 
 import * as jwt from "jsonwebtoken"
 
-import TokenDecoderService from "../../../../../src/domain/services/auth/token-decoder-service.interface"
+import DecodeTokenService from "../../../../../src/domain/services/auth/decode-token-service.interface"
 
-import JwtTokenDecoderService from "../../../../../src/domain/services/auth/implementations/jwt-token-decoder.service"
+import JwtDecodeTokenService from "../../../../../src/domain/services/auth/implementations/jwt-decode-token.service"
 
 import ExpiredTokenError from "../../../../../src/domain/errors/auth/expired-token.error"
 import InvalidTokenError from "../../../../../src/domain/errors/auth/invalid-token.error"
@@ -15,13 +15,13 @@ import FakeTokenService from "../../../../utils/fakes/token-service.fake"
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
 import { isValidUUIDv4 } from "../../../../utils/functions/validation.functions"
 
-let tokenDecoderService: TokenDecoderService
+let tokenDecoderService: DecodeTokenService
 
 beforeAll(() => {
-  tokenDecoderService = new JwtTokenDecoderService(process.env.JWT_SECRET)
+  tokenDecoderService = new JwtDecodeTokenService(process.env.JWT_SECRET)
 })
 
-describe("JwtTokenDecoderService | execute | Invalid tokens throws errors", () => {
+describe("JwtDecodeTokenService | execute | Invalid tokens throws errors", () => {
   test("Falsy throws Invalid Token", () => {
     const token = null
     // Given
@@ -78,7 +78,7 @@ describe("JwtTokenDecoderService | execute | Invalid tokens throws errors", () =
   })
 })
 
-describe("JwtTokenDecoderService | execute | Valid token", () => {
+describe("JwtDecodeTokenService | execute | Valid token", () => {
   test("Valid authentication token returns object with userId", () => {
     const userId = FakeUserService.getValidUserId()
     const token = FakeTokenService.getValid(userId)

@@ -25,9 +25,9 @@ const userValidator = new UserValidatorImplementation()
 const connection = MockConnection()
 const findUserByEmailService = new PostgresFindUserByEmailService(connection)
 const comparePasswordAndHashService = new BcryptjsComparePasswordAndHashService()
-const generateAuthTokenService = new JwtGenerateAuthTokenService()
+const generateAuthTokenService = new JwtGenerateAuthTokenService(jwtSecret)
 const hashPasswordService = new BcryptjsHashPasswordService()
-const signInUserUseCase = new SignInUserUseCaseImplementation(findUserByEmailService, comparePasswordAndHashService, generateAuthTokenService, jwtSecret)
+const signInUserUseCase = new SignInUserUseCaseImplementation(findUserByEmailService, comparePasswordAndHashService, generateAuthTokenService)
 const signInUserController = new SignInUserControllerImplementation(userValidator, signInUserUseCase)
 
 let request: AdaptedRequest<SignInUserBody>
@@ -80,7 +80,7 @@ describe("SignInUserControllerImplementation", () => {
     const mockQuery = jest.fn(() => [])
     const connection = MockConnectionAcceptQuery(mockQuery)()
     const findUserByEmailService = new PostgresFindUserByEmailService(connection)
-    const signInUserUseCase = new SignInUserUseCaseImplementation(findUserByEmailService, comparePasswordAndHashService, generateAuthTokenService, jwtSecret)
+    const signInUserUseCase = new SignInUserUseCaseImplementation(findUserByEmailService, comparePasswordAndHashService, generateAuthTokenService)
     const signInUserController = new SignInUserControllerImplementation(userValidator, signInUserUseCase)
     const userFound = await findUserByEmailService.execute(request.body.email)
     // Given
@@ -101,7 +101,7 @@ describe("SignInUserControllerImplementation", () => {
     const mockQuery = jest.fn(() => [userDB])
     const connection = MockConnectionAcceptQuery(mockQuery)()
     const findUserByEmailService = new PostgresFindUserByEmailService(connection)
-    const signInUserUseCase = new SignInUserUseCaseImplementation(findUserByEmailService, comparePasswordAndHashService, generateAuthTokenService, jwtSecret)
+    const signInUserUseCase = new SignInUserUseCaseImplementation(findUserByEmailService, comparePasswordAndHashService, generateAuthTokenService)
     const signInUserController = new SignInUserControllerImplementation(userValidator, signInUserUseCase)
     // Given Values
     const userFound = await findUserByEmailService.execute(request.body.email)
@@ -125,7 +125,7 @@ describe("SignInUserControllerImplementation", () => {
     const mockQuery = jest.fn(() => [userDB])
     const connection = MockConnectionAcceptQuery(mockQuery)()
     const findUserByEmailService = new PostgresFindUserByEmailService(connection)
-    const signInUserUseCase = new SignInUserUseCaseImplementation(findUserByEmailService, comparePasswordAndHashService, generateAuthTokenService, jwtSecret)
+    const signInUserUseCase = new SignInUserUseCaseImplementation(findUserByEmailService, comparePasswordAndHashService, generateAuthTokenService)
     const signInUserController = new SignInUserControllerImplementation(userValidator, signInUserUseCase)
     // Given Values
     const userFound = await findUserByEmailService.execute(request.body.email)

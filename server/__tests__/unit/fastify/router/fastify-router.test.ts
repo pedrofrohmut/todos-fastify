@@ -1,13 +1,12 @@
 import "jest-extended"
 
 import Router from "../../../../src/fastify/router/router.interface"
-import ControllerFactory from "../../../../src/domain/factories/controller-factory.interface"
 
-import JwtTokenDecoderService from "../../../../src/domain/services/auth/implementations/jwt-token-decoder.service"
-import FastifyRequestAdapter from "../../../../src/fastify/router/implementations/fastify-request.adapter"
-import FastifyRouter from "../../../../src/fastify/router/implementations/fastify.router"
 import ControllerFactoryImplementation from "../../../../src/domain/factories/implementations/controller.factory"
 import ControllerResponseValidatorImplementation from "../../../../src/domain/validators/implementations/controller-response.validator"
+import FastifyRequestAdapter from "../../../../src/fastify/router/implementations/fastify-request.adapter"
+import FastifyRouter from "../../../../src/fastify/router/implementations/fastify.router"
+import JwtDecodeTokenService from "../../../../src/domain/services/auth/implementations/jwt-decode-token.service"
 
 import MockConnection from "../../../utils/mocks/domain/database/database-connection.mock"
 import MockRequest from "../../../utils/mocks/fastify/fastify-request.mock"
@@ -34,7 +33,7 @@ beforeEach(() => {
 
 const connection = new MockConnection()
 const jwtSecret = process.env.JWT_SECRET
-const tokenDecoderService = new JwtTokenDecoderService(jwtSecret)
+const tokenDecoderService = new JwtDecodeTokenService(jwtSecret)
 const requestAdapter = new FastifyRequestAdapter(tokenDecoderService)
 const controllerFactory = new ControllerFactoryImplementation()
 const controllerResponseValidator = new ControllerResponseValidatorImplementation()

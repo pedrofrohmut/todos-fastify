@@ -39,13 +39,18 @@ export const expectsValidTokenOneHourExpiration = (
   decoded: any,
   userId: string
 ): void => {
+  expectsValidTokenThatExpiresIn(token, decoded, userId, decoded.exp)
+  const oneDay = 24 * 60 * 60
+  expect(decoded.exp).toBe(decoded.iat + oneDay)
+}
+
+export const expectsValidTokenThatExpiresIn = (token: any, decoded: any, userId: string, exp: number) => {
   expect(token).toBeTruthy()
   expect(token).toBeString()
   expect(decoded).toBeTruthy()
   expect(decoded).toBeObject()
   expect(decoded.userId).toBe(userId)
-  const oneDay = 24 * 60 * 60
-  expect(decoded.exp).toBe(decoded.iat + oneDay)
+  expect(decoded.exp).toBe(exp)
 }
 
 export const expectsValidUser = (user: any) => {
