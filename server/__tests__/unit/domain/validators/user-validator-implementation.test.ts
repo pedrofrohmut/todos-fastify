@@ -2,10 +2,7 @@ import "jest-extended"
 
 import UserValidatorImplementation from "../../../../src/domain/validators/implementations/user.validator"
 
-const expectsTruthyMessage = (validationMessage?: string | null) => {
-  expect(validationMessage).toBeTruthy()
-  expect(validationMessage).toBeString()
-}
+import { expectsTruthyMessage } from "../../../utils/functions/expects.functions"
 
 const userValidator = new UserValidatorImplementation()
 

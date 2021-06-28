@@ -12,6 +12,12 @@ export const expectsToHaveError = (err: any, instance?: any): void => {
   }
 }
 
+export const expectsTruthyMessage = (validationMessage?: string | null) => {
+  expect(validationMessage).toBeTruthy()
+  expect(validationMessage).toBeString()
+}
+
+
 export const expectsValidConnection = (con: any): void => {
   expect(con).toBeTruthy()
   expect(con).toBeObject()
