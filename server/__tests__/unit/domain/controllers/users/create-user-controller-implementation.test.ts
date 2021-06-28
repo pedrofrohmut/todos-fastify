@@ -83,7 +83,7 @@ describe("CreateUserControllerImplementation", () => {
   test("Null body => 400/message", async () => {
     const request: AdaptedRequest<null> = {
       body: null,
-      authUserId: null,
+      authToken: null,
       params: null
     }
     // Given
@@ -96,7 +96,7 @@ describe("CreateUserControllerImplementation", () => {
       createUserController
     )
     expect(request.body).toBeNull()
-    expect(request.authUserId).toBeNull()
+    expect(request.authToken).toBeNull()
     expect(request.params).toBeNull()
     // When
     const controllerResponse = await createUserController.execute(request)
@@ -111,7 +111,7 @@ describe("CreateUserControllerImplementation", () => {
         email: "user@email.com",
         password: "userPassword"
       },
-      authUserId: null,
+      authToken: null,
       params: null
     }
     const nameValidationMessage = userValidator.getMessageForName(request.body.name)
@@ -130,7 +130,7 @@ describe("CreateUserControllerImplementation", () => {
     expect(nameValidationMessage).toBeString()
     expect(emailValidationMessage).toBeNull()
     expect(passwordValidationMessage).toBeNull()
-    expect(request.authUserId).toBeNull()
+    expect(request.authToken).toBeNull()
     expect(request.params).toBeNull()
     // When
     const controllerResponse = await createUserController.execute(request)
@@ -145,7 +145,7 @@ describe("CreateUserControllerImplementation", () => {
         email: null,
         password: "userPassword"
       },
-      authUserId: null,
+      authToken: null,
       params: null
     }
     const nameValidationMessage = userValidator.getMessageForName(request.body.name)
@@ -164,7 +164,7 @@ describe("CreateUserControllerImplementation", () => {
     expect(nameValidationMessage).toBeNull()
     expect(emailValidationMessage).toBeTruthy()
     expect(passwordValidationMessage).toBeNull()
-    expect(request.authUserId).toBeNull()
+    expect(request.authToken).toBeNull()
     expect(request.params).toBeNull()
     // When
     const controllerResponse = await createUserController.execute(request)
@@ -179,7 +179,7 @@ describe("CreateUserControllerImplementation", () => {
         email: "user@mail.com",
         password: null
       },
-      authUserId: null,
+      authToken: null,
       params: null
     }
     const nameValidationMessage = userValidator.getMessageForName(request.body.name)
@@ -198,7 +198,7 @@ describe("CreateUserControllerImplementation", () => {
     expect(nameValidationMessage).toBeNull()
     expect(emailValidationMessage).toBeNull()
     expect(passwordValidationMessage).toBeTruthy()
-    expect(request.authUserId).toBeNull()
+    expect(request.authToken).toBeNull()
     expect(request.params).toBeNull()
     // When
     const controllerResponse = await createUserController.execute(request)
@@ -213,7 +213,7 @@ describe("CreateUserControllerImplementation", () => {
         email: "user@mail.com",
         password: "userPassword"
       },
-      authUserId: null,
+      authToken: null,
       params: null
     }
     const nameValidationMessage = userValidator.getMessageForName(request.body.name)
@@ -253,7 +253,7 @@ describe("CreateUserControllerImplementation", () => {
     expect(nameValidationMessage).toBeNull()
     expect(emailValidationMessage).toBeNull()
     expect(passwordValidationMessage).toBeNull()
-    expect(request.authUserId).toBeNull()
+    expect(request.authToken).toBeNull()
     expect(request.params).toBeNull()
     expect(userRegistered).toBeTruthy()
     // When
@@ -271,7 +271,7 @@ describe("CreateUserControllerImplementation", () => {
         email: "user@mail.com",
         password: "userPassword"
       },
-      authUserId: null,
+      authToken: null,
       params: null
     }
     const nameValidationMessage = userValidator.getMessageForName(request.body.name)
@@ -304,7 +304,7 @@ describe("CreateUserControllerImplementation", () => {
     expect(nameValidationMessage).toBeNull()
     expect(emailValidationMessage).toBeNull()
     expect(passwordValidationMessage).toBeNull()
-    expect(request.authUserId).toBeNull()
+    expect(request.authToken).toBeNull()
     expect(request.params).toBeNull()
     expect(userRegistered).toBeFalsy()
     // When

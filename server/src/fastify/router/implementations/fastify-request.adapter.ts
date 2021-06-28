@@ -79,7 +79,7 @@ export default class FastifyRequestAdapter {
     }
   }
 
-  private adaptHeaders(headers: any): null | string {
+  private adaptHeaders(headers: any): null | AuthenticationToken {
     if (headers === null || headers === undefined) {
       return null
     }
@@ -89,9 +89,13 @@ export default class FastifyRequestAdapter {
       return null
     }
     this.validateToken(token)
-    const { userId } = this.decodeToken(token)
+    const { userId, iat, exp } = this.decodeToken(token)
     this.validateUserId(userId)
-    return userId
+    return {
+      userId,
+      iat,
+      exp
+    }
   }
 
   private validateParams(params: any): void {
@@ -111,11 +115,11 @@ export default class FastifyRequestAdapter {
   public adapt(request: FastifyRequest): AdaptedRequest<any> {
     this.validateRequest(request)
     const body = this.adaptBody(request.body)
-    const authUserId = this.adaptHeaders(request.headers)
+    const authToken = this.adaptHeaders(request.headers)
     const params = this.adaptParams(request.params)
     return {
       body,
-      authUserId,
+      authToken,
       params
     }
   }

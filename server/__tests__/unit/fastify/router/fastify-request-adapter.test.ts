@@ -153,8 +153,8 @@ describe("FastifyRequestAdapter | adapt | adapt params", () => {
   })
 })
 
-describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
-  test("Null headers => null authUserId", () => {
+describe("FastifyRequestAdapter | adapt | headers to authToken", () => {
+  test("Null headers => null authToken", () => {
     request.headers = null
     const adaptErr = getSyncError(() => requestAdapter.adapt(request))
     // Given
@@ -163,10 +163,10 @@ describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
     // When
     const adaptedRequest = requestAdapter.adapt(request)
     // Then
-    expect(adaptedRequest.authUserId).toBeNull()
+    expect(adaptedRequest.authToken).toBeNull()
   })
 
-  test("Undefined headers => null authUserId", () => {
+  test("Undefined headers => null authToken", () => {
     request.headers = undefined
     const adaptErr = getSyncError(() => requestAdapter.adapt(request))
     // Given
@@ -175,7 +175,7 @@ describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
     // When
     const adaptedRequest = requestAdapter.adapt(request)
     // Then
-    expect(adaptedRequest.authUserId).toBeNull()
+    expect(adaptedRequest.authToken).toBeNull()
   })
 
   test("Not typeof object headers throws error", () => {
@@ -190,7 +190,7 @@ describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
     expectsToHaveError(adaptErr)
   })
 
-  test("Null token => null authUserId", () => {
+  test("Null token => null authToken", () => {
     request.headers.authentication_token = null
     const adaptErr = getSyncError(() => requestAdapter.adapt(request))
     // Given
@@ -201,10 +201,10 @@ describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
     // When
     const adaptedRequest = requestAdapter.adapt(request)
     // Then
-    expect(adaptedRequest.authUserId).toBeNull()
+    expect(adaptedRequest.authToken).toBeNull()
   })
 
-  test("Undefined token => null authUserId", () => {
+  test("Undefined token => null authToken", () => {
     request.headers.authentication_token = undefined
     const adaptErr = getSyncError(() => requestAdapter.adapt(request))
     // Given
@@ -215,7 +215,7 @@ describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
     // When
     const adaptedRequest = requestAdapter.adapt(request)
     // Then
-    expect(adaptedRequest.authUserId).toBeNull()
+    expect(adaptedRequest.authToken).toBeNull()
   })
 
   test("Not typeof string authToken throws error", () => {
@@ -284,7 +284,7 @@ describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
     expectsToHaveError(adaptErr)
   })
 
-  test("Valid headers, valid token and valid userId => authUserId", () => {
+  test("Valid headers, valid token and valid userId => authToken", () => {
     const id = FakeUserService.getValidUserId()
     request.headers.authentication_token = FakeTokenService.getValid(id)
     const adaptErr = getSyncError(() => requestAdapter.adapt(request))
@@ -304,7 +304,12 @@ describe("FastifyRequestAdapter | adapt | headers to authUserId", () => {
     // When
     const adaptedRequest = requestAdapter.adapt(request)
     // Then
-    expect(adaptedRequest.authUserId).toBeTruthy()
-    expect(adaptedRequest.authUserId).toBe(id)
+    expect(adaptedRequest.authToken).toBeTruthy()
+    expect(adaptedRequest.authToken).toBeObject()
+    expect(adaptedRequest.authToken.userId).toBe(id)
+    expect(adaptedRequest.authToken.iat).toBeTruthy()
+    expect(adaptedRequest.authToken.iat).toBeNumber()
+    expect(adaptedRequest.authToken.exp).toBeTruthy()
+    expect(adaptedRequest.authToken.exp).toBeNumber()
   })
 })
