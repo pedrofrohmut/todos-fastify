@@ -13,6 +13,7 @@ import CreateTaskControllerImplementation from "../../../../../src/domain/contro
 import UserNotFoundByIdError from "../../../../../src/domain/errors/users/user-not-found-by-id.error"
 
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
+import FakeTokenService from "../../../../utils/fakes/token-service.fake"
 import { getError } from "../../../../utils/functions/error.functions"
 import {
   expectsControllerResponse201,
@@ -27,6 +28,8 @@ import MockConnection, {
 const connection = MockConnection()
 
 const userId = FakeUserService.getValidUserId()
+const token = FakeTokenService.getValid(userId)
+const authToken = FakeTokenService.decode(token)
 const taskValidator = new TaskValidatorImplementation()
 const userValidator = new UserValidatorImplementation()
 const findUserByIdService = new PostgresFindUserByIdService(connection)
@@ -42,7 +45,7 @@ let controller: CreateTaskController
 beforeEach(() => {
   adaptedRequest = {
     body: { name: "TaskName" },
-    authUserId: userId,
+    authToken: { ...authToken },
     params: null
   }
   controller = new CreateTaskControllerImplementation(
@@ -86,22 +89,23 @@ describe("CreateTaskControllerImplementation | Execute | Validate request body",
   })
 })
 
-describe("CreateTaskControllerImplementation | Execute | Validate authUserId", () => {
-  test("Null authUserId => 401/message", async () => {
-    adaptedRequest.authUserId = null
+describe("CreateTaskControllerImplementation | Execute | Validate authToken", () => {
+  test("Null authToken => 401/message", async () => {
+    adaptedRequest.authToken = null
     // Given
-    expect(adaptedRequest.authUserId).toBeNull()
+    expect(adaptedRequest.authToken).toBeNull()
     // When
     const controllerResponse = await controller.execute(adaptedRequest)
     // Then
     expectsControllerResponse401AndMessage(controllerResponse)
   })
 
-  test("Not valid authUserId => 401/message", async () => {
-    adaptedRequest.authUserId = "123"
-    const authUserIdvalidationMessage = userValidator.getMessageForId(adaptedRequest.authUserId)
+  test("Not valid authToken => 401/message", async () => {
+    // @ts-ignore
+    adaptedRequest.authToken.userId = 123
+    const authTokenvalidationMessage = userValidator.getMessageForId(adaptedRequest.authToken.userId)
     // Given
-    expect(authUserIdvalidationMessage).toBeTruthy()
+    expect(authTokenvalidationMessage).toBeTruthy()
     // When
     const controllerResponse = await controller.execute(adaptedRequest)
     // Then
@@ -131,7 +135,7 @@ describe("CreateTaskControllerImplementation | Execute | When useCase execute", 
       createTaskUseCase
     )
     const useCaseErr = await getError(() =>
-      createTaskUseCase.execute(adaptedRequest.body, adaptedRequest.authUserId)
+      createTaskUseCase.execute(adaptedRequest.body, adaptedRequest.authToken.userId)
     )
     // Given
     expect(useCaseErr).toBeFalsy()
