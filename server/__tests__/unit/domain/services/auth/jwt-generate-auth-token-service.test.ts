@@ -6,7 +6,10 @@ import JwtDecodeTokenService from "../../../../../src/domain/services/auth/imple
 
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
 import FakeTokenService from "../../../../utils/fakes/token-service.fake"
-import { expectsValidTokenOneHourExpiration, expectsValidTokenThatExpiresIn } from "../../../../utils/functions/expects.functions"
+import {
+  expectsValidTokenOneHourExpiration,
+  expectsValidTokenThatExpiresIn
+} from "../../../../utils/functions/expects.functions"
 
 const jwtSecret = FakeTokenService.getSecret()
 const userValidator = new UserValidatorImplementation()
@@ -28,7 +31,7 @@ describe("JwtGenerateAuthTokenService", () => {
 
   test("Valid user id and valid exp => authToken that expires in exp passed", () => {
     const userId = FakeUserService.getValidUserId()
-    const exp = Date.now() + (2 * 60 * 60)
+    const exp = Date.now() + 2 * 60 * 60
     const userIdValidationMessage = userValidator.getMessageForId(userId)
     // Given
     expect(userIdValidationMessage).toBeNull()

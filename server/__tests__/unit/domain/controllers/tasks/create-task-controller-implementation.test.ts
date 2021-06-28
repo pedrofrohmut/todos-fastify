@@ -103,7 +103,9 @@ describe("CreateTaskControllerImplementation | Execute | Validate authToken", ()
   test("Not valid authToken => 401/message", async () => {
     // @ts-ignore
     adaptedRequest.authToken.userId = 123
-    const authTokenvalidationMessage = userValidator.getMessageForId(adaptedRequest.authToken.userId)
+    const authTokenvalidationMessage = userValidator.getMessageForId(
+      adaptedRequest.authToken.userId
+    )
     // Given
     expect(authTokenvalidationMessage).toBeTruthy()
     // When

@@ -1,7 +1,10 @@
-import {AuthenticationToken} from "./auth/token.types"
-import { TaskIdParam, TodoIdParam, UserIdParam } from "./request/param.types"
+import { AuthenticationToken } from "./auth/token.types"
 
-export type Params = TaskIdParam | TodoIdParam | UserIdParam
+export type Params = null | {
+  taskId?: string
+  todoId?: string
+  userId?: string
+}
 
 export type AdaptedRequest<T> = {
   body: T

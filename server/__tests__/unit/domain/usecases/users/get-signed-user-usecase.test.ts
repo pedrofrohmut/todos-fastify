@@ -9,9 +9,9 @@ import UserNotFoundByIdError from "../../../../../src/domain/errors/users/user-n
 
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
 import FakeTokenService from "../../../../utils/fakes/token-service.fake"
-import {getError} from "../../../../utils/functions/error.functions"
-import {MockConnectionAcceptQuery} from "../../../../utils/mocks/domain/database/database-connection.mock"
-import {expectsToHaveError} from "../../../../utils/functions/expects.functions"
+import { getError } from "../../../../utils/functions/error.functions"
+import { MockConnectionAcceptQuery } from "../../../../utils/mocks/domain/database/database-connection.mock"
+import { expectsToHaveError } from "../../../../utils/functions/expects.functions"
 import BcryptjsHashPasswordService from "../../../../../src/domain/services/auth/implementations/bcryptjs-hash-password.service"
 
 const roundToSeconds = (n: number) => Math.floor(n / 1000)
@@ -27,7 +27,10 @@ describe("GetSignedUserUseCase | execute", () => {
     const mockQuery = jest.fn(() => [])
     const connection = MockConnectionAcceptQuery(mockQuery)()
     const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const getSignedUserUseCase = new GetSignedUserUseCaseImplementation(findUserByIdService, generateTokenService)
+    const getSignedUserUseCase = new GetSignedUserUseCaseImplementation(
+      findUserByIdService,
+      generateTokenService
+    )
     const token = generateTokenService.execute(userId)
     const decodedToken = tokenDecoderService.execute(token)
     const userFound = await findUserByIdService.execute(userId)
@@ -46,12 +49,20 @@ describe("GetSignedUserUseCase | execute", () => {
     const twoHours = 60 * 60 * 2
     const exp = roundToSeconds(now) + twoHours
     const passwordHash = await hashPasswordService.execute("user_password")
-    const userDB = { id: userId, name: "User Name", email: "user@mail.com", password_hash: passwordHash }
+    const userDB = {
+      id: userId,
+      name: "User Name",
+      email: "user@mail.com",
+      password_hash: passwordHash
+    }
     // Setup
     const mockQuery = jest.fn(() => [userDB])
     const connection = MockConnectionAcceptQuery(mockQuery)()
     const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const getSignedUserUseCase = new GetSignedUserUseCaseImplementation(findUserByIdService, generateTokenService)
+    const getSignedUserUseCase = new GetSignedUserUseCaseImplementation(
+      findUserByIdService,
+      generateTokenService
+    )
     const token = generateTokenService.execute(userId, exp)
     const decodedToken = tokenDecoderService.execute(token)
     // Given values

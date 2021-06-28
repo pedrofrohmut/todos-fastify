@@ -9,8 +9,13 @@ import GetSignedUserControllerImplementation from "../../../../../src/domain/con
 
 import FakeTokenService from "../../../../utils/fakes/token-service.fake"
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
-import { expectsControllerResponse400AndMessage, expectsControllerResponse401AndMessage } from "../../../../utils/functions/expects.functions"
-import MockConnection, {MockConnectionAcceptQuery} from "../../../../utils/mocks/domain/database/database-connection.mock"
+import {
+  expectsControllerResponse400AndMessage,
+  expectsControllerResponse401AndMessage
+} from "../../../../utils/functions/expects.functions"
+import MockConnection, {
+  MockConnectionAcceptQuery
+} from "../../../../utils/mocks/domain/database/database-connection.mock"
 import BcryptjsHashPasswordService from "../../../../../src/domain/services/auth/implementations/bcryptjs-hash-password.service"
 
 const roundToSeconds = (n: number) => Math.floor(n / 1000)
@@ -77,7 +82,12 @@ describe("GetSignedUserControllerImplementation | execute", () => {
 
   test("Valid authToken and user found => 200/SignedUserDto", async () => {
     const passwordHash = await hashPasswordService.execute("user_password")
-    const userDB = { id: userId, name: "User Name", email: "user@mail.com", password_hash: passwordHash }
+    const userDB = {
+      id: userId,
+      name: "User Name",
+      email: "user@mail.com",
+      password_hash: passwordHash
+    }
     const mockQuery = jest.fn(() => [userDB])
     const connection = MockConnectionAcceptQuery(mockQuery)()
     const findUserByIdService = new PostgresFindUserByIdService(connection)
@@ -96,6 +106,11 @@ describe("GetSignedUserControllerImplementation | execute", () => {
     // Then
     expect(controllerResponse.status).toBe(200)
     const token = generateAuthTokenService.execute(userId, request.authToken.exp)
-    expect(controllerResponse.body).toEqual({ id: userId, name: userDB.name, email: userDB.email, token })
+    expect(controllerResponse.body).toEqual({
+      id: userId,
+      name: userDB.name,
+      email: userDB.email,
+      token
+    })
   })
 })

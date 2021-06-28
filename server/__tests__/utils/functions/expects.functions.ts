@@ -17,7 +17,6 @@ export const expectsTruthyMessage = (validationMessage?: string | null) => {
   expect(validationMessage).toBeString()
 }
 
-
 export const expectsValidConnection = (con: any): void => {
   expect(con).toBeTruthy()
   expect(con).toBeObject()
@@ -50,7 +49,12 @@ export const expectsValidTokenOneHourExpiration = (
   expect(decoded.exp).toBe(decoded.iat + oneDay)
 }
 
-export const expectsValidTokenThatExpiresIn = (token: any, decoded: any, userId: string, exp: number) => {
+export const expectsValidTokenThatExpiresIn = (
+  token: any,
+  decoded: any,
+  userId: string,
+  exp: number
+) => {
   expect(token).toBeTruthy()
   expect(token).toBeString()
   expect(decoded).toBeTruthy()
@@ -80,6 +84,11 @@ export const expectsValidUserId = (userId: any): void => {
 
 export const expectsControllerResponse201 = (response: any): void => {
   expect(response.status).toBe(201)
+  expect(response.body).toBeUndefined()
+}
+
+export const expectsControllerResponse204 = (response: any): void => {
+  expect(response.status).toBe(204)
   expect(response.body).toBeUndefined()
 }
 

@@ -15,7 +15,10 @@ import PasswordAndHashDontMatchError from "../../../../../src/domain/errors/auth
 
 import { MockConnectionAcceptQuery } from "../../../../utils/mocks/domain/database/database-connection.mock"
 import { getError } from "../../../../utils/functions/error.functions"
-import { expectsToHaveError, expectsValidTokenOneHourExpiration } from "../../../../utils/functions/expects.functions"
+import {
+  expectsToHaveError,
+  expectsValidTokenOneHourExpiration
+} from "../../../../utils/functions/expects.functions"
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
 import FakeTokenService from "../../../../utils/fakes/token-service.fake"
 

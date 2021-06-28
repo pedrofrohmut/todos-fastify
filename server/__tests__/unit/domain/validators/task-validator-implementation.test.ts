@@ -2,7 +2,7 @@ import "jest-extended"
 
 import TaskValidatorImplementation from "../../../../src/domain/validators/implementations/task.validator"
 import FakeTaskService from "../../../utils/fakes/task-service.fake"
-import {expectsTruthyMessage} from "../../../utils/functions/expects.functions"
+import { expectsTruthyMessage } from "../../../utils/functions/expects.functions"
 
 const getValidationMessageForName = (name?: any) => {
   return new TaskValidatorImplementation().getMessageForName(name)
@@ -67,7 +67,11 @@ describe("TaskValidator | getMessageForName", () => {
   })
 
   test("Too long => message", () => {
-    expectsTruthyMessage(taskValidator.getMessageForName("Ipsum nostrum similique dolor aut veritatis? Corporis dolorem eos eos praesentium obcaecati. Ipsum ab eligendi non vitae Ipsum voluptate dolorem magni"))
+    expectsTruthyMessage(
+      taskValidator.getMessageForName(
+        "Ipsum nostrum similique dolor aut veritatis? Corporis dolorem eos eos praesentium obcaecati. Ipsum ab eligendi non vitae Ipsum voluptate dolorem magni"
+      )
+    )
   })
 
   test("Valid => null", () => {
@@ -77,7 +81,11 @@ describe("TaskValidator | getMessageForName", () => {
 
 describe("TaskValidator | getMessageForDescription", () => {
   test("Too long => message", () => {
-    expectsTruthyMessage(taskValidator.getMessageForDescription("Ipsum consequatur fugiat ducimus ea maxime? Earum reiciendis sed consectetur perspiciatis officia Quisquam maxime velit fugit consequatur molestiae Porro ducimus consequatur autem odit illum Recusandae nihil nemo minima assumenda ab Minima dolores debitis eius ipsum voluptatibus maiores, tempora? Ipsum asperiores nam neque doloremque sunt Ut ducimus eaque ex magnam maiores!"))
+    expectsTruthyMessage(
+      taskValidator.getMessageForDescription(
+        "Ipsum consequatur fugiat ducimus ea maxime? Earum reiciendis sed consectetur perspiciatis officia Quisquam maxime velit fugit consequatur molestiae Porro ducimus consequatur autem odit illum Recusandae nihil nemo minima assumenda ab Minima dolores debitis eius ipsum voluptatibus maiores, tempora? Ipsum asperiores nam neque doloremque sunt Ut ducimus eaque ex magnam maiores!"
+      )
+    )
   })
 
   test("Not string => message", () => {
