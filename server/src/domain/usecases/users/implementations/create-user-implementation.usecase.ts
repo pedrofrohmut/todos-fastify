@@ -8,25 +8,19 @@ import HashPasswordService from "../../../services/auth/hash-password-service.in
 import EmailAlreadyRegisteredError from "../../../errors/users/email-already-registered.error"
 
 export default class CreateUserUseCaseImplementation implements CreateUserUseCase {
-  private readonly findUserByEmailService: FindUserByEmailService
-  private readonly hashPasswordService: HashPasswordService
-  private readonly createUserService: CreateUserService
+  private readonly errorMessage = "[CreateUserUseCase] execute"
 
   constructor(
-    findUserByEmailService: FindUserByEmailService,
-    hashPasswordService: HashPasswordService,
-    createUserService: CreateUserService
-  ) {
-    this.findUserByEmailService = findUserByEmailService
-    this.hashPasswordService = hashPasswordService
-    this.createUserService = createUserService
-  }
+    private readonly findUserByEmailService: FindUserByEmailService,
+    private readonly hashPasswordService: HashPasswordService,
+    private readonly createUserService: CreateUserService
+  ) {}
 
   public async execute(newUser: CreateUserBody): Promise<void> {
     const { name, email, password } = newUser
     const foundUser = await this.findUserByEmailService.execute(email)
     if (foundUser !== null) {
-      throw new EmailAlreadyRegisteredError("[CreateUserUseCase] execute")
+      throw new EmailAlreadyRegisteredError(this.errorMessage)
     }
     const passwordHash = await this.hashPasswordService.execute(password)
     this.createUserService.execute({ name, email, passwordHash })

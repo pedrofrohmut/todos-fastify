@@ -8,17 +8,15 @@ import MissingRequestAuthTokenError from "../../../errors/controllers/missing-re
 import UserNotFoundByIdError from "../../../errors/users/user-not-found-by-id.error"
 
 export default class GetSignedUserControllerImplementation implements GetSignedUserController {
-  private readonly getSignedUserUseCase: GetSignedUserUseCase
+  private readonly errorMessage = "[GetSignedUserController] execute"
 
-  constructor(getSignedUserUseCase: GetSignedUserUseCase) {
-    this.getSignedUserUseCase = getSignedUserUseCase
-  }
+  constructor(private readonly getSignedUserUseCase: GetSignedUserUseCase) {}
 
   public async execute(request: AdaptedRequest<null>): Promise<ControllerResponse<SignedUserDto>> {
     if (request.authToken === null) {
       return {
         status: 401,
-        body: new MissingRequestAuthTokenError("[GetSignedUserController] execute").message
+        body: new MissingRequestAuthTokenError(this.errorMessage).message
       }
     }
     try {
@@ -28,7 +26,7 @@ export default class GetSignedUserControllerImplementation implements GetSignedU
       if (err instanceof UserNotFoundByIdError) {
         return {
           status: 400,
-          body: new UserNotFoundByIdError("[GetSignedUserController] execute").message
+          body: new UserNotFoundByIdError(this.errorMessage).message
         }
       }
       throw err

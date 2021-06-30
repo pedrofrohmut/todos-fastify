@@ -4,11 +4,7 @@ import { UserDto, UserTableDto } from "../../../types/user.types"
 import FindUserByIdService from "../find-user-by-id-service.interface"
 
 export default class PostgresFindUserByIdService implements FindUserByIdService {
-  private readonly connection: DatabaseConnection
-
-  constructor(connection: DatabaseConnection) {
-    this.connection = connection
-  }
+  constructor(private readonly connection: DatabaseConnection) {}
 
   public async execute(userId: string): Promise<UserDto | null> {
     const queryResultRows = await this.connection.query<UserTableDto>(

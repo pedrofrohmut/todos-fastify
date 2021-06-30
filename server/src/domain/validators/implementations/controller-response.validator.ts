@@ -10,7 +10,7 @@ import InvalidResponseBodyError from "../../errors/controllers/invalid-response-
 export default class ControllerResponseValidatorImplementation
   implements ControllerResponseValidator
 {
-  private errorMessage = "[ControllerResponseValidator] validate"
+  private readonly errorMessage = "[ControllerResponseValidator] validate"
 
   private validateResponse(response: any): void {
     if (response === null || response === undefined) {

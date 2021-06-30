@@ -3,11 +3,7 @@ import { CreateTaskDto } from "../../../types/task.types"
 import CreateTaskService from "../create-task-service.interface"
 
 export default class PostgresCreateTaskService implements CreateTaskService {
-  private readonly connection: DatabaseConnection
-
-  constructor(connection: DatabaseConnection) {
-    this.connection = connection
-  }
+  constructor(private readonly connection: DatabaseConnection) {}
 
   public async execute({ name, description, userId }: CreateTaskDto): Promise<void> {
     this.connection.mutate(

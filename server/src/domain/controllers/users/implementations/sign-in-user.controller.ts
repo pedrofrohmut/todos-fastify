@@ -13,13 +13,10 @@ import PasswordAndHashDontMatchError from "../../../errors/auth/password-and-has
 export default class SignInUserControllerImplementation implements SignInUserController {
   private errorMessage = "[SignInUserController] execute"
 
-  private readonly userValidator: UserValidator
-  private readonly signInUserUseCase: SignInUserUseCase
-
-  constructor(userValidator: UserValidator, signInUserUseCase: SignInUserUseCase) {
-    this.userValidator = userValidator
-    this.signInUserUseCase = signInUserUseCase
-  }
+  constructor(
+    private readonly userValidator: UserValidator,
+    private readonly signInUserUseCase: SignInUserUseCase
+  ) {}
 
   private getValidationMessageForBody(body: SignInUserBody | null): null | string {
     if (body === null) {

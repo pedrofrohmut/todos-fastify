@@ -7,21 +7,17 @@ import { SignedUserDto } from "../../../types/user.types"
 import GetSignedUserUseCase from "../get-signed-user-usecase.interface"
 
 export default class GetSignedUserUseCaseImplementation implements GetSignedUserUseCase {
-  private readonly findUserByIdService: FindUserByIdService
-  private readonly generateAuthTokenService: GenerateAuthTokenService
+  private readonly errorMessage = "[GetSignedUserUseCase] execute"
 
   constructor(
-    findUserByIdService: FindUserByIdService,
-    generateAuthTokenService: GenerateAuthTokenService
-  ) {
-    this.findUserByIdService = findUserByIdService
-    this.generateAuthTokenService = generateAuthTokenService
-  }
+    private readonly findUserByIdService: FindUserByIdService,
+    private readonly generateAuthTokenService: GenerateAuthTokenService
+  ) {}
 
   public async execute(decodedToken: AuthenticationToken): Promise<SignedUserDto> {
     const userFound = await this.findUserByIdService.execute(decodedToken.userId)
     if (userFound === null) {
-      throw new UserNotFoundByIdError("[GetSignedUserUseCase] execute")
+      throw new UserNotFoundByIdError(this.errorMessage)
     }
     const newToken = this.generateAuthTokenService.execute(decodedToken.userId, decodedToken.exp)
     const { id, name, email } = userFound

@@ -4,11 +4,7 @@ import { UserDto, UserTableDto } from "../../../types/user.types"
 import FindUserByEmailService from "../find-user-by-email-service.interface"
 
 export default class PostgresFindUserByEmailService implements FindUserByEmailService {
-  private readonly connection: DatabaseConnection
-
-  constructor(connection: DatabaseConnection) {
-    this.connection = connection
-  }
+  constructor(private readonly connection: DatabaseConnection) {}
 
   public async execute(email: string): Promise<UserDto | null> {
     const queryResultRows = await this.connection.query<UserTableDto>(

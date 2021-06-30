@@ -3,11 +3,7 @@ import * as jwt from "jsonwebtoken"
 import GenerateAuthTokenService from "../generate-auth-token-service.interface"
 
 export default class JwtGenerateAuthTokenService implements GenerateAuthTokenService {
-  private readonly secret: string
-
-  constructor(secret: string) {
-    this.secret = secret
-  }
+  constructor(private readonly secret: string) {}
 
   public execute(userId: string, exp?: number): string {
     if (!exp) {

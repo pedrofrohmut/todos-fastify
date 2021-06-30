@@ -4,11 +4,7 @@ import { TaskDto, TaskTableDto } from "../../../types/task.types"
 import FindTaskByIdService from "../find-task-by-id-service.interface"
 
 export default class PostgresFindTaskByIdService implements FindTaskByIdService {
-  private readonly connection: DatabaseConnection
-
-  constructor(connection: DatabaseConnection) {
-    this.connection = connection
-  }
+  constructor(private readonly connection: DatabaseConnection) {}
 
   public async execute(taskId: string): Promise<TaskDto | null> {
     const queryResultRows = await this.connection.query<TaskTableDto>(

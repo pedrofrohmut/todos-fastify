@@ -12,19 +12,11 @@ import UserNotFoundByIdError from "../../../errors/users/user-not-found-by-id.er
 import MissingRequestAuthTokenError from "../../../errors/controllers/missing-request-auth-token.error"
 
 export default class CreateTaskControllerImplementation implements CreateTaskController {
-  private readonly taskValidator: TaskValidator
-  private readonly userValidator: UserValidator
-  private readonly createTaskUseCase: CreateTaskUseCase
-
   constructor(
-    taskValidator: TaskValidator,
-    userValidator: UserValidator,
-    createTaskUseCase: CreateTaskUseCase
-  ) {
-    this.taskValidator = taskValidator
-    this.userValidator = userValidator
-    this.createTaskUseCase = createTaskUseCase
-  }
+    private readonly taskValidator: TaskValidator,
+    private readonly userValidator: UserValidator,
+    private readonly createTaskUseCase: CreateTaskUseCase
+  ) {}
 
   private getValidationMessageForBody(body: CreateTaskBody): null | string {
     if (body === null) {

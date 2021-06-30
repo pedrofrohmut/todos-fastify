@@ -8,11 +8,7 @@ import InvalidTokenError from "../../../errors/auth/invalid-token.error"
 import ExpiredTokenError from "../../../errors/auth/expired-token.error"
 
 export default class JwtDecodeTokenService implements DecodeTokenService {
-  private readonly secret: string
-
-  constructor(secret: string) {
-    this.secret = secret
-  }
+  constructor(private readonly secret: string) {}
 
   private validateToken(token: string, errorMessage: string): void {
     if (!token || typeof token !== "string") {

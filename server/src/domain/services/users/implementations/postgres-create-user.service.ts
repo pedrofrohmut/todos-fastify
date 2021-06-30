@@ -4,11 +4,7 @@ import { CreateUserDto } from "../../../types/user.types"
 import CreateUserService from "../create-user-service.interface"
 
 export default class PostgresCreateUserService implements CreateUserService {
-  private readonly connection: DatabaseConnection
-
-  constructor(connection: DatabaseConnection) {
-    this.connection = connection
-  }
+  constructor(private readonly connection: DatabaseConnection) {}
 
   public async execute({ name, email, passwordHash }: CreateUserDto): Promise<void> {
     this.connection.mutate(

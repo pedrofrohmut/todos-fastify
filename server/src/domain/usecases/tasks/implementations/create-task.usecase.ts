@@ -7,18 +7,17 @@ import CreateTaskUseCase from "../create-task-usecase.interface"
 import UserNotFoundByIdError from "../../../errors/users/user-not-found-by-id.error"
 
 export default class CreatTaskUseCaseImplementation implements CreateTaskUseCase {
-  private readonly findUserByIdService: FindUserByIdService
-  private readonly createTaskService: CreateTaskService
+  private readonly errorMessage = "[CreateTaskUseCase] execute"
 
-  constructor(findUserByIdService: FindUserByIdService, createTaskService: CreateTaskService) {
-    this.findUserByIdService = findUserByIdService
-    this.createTaskService = createTaskService
-  }
+  constructor(
+    private readonly findUserByIdService: FindUserByIdService,
+    private readonly createTaskService: CreateTaskService
+  ) {}
 
   public async execute(newTask: CreateTaskBody, userId: string): Promise<void> {
     const foundUser = await this.findUserByIdService.execute(userId)
     if (foundUser === null) {
-      throw new UserNotFoundByIdError("[CreateTaskUseCase] execute")
+      throw new UserNotFoundByIdError(this.errorMessage)
     }
     await this.createTaskService.execute({
       name: newTask.name,

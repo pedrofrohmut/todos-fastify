@@ -10,15 +10,12 @@ import MissingRequestAuthTokenError from "../../../errors/controllers/missing-re
 import TaskNotFoundByIdError from "../../../errors/tasks/task-not-found-by-id.error"
 
 export default class DeleteTaskControllerImplementation implements DeleteTaskController {
-  private readonly taskValidator: TaskValidator
-  private readonly deleteTaskUseCase: DeleteTaskUseCase
-
   private readonly errorMessage = "[DeleteTaskController] execute"
 
-  constructor(taskValidator: TaskValidator, deleteTaskUseCase: DeleteTaskUseCase) {
-    this.taskValidator = taskValidator
-    this.deleteTaskUseCase = deleteTaskUseCase
-  }
+  constructor(
+    private readonly taskValidator: TaskValidator,
+    private readonly deleteTaskUseCase: DeleteTaskUseCase
+  ) {}
 
   private getValidationMessageForParams(params: Params): null | string {
     if (params === null) {

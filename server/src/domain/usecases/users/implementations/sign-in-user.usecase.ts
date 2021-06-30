@@ -10,22 +10,15 @@ import UserNotFoundByEmailError from "../../../errors/users/user-not-found-by-em
 import PasswordAndHashDontMatchError from "../../../errors/auth/password-and-hash-dont-match.error"
 
 export default class SignInUserUseCaseImplementation implements SignInUserUseCase {
-  private readonly findUserByEmailService: FindUserByEmailService
-  private readonly comparePasswordAndHashService: ComparePasswordAndHashService
-  private readonly generateAuthTokenService: GenerateAuthTokenService
+  private readonly errorMessage = "[SignInUserUseCase] execute"
 
   constructor(
-    findUserByEmailService: FindUserByEmailService,
-    comparePasswordAndHashService: ComparePasswordAndHashService,
-    generateAuthTokenService: GenerateAuthTokenService
-  ) {
-    this.findUserByEmailService = findUserByEmailService
-    this.comparePasswordAndHashService = comparePasswordAndHashService
-    this.generateAuthTokenService = generateAuthTokenService
-  }
+    private readonly findUserByEmailService: FindUserByEmailService,
+    private readonly comparePasswordAndHashService: ComparePasswordAndHashService,
+    private readonly generateAuthTokenService: GenerateAuthTokenService
+  ) {}
 
   public async execute(credentials: SignInUserBody): Promise<SignedUserDto> {
-    const errorMessage = "[SignInUserUseCase] execute"
     const foundUser = await this.findUserByEmailService.execute(credentials.email)
     if (foundUser === null) {
       throw new UserNotFoundByEmailError()
@@ -35,7 +28,7 @@ export default class SignInUserUseCaseImplementation implements SignInUserUseCas
       foundUser.passwordHash
     )
     if (!isMatch) {
-      throw new PasswordAndHashDontMatchError(errorMessage)
+      throw new PasswordAndHashDontMatchError(this.errorMessage)
     }
     const token = this.generateAuthTokenService.execute(foundUser.id)
     const { id, name, email } = foundUser

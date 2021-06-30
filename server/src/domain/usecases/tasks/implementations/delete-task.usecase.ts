@@ -6,29 +6,22 @@ import FindUserByIdService from "../../../services/users/find-user-by-id-service
 import DeleteTaskUseCase from "../delete-task-usecase.interface"
 
 export default class DeleteTaskUseCaseImplementation implements DeleteTaskUseCase {
-  private readonly findUserByIdService: FindUserByIdService
-  private readonly findTaskByIdService: FindTaskByIdService
-  private readonly deleteTaskService: DeleteTaskService
+  private readonly errorMessage = "[DeleteTaskUseCase] execute"
 
   constructor(
-    findUserByIdService: FindUserByIdService,
-    findTaskByIdService: FindTaskByIdService,
-    deleteTaskService: DeleteTaskService
-  ) {
-    this.findUserByIdService = findUserByIdService
-    this.findTaskByIdService = findTaskByIdService
-    this.deleteTaskService = deleteTaskService
-  }
+    private readonly findUserByIdService: FindUserByIdService,
+    private readonly findTaskByIdService: FindTaskByIdService,
+    private readonly deleteTaskService: DeleteTaskService
+  ) {}
 
   public async execute(userId: string, taskId: string): Promise<void> {
-    const errorMessage = "[DeleteTaskUseCase] execute"
     const foundUser = await this.findUserByIdService.execute(userId)
     if (foundUser === null) {
-      throw new UserNotFoundByIdError()
+      throw new UserNotFoundByIdError(this.errorMessage)
     }
     const foundTask = await this.findTaskByIdService.execute(taskId)
     if (foundTask === null) {
-      throw new TaskNotFoundByIdError(errorMessage)
+      throw new TaskNotFoundByIdError(this.errorMessage)
     }
     this.deleteTaskService.execute(taskId)
   }

@@ -9,13 +9,12 @@ import UserValidator from "../../../validators/user-validator.interface"
 import EmailAlreadyRegisteredError from "../../../errors/users/email-already-registered.error"
 
 export default class CreateUserControllerImplementation implements CreateUserController {
-  private readonly userValidator: UserValidator
-  private readonly createUserUseCase: CreateUserUseCase
+  private readonly errorMessage = "[CreateUserController] execute"
 
-  constructor(userValidator: UserValidator, createUserUseCase: CreateUserUseCase) {
-    this.userValidator = userValidator
-    this.createUserUseCase = createUserUseCase
-  }
+  constructor(
+    private readonly userValidator: UserValidator,
+    private readonly createUserUseCase: CreateUserUseCase
+  ) {}
 
   private getValidationMessageForBody(body: CreateUserBody | null): string | null {
     if (body === null) {
@@ -50,7 +49,7 @@ export default class CreateUserControllerImplementation implements CreateUserCon
       if (err instanceof EmailAlreadyRegisteredError) {
         return {
           status: 400,
-          body: new EmailAlreadyRegisteredError("[CreateUserController] execute").message
+          body: new EmailAlreadyRegisteredError(this.errorMessage).message
         }
       }
       throw err
