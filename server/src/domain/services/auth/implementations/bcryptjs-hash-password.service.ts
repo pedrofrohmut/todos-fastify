@@ -4,7 +4,7 @@ import HashPasswordService from "../hash-password-service.interface"
 
 export default class BcryptjsHashPasswordService implements HashPasswordService {
   public async execute(password: string): Promise<string> {
-    const hashPromise = bcrypt.hash(password, 8)
-    return hashPromise
+    const hash = bcrypt.hash(password, 8)
+    return hash
   }
 }

@@ -6,20 +6,29 @@ import FindUserByIdService from "../find-user-by-id-service.interface"
 export default class PostgresFindUserByIdService implements FindUserByIdService {
   constructor(private readonly connection: DatabaseConnection) {}
 
-  public async execute(userId: string): Promise<UserDto | null> {
-    const queryResultRows = await this.connection.query<UserTableDto>(
+  private getQueryResultRows(userId: string) {
+    return this.connection.query<UserTableDto>(
       "SELECT name, email, password_hash FROM app.users WHERE id = $1",
       [userId]
     )
-    if (queryResultRows.length === 0) {
-      return null
-    }
-    const { name, email, password_hash } = queryResultRows[0]
+  }
+
+  private mapFirstRowToTask(userId: string, rows: UserTableDto[]) {
+    const { name, email, password_hash } = rows[0]
     return {
       id: userId,
       name,
       email,
       passwordHash: password_hash
     }
+  }
+
+  public async execute(userId: string): Promise<UserDto | null> {
+    const rows = await this.getQueryResultRows(userId)
+    if (rows.length === 0) {
+      return null
+    }
+    const user = this.mapFirstRowToTask(userId, rows)
+    return user
   }
 }

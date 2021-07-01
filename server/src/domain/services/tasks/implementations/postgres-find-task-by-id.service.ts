@@ -6,20 +6,29 @@ import FindTaskByIdService from "../find-task-by-id-service.interface"
 export default class PostgresFindTaskByIdService implements FindTaskByIdService {
   constructor(private readonly connection: DatabaseConnection) {}
 
-  public async execute(taskId: string): Promise<TaskDto | null> {
-    const queryResultRows = await this.connection.query<TaskTableDto>(
+  private getQueryResultRows(taskId: string) {
+    return this.connection.query<TaskTableDto>(
       "SELECT name, description, user_id FROM app.tasks WHERE id = $1",
       [taskId]
     )
-    if (queryResultRows.length === 0) {
-      return null
-    }
-    const { name, description, user_id } = queryResultRows[0]
+  }
+
+  private mapFirstRowToTask(taskId: string, rows: TaskTableDto[]) {
+    const { name, description, user_id } = rows[0]
     return {
       id: taskId,
       name,
       description,
       userId: user_id
     }
+  }
+
+  public async execute(taskId: string): Promise<TaskDto | null> {
+    const rows = await this.getQueryResultRows(taskId)
+    if (rows.length === 0) {
+      return null
+    }
+    const task = this.mapFirstRowToTask(taskId, rows)
+    return task
   }
 }
