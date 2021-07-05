@@ -89,6 +89,7 @@ describe("TaskValidator | getMessageForDescription", () => {
   })
 
   test("Not string => message", () => {
+    // @ts-ignore
     expectsTruthyMessage(taskValidator.getMessageForDescription(123))
   })
 

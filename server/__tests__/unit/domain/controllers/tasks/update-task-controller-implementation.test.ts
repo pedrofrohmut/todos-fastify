@@ -25,6 +25,19 @@ import MockConnection, {
 import UserNotFoundByIdError from "../../../../../src/domain/errors/users/user-not-found-by-id.error"
 import TaskNotFoundByIdError from "../../../../../src/domain/errors/tasks/task-not-found-by-id.error"
 
+const expectsValidRequest = (request: any): void => {
+  const nameValidationMessage = taskValidator.getMessageForName(request.body.name)
+  expect(nameValidationMessage).toBeNull()
+  const descriptionValidationMessage = taskValidator.getMessageForDescription(
+    request.body.description
+  )
+  expect(descriptionValidationMessage).toBeNull()
+  const taskIdValidationdMessage = taskValidator.getMessageForId(request.params.taskId)
+  expect(taskIdValidationdMessage).toBeNull()
+  expect(request.authToken.userId).toBeString()
+  expect(request.authToken.userId).toBeTruthy()
+}
+
 const userId = FakeUserService.getValidUserId()
 const taskId = FakeTaskService.getValidTaskId()
 const token = FakeTokenService.getValid(userId)
@@ -48,19 +61,6 @@ const updateTaskController = new UpdateTaskControllerImplementation(
   taskValidator,
   updateTaskUseCase
 )
-
-const expectsValidRequest = (request: any): void => {
-  const nameValidationMessage = taskValidator.getMessageForName(request.body.name)
-  expect(nameValidationMessage).toBeNull()
-  const descriptionValidationMessage = taskValidator.getMessageForDescription(
-    request.body.description
-  )
-  expect(descriptionValidationMessage).toBeNull()
-  const taskIdValidationdMessage = taskValidator.getMessageForId(request.params.taskId)
-  expect(taskIdValidationdMessage).toBeNull()
-  expect(request.authToken.userId).toBeString()
-  expect(request.authToken.userId).toBeTruthy()
-}
 
 let request: AdaptedRequest<UpdateTaskBody>
 
