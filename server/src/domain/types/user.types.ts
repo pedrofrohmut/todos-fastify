@@ -12,15 +12,11 @@ export type UserDto = {
   passwordHash: string
 }
 
+export type CreateUserDto = Omit<UserDto, "id">
+
 export type UserTableDto = {
   id: string
   name: string
   email: string
   password_hash: string
-}
-
-export type CreateUserDto = {
-  name: string
-  email: string
-  passwordHash: string
 }
