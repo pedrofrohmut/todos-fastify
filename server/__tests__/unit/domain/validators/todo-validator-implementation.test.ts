@@ -1,8 +1,33 @@
 import TodoValidatorImplementation from "../../../../src/domain/validators/implementations/todo.validator"
+import FakeTodoService from "../../../utils/fakes/todo-service.fake"
 
 import { expectsTruthyMessage } from "../../../utils/functions/expects.functions"
 
 const todoValidator = new TodoValidatorImplementation()
+
+describe("TodoValidatorImplementation | getMessageForId", () => {
+  test("Null => message", () => {
+    expectsTruthyMessage(todoValidator.getMessageForId(null))
+  })
+
+  test("Undefined => message", () => {
+    expectsTruthyMessage(todoValidator.getMessageForId(undefined))
+  })
+
+  test("Not typeof string => message", () => {
+    // @ts-ignore
+    expectsTruthyMessage(todoValidator.getMessageForId(123))
+  })
+
+  test("Not valid uuid v4 format => message", () => {
+    expectsTruthyMessage(todoValidator.getMessageForId("123"))
+  })
+
+  test("Valid => null", () => {
+    const todoId = FakeTodoService.getValidTodoId()
+    expect(todoValidator.getMessageForId(todoId)).toBeNull()
+  })
+})
 
 describe("TodoValidatorImplementation | getMessageForName", () => {
   test("Null => message", () => {

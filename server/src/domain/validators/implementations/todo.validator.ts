@@ -1,7 +1,20 @@
+import isUUID from "validator/lib/isUUID"
+
 import TodoValidator from "../todo-validator.interface"
 
 export default class TodoValidatorImplementation implements TodoValidator {
-  public getMessageForId(id?: string): string | null {}
+  public getMessageForId(id?: string): string | null {
+    if (id == null || id === undefined) {
+      return "Todo id is required"
+    }
+    if (typeof id !== "string") {
+      return "Todo id is not a valid string"
+    }
+    if (!isUUID(id, 4)) {
+      return "Todo id is not a valid UUID v4"
+    }
+    return null
+  }
 
   public getMessageForName(name?: string): string | null {
     if (name === null || name === undefined) {
