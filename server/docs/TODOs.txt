@@ -1,41 +1,120 @@
-#### FASTIFY #################################################################
+se Oriented
 
-1. Create Routes for Task, Todos and Users
+### UNIT: Controllers & UseCases ###
 
-2. ControllerAdapter callControllers at routes with helper function
-"callWithAdapter"
+** Feature: FindTodosByTaskId
+0 Add to ControllerFactory
+0 FindUserByIdService
+0 FindTaskByIdService
+0 FindTodosByTaskIdService
+0 FindTodosByTaskIdUseCase
+0 FindTodosByTaskIdController
 
-#### DOMAIN ###################################################################
+** Feature: FindTodoById
+0 Add to ControllerFactory
+XX FindUserByIdService
+XX FindTodoByIdService
+0 FindTodoByIdUseCase
+0 FindTodoByIdController
 
-1. Create ControllerAdapterTypes and FastifyControllerAdapter
+** Feature: CreateTodo
+0 Add to ControllerFactory
+XX FindUserByIdService
+XX FindTaskByIdService
+XX CreateTodoService
+XX CreateTodoUseCase
+XX CreateTodoController
 
-2. Create Controller Interface/Implementation for Each Route and
-Controller.Types
 
-3. ControllerFactory to generate controllers with dependencies injected and
-ready-to-use
+** Feature: UpdateTask
+0 Add to ControllerFactory
+XX FindUserByIdService
+XX FindTaskByIdService
+XX UpdateTaskService
+XX UpdateTaskUseCase
+XX UpdateTaskController
 
-4. Create ConnectionFactory, DatabaseConnection.Interface and
-PostgresDataBaseConnection
+** Feature: FindTasksByUserId
+0 Add to ControllerFactory
+XX FindUserByIdService
+XX FindTasksByUserIdService
+XX FindTasksByUserIdUseCase
+XX FindTasksByUserIdController
 
-5. Create UseCases.Interface and UserCases.Implementations
+** Feature: FindTaskById
+0 Add to ControllerFactory
+XX FindUserByIdService
+XX FindTaskByIdService
+XX FindTaskByIdUseCase
+XX FindTaskByIdController
 
-6. Create Services.Interfaces and Services.Implementations
+** Feature: DeleteTask
+0 Add to ControllerFactory
+XX FindUserByIdService
+XX FindTaskByIdService
+XX DeleteTaskService
+XX DeleteTaskUseCase
+XX DeleteTaskController
 
-#### TESTS ###################################################################
+** Feature: CreateTask
+0 Add to ControllerFactory
+XX CreateTaskUseCase
+XX CreateTaskController
+XX CreateTaskService
 
-1. Config Jest with typescript / jest.config / babel.config
+** Feature: GetSingedUser
+0 Add to ControllerFactory
+XX FindUserByIdService
+XX GenerateAuthTokenService
+XX GetSignedUserUseCase
+XX GetSignedUserController
 
-2. Add to Jest global-setup and global-teardown for start/cleanUp off tests
+** Feature: SignInUser
+0 Add to ControllerFactory
+XX FindUserByEmailService
+XX ComparePasswordAndHashService
+XX GenerateAuthTokenService
+XX SignInUserUseCase
+XX SignInUserController
 
-3. Test-env for test env variables
+** Feature: CreateUser
+0 Add to ControllerFactory
+XX CreateUserService
+XX FindUserByEmailService
+XX HashPasswordService
+XX CreateUserUseCase
+XX CreateUserController
 
-4. Fakes to make Tasks, Todos, Users and JWTs
+### UNIT: Services ###
+XX FindUserByEmailService
+XX HashPasswordService
+XX ComparePasswordAndHashService
+XX GenerateAuthTokenService
+XX DecodeTokenService
+XX CreateTaskService
+XX CreateUserService
 
-5. ApiCallers with AxiosAdapter
+### UNIT: Validators ###
+XX UserValidator
 
-6. Test Fastify.Routes
+** Feature: router
+XX PostgresDatabaseConnection
+XX ControllerFactoryImplementation
+XX PostgresConnectionFactory
+XX FastifyRequestAdapter
+XX FastifyRouter
+XX FastifyRouterBuilder
 
-7. Test Fastify.Routes.Functions
+### INTEGRATION: Routes ###
+0 GetSignedUserRoute
+0 SignInUserRoute
+XX CreateUserRoute
 
-8. Test Domain.Controllers with mocks
+###############################
+#  0 for not done             #
+#  X for done                 #
+#  XX for done and refactored #
+###############################
+
+**** RULES ****
+* Mock only database and request/response at INTEGRATION
