@@ -11,8 +11,13 @@ import MissingRequestParamsError from "../../../../../src/domain/errors/controll
 import FakeTodoService from "../../../../utils/fakes/todo-service.fake"
 import FakeTokenService from "../../../../utils/fakes/token-service.fake"
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
-import { expectsControllerResponse400AndMessage, expectsControllerResponse401AndMessage } from "../../../../utils/functions/expects.functions"
-import MockConnection, {MockConnectionAcceptQuery} from "../../../../utils/mocks/domain/database/database-connection.mock"
+import {
+  expectsControllerResponse400AndMessage,
+  expectsControllerResponse401AndMessage
+} from "../../../../utils/functions/expects.functions"
+import MockConnection, {
+  MockConnectionAcceptQuery
+} from "../../../../utils/mocks/domain/database/database-connection.mock"
 import MissingRequestAuthTokenError from "../../../../../src/domain/errors/controllers/missing-request-auth-token.error"
 import UserNotFoundByIdError from "../../../../../src/domain/errors/users/user-not-found-by-id.error"
 import TodoNotFoundByIdError from "../../../../../src/domain/errors/todos/todo-not-found-by-id.error"
@@ -95,12 +100,7 @@ describe("FindTodoByIdControllerImplementation", () => {
   })
 
   test("Valid request. But user bot found by authToken.userId => 400/message", async () => {
-    const mockQuery = jest.fn().mockReturnValue([])
-    const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const findTodoByIdUseCase = new FindTodoByIdUseCaseImplementation(findUserByIdService, findTodoByIdService)
-    const findTodoByIdController = new FindTodoByIdControllerImplementation(todoValidator, findTodoByIdUseCase)
-    const foundUser = await findUserByIdService.execute(request.authToken.userId)
+    const { foundUser, findTodoByIdController } = await setupUserNotFound()
     // Given
     expectsValidRequest(request)
     expect(foundUser).toBeNull()
@@ -112,14 +112,7 @@ describe("FindTodoByIdControllerImplementation", () => {
   })
 
   test("Valid request and user found. But todo not found by params.todoId => 400/message", async () => {
-    const mockQuery = jest.fn().mockReturnValueOnce([userDB]).mockReturnValueOnce([]).mockReturnValueOnce([userDB]).mockReturnValueOnce([])
-    const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const findTodoByIdService = new PostgresFindTodoByIdService(connection)
-    const findTodoByIdUseCase = new FindTodoByIdUseCaseImplementation(findUserByIdService, findTodoByIdService)
-    const findTodoByIdController = new FindTodoByIdControllerImplementation(todoValidator, findTodoByIdUseCase)
-    const foundUser = await findUserByIdService.execute(request.authToken.userId)
-    const foundTodo = await findTodoByIdService.execute(request.params.todoId)
+    const { foundUser, foundTodo, findTodoByIdController } = await setupUserFoundButTodoNotFound()
     // Given
     expectsValidRequest(request)
     expect(foundUser).toEqual(foundUserFromService)
@@ -132,14 +125,7 @@ describe("FindTodoByIdControllerImplementation", () => {
   })
 
   test("Valid request, user found and todo found => 200/Todo", async () => {
-    const mockQuery = jest.fn().mockReturnValueOnce([userDB]).mockReturnValueOnce([todoDB]).mockReturnValueOnce([userDB]).mockReturnValueOnce([todoDB])
-    const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const findTodoByIdService = new PostgresFindTodoByIdService(connection)
-    const findTodoByIdUseCase = new FindTodoByIdUseCaseImplementation(findUserByIdService, findTodoByIdService)
-    const findTodoByIdController = new FindTodoByIdControllerImplementation(todoValidator, findTodoByIdUseCase)
-    const foundUser = await findUserByIdService.execute(request.authToken.userId)
-    const foundTodo = await findTodoByIdService.execute(request.params.todoId)
+    const { foundUser, foundTodo, findTodoByIdController } = await setupUserAndTodoFound()
     // Given
     expectsValidRequest(request)
     expect(foundUser).toEqual(foundUserFromService)
@@ -151,3 +137,65 @@ describe("FindTodoByIdControllerImplementation", () => {
     expect(controllerResponse.body).toEqual(foundTodoFromService)
   })
 })
+
+async function setupUserAndTodoFound() {
+  const mockQuery = jest
+    .fn()
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([todoDB])
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([todoDB])
+  const connection = MockConnectionAcceptQuery(mockQuery)()
+  const findUserByIdService = new PostgresFindUserByIdService(connection)
+  const findTodoByIdService = new PostgresFindTodoByIdService(connection)
+  const findTodoByIdUseCase = new FindTodoByIdUseCaseImplementation(
+    findUserByIdService,
+    findTodoByIdService
+  )
+  const findTodoByIdController = new FindTodoByIdControllerImplementation(
+    todoValidator,
+    findTodoByIdUseCase
+  )
+  const foundUser = await findUserByIdService.execute(request.authToken.userId)
+  const foundTodo = await findTodoByIdService.execute(request.params.todoId)
+  return { foundUser, foundTodo, findTodoByIdController }
+}
+
+async function setupUserFoundButTodoNotFound() {
+  const mockQuery = jest
+    .fn()
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([])
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([])
+  const connection = MockConnectionAcceptQuery(mockQuery)()
+  const findUserByIdService = new PostgresFindUserByIdService(connection)
+  const findTodoByIdService = new PostgresFindTodoByIdService(connection)
+  const findTodoByIdUseCase = new FindTodoByIdUseCaseImplementation(
+    findUserByIdService,
+    findTodoByIdService
+  )
+  const findTodoByIdController = new FindTodoByIdControllerImplementation(
+    todoValidator,
+    findTodoByIdUseCase
+  )
+  const foundUser = await findUserByIdService.execute(request.authToken.userId)
+  const foundTodo = await findTodoByIdService.execute(request.params.todoId)
+  return { foundUser, foundTodo, findTodoByIdController }
+}
+
+async function setupUserNotFound() {
+  const mockQuery = jest.fn().mockReturnValue([])
+  const connection = MockConnectionAcceptQuery(mockQuery)()
+  const findUserByIdService = new PostgresFindUserByIdService(connection)
+  const findTodoByIdUseCase = new FindTodoByIdUseCaseImplementation(
+    findUserByIdService,
+    findTodoByIdService
+  )
+  const findTodoByIdController = new FindTodoByIdControllerImplementation(
+    todoValidator,
+    findTodoByIdUseCase
+  )
+  const foundUser = await findUserByIdService.execute(request.authToken.userId)
+  return { foundUser, findTodoByIdController }
+}

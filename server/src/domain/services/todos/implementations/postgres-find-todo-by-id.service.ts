@@ -1,7 +1,7 @@
-import DatabaseConnection from "../../../database/database-connection.interface"
 import { TodoDto, TodoTableDto } from "../../../types/todo.types"
 
-import FindTodoByIdService from "../find-todo-by-id-service.test"
+import FindTodoByIdService from "../find-todo-by-id-service.interface"
+import DatabaseConnection from "../../../database/database-connection.interface"
 
 export default class PostgresFindTodoByIdService implements FindTodoByIdService {
   constructor(private readonly connection: DatabaseConnection) {}
