@@ -13,12 +13,12 @@ export default class PostgresFindTasksByUserIdService implements FindTasksByUser
     )
   }
 
-  private mapRowsToTasks(tasks: TaskTableDto[]) {
-    return tasks.map(({ id, name, description, user_id }) => ({
+  private mapRowsToTasks(userId: string, tasks: TaskTableDto[]) {
+    return tasks.map(({ id, name, description }) => ({
       id,
       name,
       description,
-      userId: user_id
+      userId
     }))
   }
 
@@ -27,7 +27,7 @@ export default class PostgresFindTasksByUserIdService implements FindTasksByUser
     if (rows.length === 0) {
       return []
     }
-    const tasks = this.mapRowsToTasks(rows)
+    const tasks = this.mapRowsToTasks(userId, rows)
     return tasks
   }
 }
