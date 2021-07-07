@@ -21,18 +21,13 @@ const foundUserFromService = {
 const taskDB1 = FakeTaskService.getTaskDB("1", userId)
 const taskDB2 = FakeTaskService.getTaskDB("2", userId)
 const taskDB3 = FakeTaskService.getTaskDB("3", userId)
+const foundTaskFromService1 = FakeTaskService.getTaskFromService(taskDB1)
+const foundTaskFromService2 = FakeTaskService.getTaskFromService(taskDB2)
+const foundTaskFromService3 = FakeTaskService.getTaskFromService(taskDB3)
 
 describe("FindTasksByUserIdUseCaseImplementation", () => {
-  test("User not found throw UserNotFoundByIdError", async () => {
-    const mockQuery = jest.fn().mockReturnValueOnce([]).mockReturnValueOnce([])
-    const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const findTasksByUserIdService = new PostgresFindTasksByUserIdService(connection)
-    const findTasksByUserIdUseCase = new FindTasksByUserIdUseCaseImplementation(
-      findUserByIdService,
-      findTasksByUserIdService
-    )
-    const foundUser = await findUserByIdService.execute(userId)
+  test("User not found throws UserNotFoundByIdError", async () => {
+    const { connection, foundUser, findTasksByUserIdUseCase } = await setupUserNotFound()
     // Given
     expect(connection.query).toHaveBeenCalledTimes(1)
     expect(foundUser).toBeNull()
@@ -43,22 +38,9 @@ describe("FindTasksByUserIdUseCaseImplementation", () => {
     expectsToHaveError(useCaseErr, UserNotFoundByIdError)
   })
 
-  test("User found. But no tasks found => empty TaskDto[]", async () => {
-    const mockQuery = jest
-      .fn()
-      .mockReturnValueOnce([userDB])
-      .mockReturnValueOnce([])
-      .mockReturnValueOnce([userDB])
-      .mockReturnValueOnce([])
-    const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const findTasksByUserIdService = new PostgresFindTasksByUserIdService(connection)
-    const findTasksByUserIdUseCase = new FindTasksByUserIdUseCaseImplementation(
-      findUserByIdService,
-      findTasksByUserIdService
-    )
-    const foundUser = await findUserByIdService.execute(userId)
-    const foundTasks = await findTasksByUserIdService.execute(userId)
+  test("User found. But no tasks found => empty array", async () => {
+    const { connection, foundUser, foundTasks, findTasksByUserIdUseCase } =
+      await setupUserFoundButTasksNotFound()
     // Given
     expect(connection.query).toHaveBeenCalledTimes(2)
     expect(foundUser).toEqual(foundUserFromService)
@@ -70,31 +52,73 @@ describe("FindTasksByUserIdUseCaseImplementation", () => {
     expect(foundTasksUseCase).toBeArrayOfSize(0)
   })
 
-  test("User found and tasks found => TaskDto[] with the same userId", async () => {
-    const mockQuery = jest
-      .fn()
-      .mockReturnValueOnce([userDB])
-      .mockReturnValueOnce([taskDB1, taskDB2, taskDB3])
-      .mockReturnValueOnce([userDB])
-      .mockReturnValueOnce([taskDB1, taskDB2, taskDB3])
-    const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const findTasksByUserIdService = new PostgresFindTasksByUserIdService(connection)
-    const findTasksByUserIdUseCase = new FindTasksByUserIdUseCaseImplementation(
-      findUserByIdService,
-      findTasksByUserIdService
-    )
-    const foundUser = await findUserByIdService.execute(userId)
-    const foundTasks = await findTasksByUserIdService.execute(userId)
+  test("User found and tasks found => filled array with found tasks", async () => {
+    const { connection, foundUser, foundTasks, findTasksByUserIdUseCase } =
+      await setupUserAndTasksFound()
     // Given
     expect(connection.query).toHaveBeenCalledTimes(2)
     expect(foundUser).toEqual(foundUserFromService)
     expect(foundTasks).toBeArrayOfSize(3)
     // When
-    const foundTasksUseCase = await findTasksByUserIdUseCase.execute(userId)
+    const foundTasksFromUseCase = await findTasksByUserIdUseCase.execute(userId)
     // Then
     expect(connection.query).toHaveBeenCalledTimes(4)
-    expect(foundTasksUseCase).toBeArrayOfSize(3)
-    foundTasksUseCase.forEach(task => expect(task.userId).toBe(userId))
+    expect(foundTasksFromUseCase).toBeArrayOfSize(3)
+    expect(foundTasksFromUseCase).toIncludeAllMembers([
+      foundTaskFromService1,
+      foundTaskFromService2,
+      foundTaskFromService3
+    ])
   })
 })
+
+async function setupUserAndTasksFound() {
+  const mockQuery = jest
+    .fn()
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([taskDB1, taskDB2, taskDB3])
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([taskDB1, taskDB2, taskDB3])
+  const connection = MockConnectionAcceptQuery(mockQuery)()
+  const findUserByIdService = new PostgresFindUserByIdService(connection)
+  const findTasksByUserIdService = new PostgresFindTasksByUserIdService(connection)
+  const findTasksByUserIdUseCase = new FindTasksByUserIdUseCaseImplementation(
+    findUserByIdService,
+    findTasksByUserIdService
+  )
+  const foundUser = await findUserByIdService.execute(userId)
+  const foundTasks = await findTasksByUserIdService.execute(userId)
+  return { connection, foundUser, foundTasks, findTasksByUserIdUseCase }
+}
+
+async function setupUserFoundButTasksNotFound() {
+  const mockQuery = jest
+    .fn()
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([])
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([])
+  const connection = MockConnectionAcceptQuery(mockQuery)()
+  const findUserByIdService = new PostgresFindUserByIdService(connection)
+  const findTasksByUserIdService = new PostgresFindTasksByUserIdService(connection)
+  const findTasksByUserIdUseCase = new FindTasksByUserIdUseCaseImplementation(
+    findUserByIdService,
+    findTasksByUserIdService
+  )
+  const foundUser = await findUserByIdService.execute(userId)
+  const foundTasks = await findTasksByUserIdService.execute(userId)
+  return { connection, foundUser, foundTasks, findTasksByUserIdUseCase }
+}
+
+async function setupUserNotFound() {
+  const mockQuery = jest.fn().mockReturnValueOnce([]).mockReturnValueOnce([])
+  const connection = MockConnectionAcceptQuery(mockQuery)()
+  const findUserByIdService = new PostgresFindUserByIdService(connection)
+  const findTasksByUserIdService = new PostgresFindTasksByUserIdService(connection)
+  const findTasksByUserIdUseCase = new FindTasksByUserIdUseCaseImplementation(
+    findUserByIdService,
+    findTasksByUserIdService
+  )
+  const foundUser = await findUserByIdService.execute(userId)
+  return { connection, foundUser, findTasksByUserIdUseCase }
+}

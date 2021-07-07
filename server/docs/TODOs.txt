@@ -4,18 +4,18 @@ se Oriented
 
 ** Feature: FindTodosByTaskId
 0 Add to ControllerFactory
-0 FindUserByIdService
-0 FindTaskByIdService
-0 FindTodosByTaskIdService
-0 FindTodosByTaskIdUseCase
+XX FindUserByIdService
+XX FindTaskByIdService
+XX FindTodosByTaskIdService
+XX FindTodosByTaskIdUseCase
 0 FindTodosByTaskIdController
 
 ** Feature: FindTodoById
 0 Add to ControllerFactory
 XX FindUserByIdService
 XX FindTodoByIdService
-0 FindTodoByIdUseCase
-0 FindTodoByIdController
+XX FindTodoByIdUseCase
+XX FindTodoByIdController
 
 ** Feature: CreateTodo
 0 Add to ControllerFactory
