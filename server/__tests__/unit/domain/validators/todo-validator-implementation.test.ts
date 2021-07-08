@@ -77,3 +77,14 @@ describe("TodoValidatorImplementation | getMessageForDescription", () => {
     expect(todoValidator.getMessageForDescription("Todo Description")).toBeNull()
   })
 })
+
+describe("TodoValidatorImplementation | getMessageForIsDone", () => {
+  test("Not typeof boolean", () => {
+    // @ts-ignore
+    expectsTruthyMessage(todoValidator.getMessageForIsDone(123))
+  })
+
+  test("Valid => null", () => {
+    expect(todoValidator.getMessageForIsDone(true)).toBeNull()
+  })
+})

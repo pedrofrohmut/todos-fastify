@@ -20,11 +20,7 @@ describe("PostgresUpdateTaskService", () => {
     // Then
     expect(connection.mutate).toHaveBeenCalledTimes(1)
     const paramsPassedToDatabase = connection.mutate.mock.calls[0][1]
-    expect(paramsPassedToDatabase).toIncludeAllMembers([
-      updatedTask.name,
-      "",
-      updatedTask.id
-    ])
+    expect(paramsPassedToDatabase).toIncludeAllMembers([updatedTask.name, "", updatedTask.id])
     expect(serviceErr).toBeFalsy()
   })
 
