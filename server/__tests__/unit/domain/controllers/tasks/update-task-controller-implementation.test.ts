@@ -11,6 +11,8 @@ import UpdateTaskControllerImplementation from "../../../../../src/domain/contro
 import MissingRequestBodyError from "../../../../../src/domain/errors/controllers/missing-request-body.error"
 import MissingRequestAuthTokenError from "../../../../../src/domain/errors/controllers/missing-request-auth-token.error"
 import MissingRequestParamsError from "../../../../../src/domain/errors/controllers/missing-request-params.error"
+import UserNotFoundByIdError from "../../../../../src/domain/errors/users/user-not-found-by-id.error"
+import TaskNotFoundByIdError from "../../../../../src/domain/errors/tasks/task-not-found-by-id.error"
 
 import FakeTaskService from "../../../../utils/fakes/task-service.fake"
 import FakeUserService from "../../../../utils/fakes/user-service.fake"
@@ -22,21 +24,6 @@ import {
 import MockConnection, {
   MockConnectionAcceptQuery
 } from "../../../../utils/mocks/domain/database/database-connection.mock"
-import UserNotFoundByIdError from "../../../../../src/domain/errors/users/user-not-found-by-id.error"
-import TaskNotFoundByIdError from "../../../../../src/domain/errors/tasks/task-not-found-by-id.error"
-
-const expectsValidRequest = (request: any): void => {
-  const nameValidationMessage = taskValidator.getMessageForName(request.body.name)
-  expect(nameValidationMessage).toBeNull()
-  const descriptionValidationMessage = taskValidator.getMessageForDescription(
-    request.body.description
-  )
-  expect(descriptionValidationMessage).toBeNull()
-  const taskIdValidationdMessage = taskValidator.getMessageForId(request.params.taskId)
-  expect(taskIdValidationdMessage).toBeNull()
-  expect(request.authToken.userId).toBeString()
-  expect(request.authToken.userId).toBeTruthy()
-}
 
 const userId = FakeUserService.getValidUserId()
 const taskId = FakeTaskService.getValidTaskId()
@@ -152,19 +139,7 @@ describe("UpdateTaskControllerImplementation", () => {
   })
 
   test("Valid request. But user not found by authToken userId => 400/message", async () => {
-    const mockQuery = jest.fn().mockReturnValueOnce([]).mockReturnValueOnce([])
-    const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const updateTaskUseCase = new UpdateTaskUseCaseImplementation(
-      findUserByIdService,
-      findTaskByIdService,
-      updateTaskService
-    )
-    const updateTaskController = new UpdateTaskControllerImplementation(
-      taskValidator,
-      updateTaskUseCase
-    )
-    const foundUser = await findUserByIdService.execute(userId)
+    const { connection, foundUser, updateTaskController } = await setupUserNotFound()
     // Given
     expectsValidRequest(request)
     expect(connection.query).toHaveBeenCalledTimes(1)
@@ -178,26 +153,8 @@ describe("UpdateTaskControllerImplementation", () => {
   })
 
   test("Valid request and user found. But task not found by param taskId => 400/message", async () => {
-    const mockQuery = jest
-      .fn()
-      .mockReturnValueOnce([userDB])
-      .mockReturnValueOnce([])
-      .mockReturnValueOnce([userDB])
-      .mockReturnValueOnce([])
-    const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const findTaskByIdService = new PostgresFindTaskByIdService(connection)
-    const updateTaskUseCase = new UpdateTaskUseCaseImplementation(
-      findUserByIdService,
-      findTaskByIdService,
-      updateTaskService
-    )
-    const updateTaskController = new UpdateTaskControllerImplementation(
-      taskValidator,
-      updateTaskUseCase
-    )
-    const foundUser = await findUserByIdService.execute(userId)
-    const foundTask = await findTaskByIdService.execute(taskId)
+    const { connection, foundUser, foundTask, updateTaskController } =
+      await setupUserFoundButTaskNotFound()
     // Given
     expectsValidRequest(request)
     expect(connection.query).toHaveBeenCalledTimes(2)
@@ -212,26 +169,7 @@ describe("UpdateTaskControllerImplementation", () => {
   })
 
   test("Valid request and user found and task found => 204", async () => {
-    const mockQuery = jest
-      .fn()
-      .mockReturnValueOnce([userDB])
-      .mockReturnValueOnce([taskDB])
-      .mockReturnValueOnce([userDB])
-      .mockReturnValueOnce([taskDB])
-    const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const findTaskByIdService = new PostgresFindTaskByIdService(connection)
-    const updateTaskUseCase = new UpdateTaskUseCaseImplementation(
-      findUserByIdService,
-      findTaskByIdService,
-      updateTaskService
-    )
-    const updateTaskController = new UpdateTaskControllerImplementation(
-      taskValidator,
-      updateTaskUseCase
-    )
-    const foundUser = await findUserByIdService.execute(userId)
-    const foundTask = await findTaskByIdService.execute(taskId)
+    const { connection, foundUser, foundTask, updateTaskController } = await setupUserAndTaskFound()
     // Given
     expectsValidRequest(request)
     expect(connection.query).toHaveBeenCalledTimes(2)
@@ -245,3 +183,81 @@ describe("UpdateTaskControllerImplementation", () => {
     expect(controllerResponse.body).toBeUndefined()
   })
 })
+
+async function setupUserAndTaskFound() {
+  const mockQuery = jest
+    .fn()
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([taskDB])
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([taskDB])
+  const connection = MockConnectionAcceptQuery(mockQuery)()
+  const findUserByIdService = new PostgresFindUserByIdService(connection)
+  const findTaskByIdService = new PostgresFindTaskByIdService(connection)
+  const updateTaskUseCase = new UpdateTaskUseCaseImplementation(
+    findUserByIdService,
+    findTaskByIdService,
+    updateTaskService
+  )
+  const updateTaskController = new UpdateTaskControllerImplementation(
+    taskValidator,
+    updateTaskUseCase
+  )
+  const foundUser = await findUserByIdService.execute(userId)
+  const foundTask = await findTaskByIdService.execute(taskId)
+  return { connection, foundUser, foundTask, updateTaskController }
+}
+
+async function setupUserFoundButTaskNotFound() {
+  const mockQuery = jest
+    .fn()
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([])
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([])
+  const connection = MockConnectionAcceptQuery(mockQuery)()
+  const findUserByIdService = new PostgresFindUserByIdService(connection)
+  const findTaskByIdService = new PostgresFindTaskByIdService(connection)
+  const updateTaskUseCase = new UpdateTaskUseCaseImplementation(
+    findUserByIdService,
+    findTaskByIdService,
+    updateTaskService
+  )
+  const updateTaskController = new UpdateTaskControllerImplementation(
+    taskValidator,
+    updateTaskUseCase
+  )
+  const foundUser = await findUserByIdService.execute(userId)
+  const foundTask = await findTaskByIdService.execute(taskId)
+  return { connection, foundUser, foundTask, updateTaskController }
+}
+
+async function setupUserNotFound() {
+  const mockQuery = jest.fn().mockReturnValueOnce([]).mockReturnValueOnce([])
+  const connection = MockConnectionAcceptQuery(mockQuery)()
+  const findUserByIdService = new PostgresFindUserByIdService(connection)
+  const updateTaskUseCase = new UpdateTaskUseCaseImplementation(
+    findUserByIdService,
+    findTaskByIdService,
+    updateTaskService
+  )
+  const updateTaskController = new UpdateTaskControllerImplementation(
+    taskValidator,
+    updateTaskUseCase
+  )
+  const foundUser = await findUserByIdService.execute(userId)
+  return { connection, foundUser, updateTaskController }
+}
+
+function expectsValidRequest(request: any) {
+  const nameValidationMessage = taskValidator.getMessageForName(request.body.name)
+  expect(nameValidationMessage).toBeNull()
+  const descriptionValidationMessage = taskValidator.getMessageForDescription(
+    request.body.description
+  )
+  expect(descriptionValidationMessage).toBeNull()
+  const taskIdValidationdMessage = taskValidator.getMessageForId(request.params.taskId)
+  expect(taskIdValidationdMessage).toBeNull()
+  expect(request.authToken.userId).toBeString()
+  expect(request.authToken.userId).toBeTruthy()
+}
