@@ -1,5 +1,5 @@
-import { TaskDto } from "../../types/task.types"
+import { UpdateTaskDto } from "../../types/task.types"
 
 export default interface UpdateTaskService {
-  execute(updatedTask: TaskDto): Promise<void>
+  execute(updatedTask: UpdateTaskDto): Promise<void>
 }
