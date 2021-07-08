@@ -1,6 +1,45 @@
-se Oriented
-
 ### UNIT: Controllers & UseCases ###
+UseCase Oriented System: each of the features is an useCase
+
+** Feature: ClearCompleteTodosByTaskId
+0 Add to ControllerFactory
+0 FindUserByIdService
+0 FindTaskByIdService
+0 ClearCompleteTodosByTaskIdService
+0 ClearCompleteTodosByTaskIdUseCase
+0 ClearCompleteTodosByTaskIdController
+
+** Feature: DeleteTodo
+0 Add to ControllerFactory
+0 FindUserByIdService
+0 FindTodoByIdService
+0 DeleteTodoService
+0 DeleteTodoUseCase
+0 DeleteTodoController
+
+** Feature: SetTodoAsNotDone
+0 Add to ControllerFactory
+0 FindUserByIdService
+0 FindTodoByIdService
+0 SetTodoAsNotDoneService
+0 SetTodoAsNotDoneUseCase
+0 SetTodoAsNotDoneController
+
+** Feature: SetTodoAsDone
+0 Add to ControllerFactory
+0 FindUserByIdService
+0 FindTodoByIdService
+0 SetTodoAsDoneService
+0 SetTodoAsDoneUseCase
+0 SetTodoAsDoneController
+
+** Feature: UpdateTodo
+0 Add to ControllerFactory
+XX FindUserByIdService
+XX FindTodoByIdService
+XX UpdateTodoService
+0 UpdateTodoUseCase
+0 UpdateTodoController
 
 ** Feature: FindTodosByTaskId
 0 Add to ControllerFactory
@@ -8,7 +47,7 @@ XX FindUserByIdService
 XX FindTaskByIdService
 XX FindTodosByTaskIdService
 XX FindTodosByTaskIdUseCase
-0 FindTodosByTaskIdController
+XX FindTodosByTaskIdController
 
 ** Feature: FindTodoById
 0 Add to ControllerFactory
@@ -24,7 +63,6 @@ XX FindTaskByIdService
 XX CreateTodoService
 XX CreateTodoUseCase
 XX CreateTodoController
-
 
 ** Feature: UpdateTask
 0 Add to ControllerFactory
@@ -104,11 +142,6 @@ XX PostgresConnectionFactory
 XX FastifyRequestAdapter
 XX FastifyRouter
 XX FastifyRouterBuilder
-
-### INTEGRATION: Routes ###
-0 GetSignedUserRoute
-0 SignInUserRoute
-XX CreateUserRoute
 
 ###############################
 #  0 for not done             #
