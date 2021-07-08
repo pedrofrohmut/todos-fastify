@@ -9,6 +9,8 @@ export type TodoDto = {
 
 export type CreateTodoDto = Omit<TodoDto, "id" | "isDone">
 
+export type UpdateTodoDto = Omit<TodoDto, "taskId" | "userId">
+
 export type TodoTableDto = {
   id: string
   name: string
