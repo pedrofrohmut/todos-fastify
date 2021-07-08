@@ -34,16 +34,8 @@ const findTaskByIdService = new PostgresFindTaskByIdService(connection)
 const updateTaskService = new PostgresUpdateTaskService(connection)
 
 describe("UpdateTaskUseCaseImplementation", () => {
-  test("User not found by id throw UserNotFoundByIdError", async () => {
-    const mockQuery = jest.fn().mockReturnValueOnce([]).mockReturnValueOnce([])
-    const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const updateTaskUseCase = new UpdateTaskUseCaseImplementation(
-      findUserByIdService,
-      findTaskByIdService,
-      updateTaskService
-    )
-    const foundUser = await findUserByIdService.execute(userId)
+  test("User not found by id throws UserNotFoundByIdError", async () => {
+    const { connection, foundUser, updateTaskUseCase } = await setupUserNotFound()
     // Given
     expect(connection.query).toHaveBeenCalledTimes(1)
     expect(foundUser).toBeNull()
@@ -54,23 +46,9 @@ describe("UpdateTaskUseCaseImplementation", () => {
     expectsToHaveError(useCaseErr, UserNotFoundByIdError)
   })
 
-  test("User found. But task not found by id throw TaskNotFoundByIdError", async () => {
-    const mockQuery = jest
-      .fn()
-      .mockReturnValueOnce([userDB])
-      .mockReturnValueOnce([])
-      .mockReturnValueOnce([userDB])
-      .mockReturnValueOnce([])
-    const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const findTaskByIdService = new PostgresFindTaskByIdService(connection)
-    const updateTaskUseCase = new UpdateTaskUseCaseImplementation(
-      findUserByIdService,
-      findTaskByIdService,
-      updateTaskService
-    )
-    const foundUser = await findUserByIdService.execute(userId)
-    const foundTask = await findTaskByIdService.execute(taskId)
+  test("User found. But task not found by id throws TaskNotFoundByIdError", async () => {
+    const { connection, foundUser, foundTask, updateTaskUseCase } =
+      await setupUserFoundButTaskNotFound()
     // Given
     expect(connection.query).toHaveBeenCalledTimes(2)
     expect(foundUser).toEqual(foundUserFromService)
@@ -83,22 +61,7 @@ describe("UpdateTaskUseCaseImplementation", () => {
   })
 
   test("User found and task found. Executes with no errors", async () => {
-    const mockQuery = jest
-      .fn()
-      .mockReturnValueOnce([userDB])
-      .mockReturnValueOnce([taskDB])
-      .mockReturnValueOnce([userDB])
-      .mockReturnValueOnce([taskDB])
-    const connection = MockConnectionAcceptQuery(mockQuery)()
-    const findUserByIdService = new PostgresFindUserByIdService(connection)
-    const findTaskByIdService = new PostgresFindTaskByIdService(connection)
-    const updateTaskUseCase = new UpdateTaskUseCaseImplementation(
-      findUserByIdService,
-      findTaskByIdService,
-      updateTaskService
-    )
-    const foundUser = await findUserByIdService.execute(userId)
-    const foundTask = await findTaskByIdService.execute(taskId)
+    const { connection, foundUser, foundTask, updateTaskUseCase } = await setupUserAndTaskFound()
     // Given
     expect(connection.query).toHaveBeenCalledTimes(2)
     expect(foundUser).toEqual(foundUserFromService)
@@ -111,3 +74,56 @@ describe("UpdateTaskUseCaseImplementation", () => {
     expect(useCaseErr).toBeFalsy()
   })
 })
+
+async function setupUserAndTaskFound() {
+  const mockQuery = jest
+    .fn()
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([taskDB])
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([taskDB])
+  const connection = MockConnectionAcceptQuery(mockQuery)()
+  const findUserByIdService = new PostgresFindUserByIdService(connection)
+  const findTaskByIdService = new PostgresFindTaskByIdService(connection)
+  const updateTaskUseCase = new UpdateTaskUseCaseImplementation(
+    findUserByIdService,
+    findTaskByIdService,
+    updateTaskService
+  )
+  const foundUser = await findUserByIdService.execute(userId)
+  const foundTask = await findTaskByIdService.execute(taskId)
+  return { connection, foundUser, foundTask, updateTaskUseCase }
+}
+
+async function setupUserFoundButTaskNotFound() {
+  const mockQuery = jest
+    .fn()
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([])
+    .mockReturnValueOnce([userDB])
+    .mockReturnValueOnce([])
+  const connection = MockConnectionAcceptQuery(mockQuery)()
+  const findUserByIdService = new PostgresFindUserByIdService(connection)
+  const findTaskByIdService = new PostgresFindTaskByIdService(connection)
+  const updateTaskUseCase = new UpdateTaskUseCaseImplementation(
+    findUserByIdService,
+    findTaskByIdService,
+    updateTaskService
+  )
+  const foundUser = await findUserByIdService.execute(userId)
+  const foundTask = await findTaskByIdService.execute(taskId)
+  return { connection, foundUser, foundTask, updateTaskUseCase }
+}
+
+async function setupUserNotFound() {
+  const mockQuery = jest.fn().mockReturnValueOnce([]).mockReturnValueOnce([])
+  const connection = MockConnectionAcceptQuery(mockQuery)()
+  const findUserByIdService = new PostgresFindUserByIdService(connection)
+  const updateTaskUseCase = new UpdateTaskUseCaseImplementation(
+    findUserByIdService,
+    findTaskByIdService,
+    updateTaskService
+  )
+  const foundUser = await findUserByIdService.execute(userId)
+  return { connection, foundUser, updateTaskUseCase }
+}
