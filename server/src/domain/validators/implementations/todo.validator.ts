@@ -38,4 +38,11 @@ export default class TodoValidatorImplementation implements TodoValidator {
     }
     return null
   }
+
+  public getMessageForIsDone(isDone?: boolean): string | null {
+    if (typeof isDone !== "boolean") {
+      return "Todo isDone is not a valid boolean"
+    }
+    return null
+  }
 }
