@@ -3,8 +3,8 @@ import "jest-extended"
 import PostgresUpdateTodoService from "../../../../../src/domain/services/todos/implementations/postgres-update-todo.service"
 
 import FakeTodoService from "../../../../utils/fakes/todo-service.fake"
-import { getError } from "../../../../utils/functions/error.functions"
 import MockConnection from "../../../../utils/mocks/domain/database/database-connection.mock"
+import { getError } from "../../../../utils/functions/error.functions"
 
 const todoId = FakeTodoService.getValidTodoId()
 const connection = MockConnection()
