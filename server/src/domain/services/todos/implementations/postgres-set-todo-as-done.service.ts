@@ -1,7 +1,7 @@
-import DatabaseConnection from "../../../database/database-connection.interface"
 import SetTodoAsDoneService from "../set-todo-as-done-service.interface"
+import DatabaseConnection from "../../../database/database-connection.interface"
 
-export default class PostgresSetTodoAsNotDoneService implements SetTodoAsDoneService {
+export default class PostgresSetTodoAsDoneService implements SetTodoAsDoneService {
   constructor(private readonly connection: DatabaseConnection) {}
 
   public async execute(todoId: string): Promise<void> {

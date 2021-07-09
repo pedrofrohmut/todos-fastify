@@ -23,7 +23,7 @@ XX FindUserByIdService
 XX FindTodoByIdService
 XX SetTodoAsNotDoneService
 XX SetTodoAsNotDoneUseCase
-0 SetTodoAsNotDoneController
+XX SetTodoAsNotDoneController
 
 ** Feature: SetTodoAsDone
 0 Add to ControllerFactory
@@ -31,7 +31,7 @@ XX FindUserByIdService
 XX FindTodoByIdService
 XX SetTodoAsDoneService
 XX SetTodoAsDoneUseCase
-0 SetTodoAsDoneController
+XX SetTodoAsDoneController
 
 ** Feature: UpdateTodo
 0 Add to ControllerFactory
