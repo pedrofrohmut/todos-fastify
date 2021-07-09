@@ -22,7 +22,7 @@ UseCase Oriented System: each of the features is an useCase
 XX FindUserByIdService
 XX FindTodoByIdService
 XX SetTodoAsNotDoneService
-0 SetTodoAsNotDoneUseCase
+XX SetTodoAsNotDoneUseCase
 0 SetTodoAsNotDoneController
 
 ** Feature: SetTodoAsDone
@@ -30,7 +30,7 @@ XX SetTodoAsNotDoneService
 XX FindUserByIdService
 XX FindTodoByIdService
 XX SetTodoAsDoneService
-0 SetTodoAsDoneUseCase
+XX SetTodoAsDoneUseCase
 0 SetTodoAsDoneController
 
 ** Feature: UpdateTodo
