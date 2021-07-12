@@ -23,6 +23,6 @@ export default class DeleteTaskUseCaseImplementation implements DeleteTaskUseCas
     if (foundTask === null) {
       throw new TaskNotFoundByIdError(this.errorMessage)
     }
-    this.deleteTaskService.execute(taskId)
+    await this.deleteTaskService.execute(taskId)
   }
 }
