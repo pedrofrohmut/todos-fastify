@@ -13,9 +13,9 @@ UseCase Oriented System: each of the features is an useCase
 0 Add to ControllerFactory
 XX FindUserByIdService
 XX FindTodoByIdService
-0 DeleteTodoService
-0 DeleteTodoUseCase
-0 DeleteTodoController
+XX DeleteTodoService
+XX DeleteTodoUseCase
+XX DeleteTodoController
 
 ** Feature: SetTodoAsNotDone
 0 Add to ControllerFactory
