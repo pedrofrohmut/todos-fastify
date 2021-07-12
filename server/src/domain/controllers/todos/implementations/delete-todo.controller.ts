@@ -2,7 +2,7 @@ import MissingRequestAuthTokenError from "../../../errors/controllers/missing-re
 import MissingRequestParamsError from "../../../errors/controllers/missing-request-params.error"
 import TodoNotFoundByIdError from "../../../errors/todos/todo-not-found-by-id.error"
 import UserNotFoundByIdError from "../../../errors/users/user-not-found-by-id.error"
-import {AuthenticationToken} from "../../../types/auth/token.types"
+import { AuthenticationToken } from "../../../types/auth/token.types"
 import { AdaptedRequest, ControllerResponse, Params } from "../../../types/router.types"
 import DeleteTodoUseCase from "../../../usecases/todos/implementations/delete-todos-usecase.interface"
 import TodoValidator from "../../../validators/todo-validator.interface"
