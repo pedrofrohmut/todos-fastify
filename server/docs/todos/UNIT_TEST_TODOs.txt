@@ -3,9 +3,9 @@ UseCase Oriented System: each of the features is an useCase
 
 ** Feature: ClearCompleteTodosByTaskId
 0 Add to ControllerFactory
-0 FindUserByIdService
-0 FindTaskByIdService
-0 ClearCompleteTodosByTaskIdService
+XX FindUserByIdService
+XX FindTaskByIdService
+XX ClearCompleteTodosByTaskIdService
 0 ClearCompleteTodosByTaskIdUseCase
 0 ClearCompleteTodosByTaskIdController
 
