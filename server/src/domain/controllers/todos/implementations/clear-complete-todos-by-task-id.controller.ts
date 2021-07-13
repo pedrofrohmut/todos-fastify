@@ -2,7 +2,7 @@ import MissingRequestAuthTokenError from "../../../errors/controllers/missing-re
 import MissingRequestParamsError from "../../../errors/controllers/missing-request-params.error"
 import TaskNotFoundByIdError from "../../../errors/tasks/task-not-found-by-id.error"
 import UserNotFoundByIdError from "../../../errors/users/user-not-found-by-id.error"
-import {AuthenticationToken} from "../../../types/auth/token.types"
+import { AuthenticationToken } from "../../../types/auth/token.types"
 import { AdaptedRequest, ControllerResponse, Params } from "../../../types/router.types"
 import ClearCompleteTodosByTaskIdUseCase from "../../../usecases/todos/clear-complete-todos-by-task-id-usecase.interface"
 import TaskValidator from "../../../validators/task-validator.interface"

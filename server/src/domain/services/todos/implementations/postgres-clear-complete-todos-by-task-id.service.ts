@@ -7,6 +7,6 @@ export default class PostgresClearCompleteTodosByTaskIdService
   constructor(private readonly connection: DatabaseConnection) {}
 
   public async execute(taskId: string): Promise<void> {
-    this.connection.mutate("DELETE FROM app.todos WHERE task_id = $1", [taskId])
+    this.connection.mutate("DELETE FROM app.todos WHERE task_id = $1 AND is_done = true", [taskId])
   }
 }

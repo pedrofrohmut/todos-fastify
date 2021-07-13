@@ -26,6 +26,6 @@ export default class UpdateTodoUseCaseImplementation implements UpdateTodoUseCas
     if (foundTodo === null) {
       throw new TodoNotFoundByIdError(this.errorMessage)
     }
-    this.updateTodoService.execute({ ...updatedTodo, id: todoId })
+    await this.updateTodoService.execute({ ...updatedTodo, id: todoId })
   }
 }

@@ -14,7 +14,11 @@ describe("PostgresClearCompleteTodosByTaskIdService", () => {
   })
 })
 
-function thenMutateIsCalledAnServiceErrorIsFalsy(serviceErr: Error, connection: any, taskId: string) {
+function thenMutateIsCalledAnServiceErrorIsFalsy(
+  serviceErr: Error,
+  connection: any,
+  taskId: string
+) {
   expect(serviceErr).toBeFalsy()
   expect(connection.mutate).toHaveBeenCalledTimes(1)
   const paramsPassedToDatabase = connection.mutate.mock.calls[0][1]
